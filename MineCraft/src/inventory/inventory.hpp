@@ -18,7 +18,7 @@ class Inventory{
         Inventory();
         ~Inventory();
 
-        void initialize();
+        void initialize(int size);
         void add_inventory (std::shared_ptr<Item> item, int ind);
         void erase_inventory (int ind);
         void switch_inventory(int ind1, int ind2);

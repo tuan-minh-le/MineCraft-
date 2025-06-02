@@ -1,6 +1,6 @@
 #include "entity/player.hpp"
 
-Player::Player() : hunger(20)
+Player::Player()
 {
 
 }
@@ -9,6 +9,15 @@ void Player::initialize(cgp::input_devices& inputs, cgp::window_structure& windo
     camera.initialize(inputs, window);
     camera.set_rotation_axis_y();
     set_hunger() = 20;
+    speed = 1.0f;
+    ind_inventory = 0;
+    inventory.initialize(inventory_size);
+    std::shared_ptr<Item> itemPtr = inventory.get_inventory()[ind_inventory];
+
+    isGrounded = true;
+    verticalVelocity = 0;
+    gravity = 9.81f;
+    dt = 0.01f;
 }
 
 Player::~Player()
@@ -40,55 +49,6 @@ cgp::camera_controller_first_person_euler& Player::set_camera(){
     return camera;
 }
 
-void Player::add_inventory (std::shared_ptr<Item> item, int ind){
-    if (ind > inventory_size) {
-        throw std::out_of_range("Index out of range");
-    }
-    if (ind == inventory_size) {
-        inventory.push_back(item);
-    } else {
-        inventory.insert(inventory.begin() + ind, item);
-    }
-}
-
-void Player::erase_inventory (int ind){
-    if (ind >= inventory_size) {
-        throw std::out_of_range("Index out of range");
-    }
-    inventory.erase(inventory.begin() + ind);
-}
-
-void Player::switch_inventory(int ind1, int ind2){
-    if (ind1 >= inventory_size || ind2 >= inventory_size) {
-        throw std::out_of_range("Index out of range");
-    }
-    std::swap(inventory[ind1], inventory[ind2]);
-}
-
-std::vector<std::shared_ptr<Item>> Player::get_inventory() const{
-    return inventory;
-}
-
-std::vector<std::shared_ptr<Item>>& Player::set_inventory(){
-    return inventory;
-}
-
-bool Player::get_opened_inventory() const{
-    return opened_inventory;
-}
-
-bool& Player::set_opened_inventory(){
-    return opened_inventory;
-}
-
-void Player::open_inventory(){
-
-}
-
-void Player::close_inventory(){
-
-}
-
 void Player::handle_mouse_move(cgp::vec2 const& mouse_position_current, cgp::vec2 const& mouse_position_previous, cgp::mat4& camera_view_matrix) {
     
     if(cgp::norm(mouse_position_current - mouse_position_previous) < 0.01){
@@ -108,13 +68,15 @@ void Player::handle_mouse_move(cgp::vec2 const& mouse_position_current, cgp::vec
     camera_view_matrix = camera.camera_model.matrix_view();
 }
 
-void Player::handle_keyboard_event(const cgp::inputs_keyboard_parameters& keyboard){
-    if (keyboard.is_pressed(GLFW_KEY_E) && opened_inventory){
-        close_inventory();               
+void Player::handle_keyboard_event(const cgp::inputs_keyboard_parameters& keyboard,cgp::mat4& camera_view_matrix){
+    if (keyboard.is_pressed(GLFW_KEY_E) && inventory.get_opened_inventory()){
+        inventory.close_inventory();
+        inventory.set_opened_inventory() = false;               
     }
     else if (keyboard.is_pressed(GLFW_KEY_E))
     {
-        open_inventory();
+        inventory.open_inventory();
+        inventory.set_opened_inventory() = true;
     }
 
     if (keyboard.is_pressed(GLFW_KEY_Q)){
@@ -124,10 +86,29 @@ void Player::handle_keyboard_event(const cgp::inputs_keyboard_parameters& keyboa
     if (keyboard.is_pressed(GLFW_KEY_LEFT_SHIFT)){
         set_speed() = 0.005f;
     }
-    
-    if (keyboard.is_pressed(GLFW_KEY_SPACE)){
-        
+
+    if (position.z <= 0) {
+        position.z = 0;  
+        isGrounded = true;    
+        verticalVelocity = 0.0f; 
     }
+
+    if (isGrounded) {
+        verticalVelocity = 0.0f; 
+        if (keyboard.is_pressed(GLFW_KEY_SPACE)) {
+            verticalVelocity = 5.0f; 
+            isGrounded = false;          
+        }
+    }
+    else {
+        verticalVelocity -= gravity * dt; 
+    }
+
+    
+    position.z += verticalVelocity * dt;
+
+    camera.camera_model.position_camera = position;
+    camera_view_matrix = camera.camera_model.matrix_view();
 }
 
 void Player::move(float speed,const cgp::inputs_keyboard_parameters& keyboard,cgp::mat4& camera_view_matrix){
@@ -137,8 +118,6 @@ void Player::move(float speed,const cgp::inputs_keyboard_parameters& keyboard,cg
 
     forward = camera.camera_model.front();
     right = camera.camera_model.right();
-
-
     
     if (cgp::norm(forward) > 0.01f) forward = cgp::normalize(forward);
     if (cgp::norm(right) > 0.01f) right = cgp::normalize(right);
@@ -171,4 +150,34 @@ void Player::move(float speed,const cgp::inputs_keyboard_parameters& keyboard,cg
     camera.camera_model.position_camera = position;
     camera_view_matrix = camera.camera_model.matrix_view();
 
+}
+
+void Player::handle_mouse_event(const cgp::inputs_mouse_parameters& mouse){
+    if (mouse.click.left){
+        std::cout<<"bouton gauche"<<std::endl;
+    }
+
+    if (mouse.click.right){
+        std::cout<<"bouton droit"<<std::endl;
+    }
+
+    if (mouse.scroll == 1){
+        if (ind_inventory+1 >= inventory_size) {
+            throw std::out_of_range("No next item");
+        }
+        else
+        {
+            std::shared_ptr<Item> itemPtr = inventory.get_inventory()[ind_inventory + 1];
+        }
+    }
+
+    if (mouse.scroll == -1){
+        if (ind_inventory-1 < 0) {
+            throw std::out_of_range("No previous item");
+        }
+        else
+        {
+            std::shared_ptr<Item> itemPtr = inventory.get_inventory()[ind_inventory - 1];
+        }
+    }
 }
