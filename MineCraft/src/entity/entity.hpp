@@ -11,8 +11,8 @@ class Entity{
 
     public:
 
-    virtual void initialize() = 0;
-    virtual void movement();
+    virtual void initialize(cgp::input_devices& inputs, cgp::window_structure& window) = 0;
+    virtual void move(float speed, const cgp::inputs_keyboard_parameters& keyboard) = 0;
 
     //Getter and Setter
 
