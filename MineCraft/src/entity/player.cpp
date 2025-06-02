@@ -8,6 +8,7 @@ Player::Player() : hunger(20)
 void Player::initialize(cgp::input_devices& inputs, cgp::window_structure& window){
     camera.initialize(inputs, window);
     camera.set_rotation_axis_y();
+    set_hunger() = 20;
 }
 
 Player::~Player()

@@ -12,7 +12,7 @@ void Block::initialize_shared_mesh() {
     }
 }
 
-void Block::draw_cube_at(const cgp::vec3& position, const cgp::environment_generic_structure& environment) {
+void Block::draw_block_at(const cgp::vec3& position, const cgp::environment_generic_structure& environment) {
     initialize_shared_mesh();
     
     static cgp::mesh_drawable cube_drawable;

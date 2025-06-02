@@ -14,7 +14,7 @@ void Grass::setup_texture() {
 
 }
 
-void Grass::draw_grass_at(const cgp::vec3& position, const cgp::environment_generic_structure& environment) {
+void Grass::draw_block_at(const cgp::vec3& position, const cgp::environment_generic_structure& environment) {
 
     initialize_shared_mesh();
     
@@ -24,12 +24,10 @@ void Grass::draw_grass_at(const cgp::vec3& position, const cgp::environment_gene
     
     if (!drawable_initialized) {
         grass_drawable.initialize_data_on_gpu(shared_cube_mesh);
-        // Set green color for grass
         grass_drawable.material.color = cgp::vec3{0.2f, 0.8f, 0.2f}; // Nice green color
         drawable_initialized = true;
     }
     
-    // Set position and draw
     grass_drawable.model.translation = position;
     cgp::draw(grass_drawable, environment);
 }

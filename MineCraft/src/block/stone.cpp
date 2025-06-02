@@ -1,0 +1,33 @@
+#include "stone.hpp"
+
+Stone::Stone() : Block() {}
+
+Stone::~Stone() {}
+
+void Stone::initialize() {
+    item_name = "Stone Block";
+
+    initialize_shared_mesh();
+}
+
+void Stone::setup_texture() {
+
+}
+
+void Stone::draw_block_at(const cgp::vec3& position, const cgp::environment_generic_structure& environment) {
+
+    initialize_shared_mesh();
+    
+
+    static cgp::mesh_drawable stone_drawable;
+    static bool drawable_initialized = false;
+    
+    if (!drawable_initialized) {
+        stone_drawable.initialize_data_on_gpu(shared_cube_mesh);
+        stone_drawable.material.color = cgp::vec3{0.2f, 0.8f, 0.2f}; // Nice green color
+        drawable_initialized = true;
+    }
+    
+    stone_drawable.model.translation = position;
+    cgp::draw(stone_drawable, environment);
+}

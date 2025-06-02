@@ -1,6 +1,7 @@
 #include "scene.hpp"
 
 
+
 using namespace cgp;
 
 
@@ -10,6 +11,7 @@ void scene_structure::initialize()
 	player.get_camera().look_at({ 3.0f, 2.0f, 2.0f }, {0,0,0}, {0,0,1});
 	global_frame.initialize_data_on_gpu(mesh_primitive_frame());
 
+	world.initialize();
 
 	environment.camera_view = player.get_camera().camera_model.matrix_view();
 
@@ -33,7 +35,7 @@ void scene_structure::display_frame()
 		for(int y : positions){
 			for(int z : positions){
 				cgp::vec3 position = {x, y, z};
-				Grass::draw_grass_at(position, environment);
+				grass.draw_block_at(position, environment);
 			}
 		}
 	}

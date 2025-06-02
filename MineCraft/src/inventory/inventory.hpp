@@ -8,12 +8,17 @@
 
 class Inventory{
     protected:
-        
     
+        bool opened_inventory = false;
+        std::vector<std::shared_ptr<Item>> inventory;
+        int inventory_size;
+
     public:
-        std::string getItemName() const;
 
+        Inventory();
+        ~Inventory();
 
+        void initialize();
         void add_inventory (std::shared_ptr<Item> item, int ind);
         void erase_inventory (int ind);
         void switch_inventory(int ind1, int ind2);
