@@ -1,6 +1,5 @@
 #include "block.hpp"
 
-bool mesh_initialized = false;
 
 class Grass : public Block{
     private:
