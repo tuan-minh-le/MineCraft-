@@ -7,10 +7,12 @@ using namespace cgp;
 void scene_structure::initialize()
 {
 	player.initialize(inputs,window);
-	// camera_control.initialize(inputs, window); // Give access to the inputs and window global state to the camera controler
-	// camera_control.set_rotation_axis_y();
-	// camera_control.look_at({ 3.0f, 2.0f, 2.0f }, {0,0,0}, {0,0,1});
+	player.get_camera().look_at({ 3.0f, 2.0f, 2.0f }, {0,0,0}, {0,0,1});
 	global_frame.initialize_data_on_gpu(mesh_primitive_frame());
+
+	environment.camera_view = player.get_camera().camera_model.matrix_view();
+
+	glfwSetInputMode(window.glfw_window,GLFW_CURSOR,GLFW_CURSOR_DISABLED);
 
 }
 
@@ -34,20 +36,19 @@ void scene_structure::display_gui()
 
 void scene_structure::mouse_move_event()
 {
-	if (!inputs.keyboard.shift)
-		player.get_camera().action_mouse_move(environment.camera_view);
-	player.handle_mouse_move(inputs.mouse.position.current, inputs.mouse.position.previous, environment.camera_view);
+
 }
+
 void scene_structure::mouse_click_event()
 {
-	player.get_camera().action_mouse_click(environment.camera_view);
+	
 }
 void scene_structure::keyboard_event()
 {
-	player.get_camera().action_keyboard(environment.camera_view);
+	
 }
 void scene_structure::idle_frame()
 {
-	player.get_camera().idle_frame(environment.camera_view);
+	player.handle_mouse_move(inputs.mouse.position.current, inputs.mouse.position.previous, environment.camera_view);
 }
 
