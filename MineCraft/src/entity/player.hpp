@@ -18,6 +18,8 @@ public:
     Player();
     ~Player();
 
+    void initialize(cgp::input_devices& inputs, cgp::window_structure& window);
+
     float max_pitch_up = 85.0f;
     float max_pitch_down = -85.0f;
 

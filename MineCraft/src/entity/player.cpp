@@ -1,4 +1,4 @@
-#include "player.hpp"
+#include "entity/player.hpp"
 
 Player::Player() : hunger(20)
 {
@@ -6,6 +6,11 @@ Player::Player() : hunger(20)
     {
         inventory.push_back(std::make_shared<Grass>());
     }
+}
+
+void Player::initialize(cgp::input_devices& inputs, cgp::window_structure& window){
+    camera.initialize(inputs, window);
+    camera.set_rotation_axis_z();
 }
 
 Player::~Player()
@@ -59,6 +64,8 @@ void Player::handle_mouse_move(cgp::vec2 const& mouse_position_current, cgp::vec
     float local_max_pitch_down_rad = max_pitch_down * cgp::Pi / 180.0f; 
 
     current_cam_pitch_rad = cgp::clamp(current_cam_pitch_rad, local_max_pitch_down_rad, local_max_pitch_up_rad);
+
+    std::cout << mouse_position_current << mouse_position_previous << std::endl;
     
     camera_view_matrix = camera.camera_model.matrix_view();
 }

@@ -3,7 +3,7 @@
 
 #include "cgp/cgp.hpp"
 #include "environment.hpp"
-#include "player.hpp"
+#include "entity/player.hpp"
 
 
 using cgp::mesh_drawable;
