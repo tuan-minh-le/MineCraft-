@@ -5,3 +5,4 @@ build/
 *MineCraft/build/
 *build/
 imgui.ini
+MineCraft/build/CMakeCache.txt

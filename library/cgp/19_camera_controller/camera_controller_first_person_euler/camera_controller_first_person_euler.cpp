@@ -18,8 +18,6 @@ namespace cgp
 		vec2 const& p0 = inputs->mouse.position.previous;
 		vec2 const dp = p1 - p0;
 
-		std::cout << dp << std::endl;
-
 		bool const event_valid = !inputs->mouse.on_gui;
 		bool const click_left = inputs->mouse.click.left;
 		bool const click_right = inputs->mouse.click.right;
