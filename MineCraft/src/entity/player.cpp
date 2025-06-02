@@ -123,7 +123,7 @@ void Player::handle_keyboard_event(const cgp::inputs_keyboard_parameters& keyboa
     if (keyboard.is_pressed(GLFW_KEY_D)){
         position[1] += get_speed() * 0.5; 
     }
-
+    
     if (keyboard.is_pressed(GLFW_KEY_E) && opened_inventory){
         close_inventory();               
     }
@@ -142,5 +142,23 @@ void Player::handle_keyboard_event(const cgp::inputs_keyboard_parameters& keyboa
     
     if (keyboard.is_pressed(GLFW_KEY_SPACE)){
         
+    }
+}
+
+void Player::move(float speed,const cgp::inputs_keyboard_parameters& keyboard){
+    if (keyboard.is_pressed(GLFW_KEY_Z)){
+        position[0] += get_speed() * 0.5; 
+    }
+
+    if (keyboard.is_pressed(GLFW_KEY_Q)){
+        position[1] -= get_speed() * 0.5; 
+    }
+
+    if (keyboard.is_pressed(GLFW_KEY_S)){
+        position[0] -= get_speed() * 0.5; 
+    }
+
+    if (keyboard.is_pressed(GLFW_KEY_D)){
+        position[1] += get_speed() * 0.5; 
     }
 }

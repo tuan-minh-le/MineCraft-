@@ -46,6 +46,8 @@ public:
     bool get_opened_inventory() const;
     bool& set_opened_inventory();
 
+    void move(float speed,const cgp::inputs_keyboard_parameters& keyboard);
+
     std::vector<std::shared_ptr<Item>> get_inventory() const;
     std::vector<std::shared_ptr<Item>>& set_inventory();
 
