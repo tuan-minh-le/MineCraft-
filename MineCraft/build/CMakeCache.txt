@@ -16,6 +16,7 @@
 
 //Path to a program.
 CMAKE_ADDR2LINE:FILEPATH=/usr/bin/addr2line
+CMAKE_ADDR2LINE:FILEPATH=/usr/bin/addr2line
 
 //Path to a program.
 CMAKE_AR:FILEPATH=/usr/bin/ar
@@ -101,7 +102,7 @@ CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO:STRING=
 CMAKE_EXPORT_COMPILE_COMMANDS:BOOL=
 
 //Value Computed by CMake.
-CMAKE_FIND_PACKAGE_REDIRECTS_DIR:STATIC=/home/alex_b/4A/Projet Majeure/MineCraft-/MineCraft/build/CMakeFiles/pkgRedirects
+CMAKE_FIND_PACKAGE_REDIRECTS_DIR:STATIC=/home/rom422422/Documents/Archives/Romain/Travail/Ecole_D_ing/Année 2/Projet_Majeur/MineCraft-/MineCraft/build/CMakeFiles/pkgRedirects
 
 //Install path prefix, prepended onto install directories.
 CMAKE_INSTALL_PREFIX:PATH=/usr/local
@@ -137,6 +138,7 @@ CMAKE_NM:FILEPATH=/usr/bin/nm
 
 //Path to a program.
 CMAKE_OBJCOPY:FILEPATH=/usr/bin/objcopy
+CMAKE_OBJCOPY:FILEPATH=/usr/bin/objcopy
 
 //Path to a program.
 CMAKE_OBJDUMP:FILEPATH=/usr/bin/objdump
@@ -154,6 +156,7 @@ CMAKE_PROJECT_NAME:STATIC=MineCraft
 CMAKE_RANLIB:FILEPATH=/usr/bin/ranlib
 
 //Path to a program.
+CMAKE_READELF:FILEPATH=/usr/bin/readelf
 CMAKE_READELF:FILEPATH=/usr/bin/readelf
 
 //Flags used by the linker during the creation of shared libraries
@@ -208,6 +211,7 @@ CMAKE_STRIP:FILEPATH=/usr/bin/strip
 
 //Path to a program.
 CMAKE_TAPI:FILEPATH=CMAKE_TAPI-NOTFOUND
+CMAKE_TAPI:FILEPATH=CMAKE_TAPI-NOTFOUND
 
 //If this value is on, makefiles will be generated without the
 // .SILENT directive, and all commands will be echoed to the console
@@ -232,11 +236,14 @@ PKG_CONFIG_ARGN:STRING=
 
 //pkg-config executable
 PKG_CONFIG_EXECUTABLE:FILEPATH=/usr/bin/pkg-config
+PKG_CONFIG_EXECUTABLE:FILEPATH=/usr/bin/pkg-config
 
 //The directory containing a CMake configuration file for glfw3.
 glfw3_DIR:PATH=/usr/lib/x86_64-linux-gnu/cmake/glfw3
+glfw3_DIR:PATH=/usr/lib/x86_64-linux-gnu/cmake/glfw3
 
 //Path to a library.
+pkgcfg_lib_GLFW_glfw:FILEPATH=/usr/lib/x86_64-linux-gnu/libglfw.so
 pkgcfg_lib_GLFW_glfw:FILEPATH=/usr/lib/x86_64-linux-gnu/libglfw.so
 
 
@@ -251,11 +258,11 @@ CMAKE_AR-ADVANCED:INTERNAL=1
 //This is the directory where this CMakeCache.txt was created
 CMAKE_CACHEFILE_DIR:INTERNAL=/home/alex_b/4A/Projet Majeure/MineCraft-/MineCraft/build
 //Major version of cmake used to create the current loaded cache
-CMAKE_CACHE_MAJOR_VERSION:INTERNAL=4
+CMAKE_CACHE_MAJOR_VERSION:INTERNAL=3
 //Minor version of cmake used to create the current loaded cache
-CMAKE_CACHE_MINOR_VERSION:INTERNAL=0
+CMAKE_CACHE_MINOR_VERSION:INTERNAL=28
 //Patch version of cmake used to create the current loaded cache
-CMAKE_CACHE_PATCH_VERSION:INTERNAL=2
+CMAKE_CACHE_PATCH_VERSION:INTERNAL=3
 //ADVANCED property for variable: CMAKE_COLOR_MAKEFILE
 CMAKE_COLOR_MAKEFILE-ADVANCED:INTERNAL=1
 //Path to CMake executable.
@@ -266,6 +273,10 @@ CMAKE_CPACK_COMMAND:INTERNAL=/snap/cmake/1463/bin/cpack
 CMAKE_CTEST_COMMAND:INTERNAL=/snap/cmake/1463/bin/ctest
 //ADVANCED property for variable: CMAKE_CXX_COMPILER
 CMAKE_CXX_COMPILER-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_CXX_COMPILER_AR
+CMAKE_CXX_COMPILER_AR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_CXX_COMPILER_RANLIB
+CMAKE_CXX_COMPILER_RANLIB-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_CXX_COMPILER_AR
 CMAKE_CXX_COMPILER_AR-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_CXX_COMPILER_RANLIB
@@ -302,6 +313,7 @@ CMAKE_DLLTOOL-ADVANCED:INTERNAL=1
 CMAKE_EDIT_COMMAND:INTERNAL=/snap/cmake/1463/bin/ccmake
 //Executable file format
 CMAKE_EXECUTABLE_FORMAT:INTERNAL=ELF
+CMAKE_EXECUTABLE_FORMAT:INTERNAL=ELF
 //ADVANCED property for variable: CMAKE_EXE_LINKER_FLAGS
 CMAKE_EXE_LINKER_FLAGS-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_EXE_LINKER_FLAGS_DEBUG
@@ -331,8 +343,6 @@ CMAKE_HOME_DIRECTORY:INTERNAL=/home/alex_b/4A/Projet Majeure/MineCraft-/MineCraf
 CMAKE_INSTALL_SO_NO_EXE:INTERNAL=1
 //ADVANCED property for variable: CMAKE_LINKER
 CMAKE_LINKER-ADVANCED:INTERNAL=1
-//Name of CMakeLists files to read
-CMAKE_LIST_FILE_NAME:INTERNAL=CMakeLists.txt
 //ADVANCED property for variable: CMAKE_MAKE_PROGRAM
 CMAKE_MAKE_PROGRAM-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_MODULE_LINKER_FLAGS
@@ -402,9 +412,14 @@ GLFW_FOUND:INTERNAL=1
 GLFW_INCLUDEDIR:INTERNAL=/usr/include
 GLFW_INCLUDE_DIRS:INTERNAL=/usr/include
 GLFW_LDFLAGS:INTERNAL=-L/usr/lib/x86_64-linux-gnu;-lglfw
+GLFW_INCLUDEDIR:INTERNAL=/usr/include
+GLFW_INCLUDE_DIRS:INTERNAL=/usr/include
+GLFW_LDFLAGS:INTERNAL=-L/usr/lib/x86_64-linux-gnu;-lglfw
 GLFW_LDFLAGS_OTHER:INTERNAL=
 GLFW_LIBDIR:INTERNAL=/usr/lib/x86_64-linux-gnu
+GLFW_LIBDIR:INTERNAL=/usr/lib/x86_64-linux-gnu
 GLFW_LIBRARIES:INTERNAL=glfw
+GLFW_LIBRARY_DIRS:INTERNAL=/usr/lib/x86_64-linux-gnu
 GLFW_LIBRARY_DIRS:INTERNAL=/usr/lib/x86_64-linux-gnu
 GLFW_LIBS:INTERNAL=
 GLFW_LIBS_L:INTERNAL=
@@ -413,12 +428,19 @@ GLFW_LIBS_PATHS:INTERNAL=
 GLFW_MODULE_NAME:INTERNAL=glfw3
 GLFW_PREFIX:INTERNAL=/usr
 GLFW_STATIC_CFLAGS:INTERNAL=-I/usr/include
+GLFW_PREFIX:INTERNAL=/usr
+GLFW_STATIC_CFLAGS:INTERNAL=-I/usr/include
 GLFW_STATIC_CFLAGS_I:INTERNAL=
 GLFW_STATIC_CFLAGS_OTHER:INTERNAL=
 GLFW_STATIC_INCLUDE_DIRS:INTERNAL=/usr/include
 GLFW_STATIC_LDFLAGS:INTERNAL=-L/usr/lib/x86_64-linux-gnu;-lglfw;-lrt;-lm;-ldl
 GLFW_STATIC_LDFLAGS_OTHER:INTERNAL=
+GLFW_STATIC_INCLUDE_DIRS:INTERNAL=/usr/include
+GLFW_STATIC_LDFLAGS:INTERNAL=-L/usr/lib/x86_64-linux-gnu;-lglfw;-lrt;-lm;-ldl
+GLFW_STATIC_LDFLAGS_OTHER:INTERNAL=
 GLFW_STATIC_LIBDIR:INTERNAL=
+GLFW_STATIC_LIBRARIES:INTERNAL=glfw;rt;m;dl
+GLFW_STATIC_LIBRARY_DIRS:INTERNAL=/usr/lib/x86_64-linux-gnu
 GLFW_STATIC_LIBRARIES:INTERNAL=glfw;rt;m;dl
 GLFW_STATIC_LIBRARY_DIRS:INTERNAL=/usr/lib/x86_64-linux-gnu
 GLFW_STATIC_LIBS:INTERNAL=
@@ -434,8 +456,11 @@ GLFW_glfw3_VERSION:INTERNAL=
 PKG_CONFIG_ARGN-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: PKG_CONFIG_EXECUTABLE
 PKG_CONFIG_EXECUTABLE-ADVANCED:INTERNAL=1
+//linker supports push/pop state
+_CMAKE_LINKER_PUSHPOP_STATE_SUPPORTED:INTERNAL=TRUE
 __pkg_config_checked_GLFW:INTERNAL=1
 //ADVANCED property for variable: pkgcfg_lib_GLFW_glfw
 pkgcfg_lib_GLFW_glfw-ADVANCED:INTERNAL=1
+prefix_result:INTERNAL=/usr/lib/x86_64-linux-gnu
 prefix_result:INTERNAL=/usr/lib/x86_64-linux-gnu
 
