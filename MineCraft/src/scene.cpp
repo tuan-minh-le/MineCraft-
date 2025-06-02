@@ -67,6 +67,6 @@ void scene_structure::idle_frame()
 {
 	player.handle_mouse_move(inputs.mouse.position.current, inputs.mouse.position.previous, environment.camera_view);
 	player.handle_keyboard_event(inputs.keyboard);
-	player.move(player.get_speed(),inputs.keyboard);
+	player.move(player.get_speed(),inputs.keyboard, environment.camera_view);
 }
 

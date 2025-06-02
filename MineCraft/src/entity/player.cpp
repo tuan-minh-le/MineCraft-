@@ -91,7 +91,7 @@ void Player::close_inventory(){
 void Player::handle_mouse_move(cgp::vec2 const& mouse_position_current, cgp::vec2 const& mouse_position_previous, cgp::mat4& camera_view_matrix) {
     
     if(cgp::norm(mouse_position_current - mouse_position_previous) < 0.01){
-        std::cout << "Ignoring input" << std::endl;
+        //std::cout << "Ignoring input" << std::endl;
         return;
     }
 
@@ -145,21 +145,35 @@ void Player::handle_keyboard_event(const cgp::inputs_keyboard_parameters& keyboa
     }
 }
 
-void Player::move(float speed,const cgp::inputs_keyboard_parameters& keyboard){
-    cgp::vec3 forward = camera.camera_model.front();
-    cgp::vec3 right = camera.camera_model.right();
+void Player::move(float speed,const cgp::inputs_keyboard_parameters& keyboard,cgp::mat4& camera_view_matrix){
+
+    static cgp::vec3 forward;
+    static cgp::vec3 right;
+    static cgp::vec3 desired_direction(0, 0, 0);
+    static cgp::vec3 velocity_change;
+
+    forward = camera.camera_model.front();
+    right = camera.camera_model.right();
+
+    forward.z = 0;
+    right.z = 0;
+    
     if (cgp::norm(forward) > 0.01f) forward = cgp::normalize(forward);
     if (cgp::norm(right) > 0.01f) right = cgp::normalize(right);
 
 
     if (keyboard.is_pressed(GLFW_KEY_W)){
+
+        std::cout<< "speed" << speed<<std::endl;
+        std::cout<< "position before" << position<<std::endl;
+
         position += speed * forward;
 
+        std::cout<< "position after" << position<<std::endl;
     }
 
     if (keyboard.is_pressed(GLFW_KEY_A)){
         position -= speed * right;
-
     }
 
     if (keyboard.is_pressed(GLFW_KEY_S)){
@@ -169,4 +183,8 @@ void Player::move(float speed,const cgp::inputs_keyboard_parameters& keyboard){
     if (keyboard.is_pressed(GLFW_KEY_D)){
         position += speed * right;
     }
+
+    camera.camera_model.position_camera = position + camera.camera_model.front();
+    camera_view_matrix = camera.camera_model.matrix_view();
+
 }
