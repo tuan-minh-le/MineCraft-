@@ -1,5 +1,5 @@
 #include "scene.hpp"
-
+#include "entity/player.hpp"
 
 
 using namespace cgp;
@@ -7,11 +7,14 @@ using namespace cgp;
 
 void scene_structure::initialize()
 {
+	
 	player.initialize(inputs,window);
 	player.get_camera().look_at({ 3.0f, 2.0f, 2.0f }, {0,0,0}, {0,0,1});
 	global_frame.initialize_data_on_gpu(mesh_primitive_frame());
 
 	world.initialize();
+	world.setCenter({0, 0, 0});
+
 
 	environment.camera_view = player.get_camera().camera_model.matrix_view();
 
@@ -29,16 +32,17 @@ void scene_structure::display_frame()
 	// Set the light to the current position of the camera
 	environment.light = player.get_camera().camera_model.position();
 
-	std::vector<int> positions = {0, 1, 2};
+	world.drawChunk(environment);
+	// std::vector<int> positions = {0, 1, 2};
     
-	for(int x : positions){
-		for(int y : positions){
-			for(int z : positions){
-				cgp::vec3 position = {x, y, z};
-				grass.draw_block_at(position, environment);
-			}
-		}
-	}
+	// for(int x : positions){
+	// 	for(int y : positions){
+	// 		for(int z : positions){
+	// 			cgp::vec3 position = {x, y, z};
+	// 			grass.draw_block_at(position, environment);
+	// 		}
+	// 	}
+	// }
 	
 	if (gui.display_frame)
 		draw(global_frame, environment);

@@ -14,7 +14,7 @@ void Grass::setup_texture() {
 
 }
 
-void Grass::draw_block_at(const cgp::vec3& position, const cgp::environment_generic_structure& environment) {
+void Grass::draw_block_at(const cgp::vec3& position, const cgp::environment_generic_structure& environment){
 
     initialize_shared_mesh();
     

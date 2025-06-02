@@ -22,6 +22,8 @@ private:
     float verticalVelocity;
     float gravity;
     float dt;
+    // std::string nameObj = "../../assets/Minecraft_steve/minecraft_steve.obj";
+    // std::string nameTexture = "../../assets/Minecraft_steve/minecraft_steve_skin.jpg";
 
 public:
     Player();
@@ -50,4 +52,9 @@ public:
     void handle_keyboard_event(const cgp::inputs_keyboard_parameters& keyboard,cgp::mat4& camera_view_matrix);
 
     void handle_mouse_event(const cgp::inputs_mouse_parameters& mouse);
+
+    // std::string getNameObj()const;
+    // std::string& setNameObj();
+    // std::string getNameTexture()const;
+    // std::string& setNameTexture();
 };

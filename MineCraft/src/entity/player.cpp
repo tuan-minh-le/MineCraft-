@@ -131,6 +131,7 @@ void Player::move(float speed,const cgp::inputs_keyboard_parameters& keyboard,cg
         std::cout<< "position before" << position<<std::endl;
 
         position += speed * forward;
+        std::cout<<"move z"<<std::endl;
 
         std::cout<< "position after" << position<<std::endl;
     }
@@ -146,7 +147,6 @@ void Player::move(float speed,const cgp::inputs_keyboard_parameters& keyboard,cg
     if (keyboard.is_pressed(GLFW_KEY_D)){
         position += speed * right;
     }
-
     camera.camera_model.position_camera = position;
     camera_view_matrix = camera.camera_model.matrix_view();
 
@@ -181,3 +181,19 @@ void Player::handle_mouse_event(const cgp::inputs_mouse_parameters& mouse){
         }
     }
 }
+}
+
+
+
+// std::string Player::getNameObj()const{
+//     return nameObj;
+// }
+// std::string& Player::setNameObj(){
+//     return nameObj;
+// }
+// std::string Player::getNameTexture()const{
+//     return nameTexture;
+// }
+// std::string& Player::setNameTexture(){
+//     return nameTexture;
+// }
