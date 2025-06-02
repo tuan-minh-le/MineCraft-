@@ -1,3 +1,7 @@
+MineCraft/build/
+build/
 .vs/
 .vscode/
+*MineCraft/build/
 *build/
+imgui.ini

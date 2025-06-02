@@ -3,6 +3,7 @@
 
 #include "cgp/cgp.hpp"
 #include "environment.hpp"
+#include "player.hpp"
 
 
 using cgp::mesh_drawable;
@@ -22,6 +23,7 @@ struct scene_structure : cgp::scene_inputs_generic {
 	camera_controller_orbit_euler camera_control;
 	camera_projection_perspective camera_projection;
 	window_structure window;
+	Player player;
 
 	mesh_drawable global_frame;          // The standard global frame
 	environment_structure environment;   // Standard environment controler

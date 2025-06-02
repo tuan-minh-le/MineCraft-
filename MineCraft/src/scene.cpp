@@ -10,6 +10,8 @@ void scene_structure::initialize()
 	camera_control.set_rotation_axis_y();
 	camera_control.look_at({ 3.0f, 2.0f, 2.0f }, {0,0,0}, {0,0,1});
 	global_frame.initialize_data_on_gpu(mesh_primitive_frame());
+
+	player.handle_mouse_move(inputs.mouse.position.current, inputs.mouse.position.previous, environment.camera_view);
 }
 
 
