@@ -49,7 +49,9 @@ void scene_structure::display_gui()
 {
 	ImGui::Checkbox("Frame", &gui.display_frame);
 	ImGui::Checkbox("Wireframe", &gui.display_wireframe);
-
+	ImGui::Text("x: %f", player.getPosition().x);
+	ImGui::Text("y: %f", player.getPosition().y);
+	ImGui::Text("z: %f", player.getPosition().z);
 }
 
 void scene_structure::mouse_move_event()

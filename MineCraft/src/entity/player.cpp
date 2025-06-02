@@ -109,22 +109,6 @@ void Player::handle_mouse_move(cgp::vec2 const& mouse_position_current, cgp::vec
 }
 
 void Player::handle_keyboard_event(const cgp::inputs_keyboard_parameters& keyboard){
-    if (keyboard.is_pressed(GLFW_KEY_Z)){
-        position[0] += get_speed() * 0.5; 
-    }
-
-    if (keyboard.is_pressed(GLFW_KEY_Q)){
-        position[1] -= get_speed() * 0.5; 
-    }
-
-    if (keyboard.is_pressed(GLFW_KEY_S)){
-        position[0] -= get_speed() * 0.5; 
-    }
-
-    if (keyboard.is_pressed(GLFW_KEY_D)){
-        position[1] += get_speed() * 0.5; 
-    }
-    
     if (keyboard.is_pressed(GLFW_KEY_E) && opened_inventory){
         close_inventory();               
     }
@@ -133,12 +117,12 @@ void Player::handle_keyboard_event(const cgp::inputs_keyboard_parameters& keyboa
         open_inventory();
     }
 
-    if (keyboard.is_pressed(GLFW_KEY_A)){
-        set_speed() = 2.0f;
+    if (keyboard.is_pressed(GLFW_KEY_Q)){
+        set_speed() = 0.05f;
     }
 
     if (keyboard.is_pressed(GLFW_KEY_LEFT_SHIFT)){
-        set_speed() = 0.5f;
+        set_speed() = 0.005f;
     }
     
     if (keyboard.is_pressed(GLFW_KEY_SPACE)){
@@ -150,18 +134,17 @@ void Player::move(float speed,const cgp::inputs_keyboard_parameters& keyboard,cg
 
     static cgp::vec3 forward;
     static cgp::vec3 right;
-    static cgp::vec3 desired_direction(0, 0, 0);
-    static cgp::vec3 velocity_change;
 
     forward = camera.camera_model.front();
     right = camera.camera_model.right();
 
-    forward.z = 0;
-    right.z = 0;
+
     
     if (cgp::norm(forward) > 0.01f) forward = cgp::normalize(forward);
     if (cgp::norm(right) > 0.01f) right = cgp::normalize(right);
 
+    forward.y = 0;
+    right.y = 0;
 
     if (keyboard.is_pressed(GLFW_KEY_W)){
 
@@ -185,7 +168,7 @@ void Player::move(float speed,const cgp::inputs_keyboard_parameters& keyboard,cg
         position += speed * right;
     }
 
-    camera.camera_model.position_camera = position + camera.camera_model.front();
+    camera.camera_model.position_camera = position;
     camera_view_matrix = camera.camera_model.matrix_view();
 
 }

@@ -14,7 +14,7 @@ private:
     int hunger;
     std::vector<std::shared_ptr<Item>> inventory;
     bool opened_inventory = false;
-    float speed = 1.0f;
+    float speed = 0.01f;
 
 public:
     Player();
