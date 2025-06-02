@@ -4,7 +4,7 @@
 #include "cgp/cgp.hpp"
 #include "environment.hpp"
 #include "entity/player.hpp"
-
+#include "block/grass.hpp"
 
 using cgp::mesh_drawable;
 
@@ -24,6 +24,8 @@ struct scene_structure : cgp::scene_inputs_generic {
 	camera_projection_perspective camera_projection;
 	window_structure window;
 	Player player;
+
+	Grass grass;
 
 	mesh_drawable global_frame;          // The standard global frame
 	environment_structure environment;   // Standard environment controler

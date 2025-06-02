@@ -1,18 +1,24 @@
+#pragma once
 #include "cgp/cgp.hpp"
 #include "item.hpp"
 
-class Block : public Item{
-    protected:
-        int dimension = 1;
-        cgp::vec3 position;
-        cgp::mesh_drawable block_texture;
-        static cgp::mesh block_mesh;
+class Block : public Item {
+protected:
+    int dimension = 1;
+    
+    static cgp::mesh shared_cube_mesh;
+    static bool mesh_initialized;
 
-    public:
-        Block();
-        Block(const cgp::vec3& position);
-        virtual void initialize() = 0;
-        int getDimension() const;
-        cgp::vec3 getPosition() const;
-        cgp::vec3& setPosition();
+public:
+    Block(); 
+    virtual void initialize() = 0;
+    
+    static void initialize_shared_mesh();
+    
+    static void draw_cube_at(const cgp::vec3& position, const cgp::environment_generic_structure& environment);
+    
+    virtual void setup_texture() = 0;
+    
+    // Getter
+    int getDimension() const;
 };
