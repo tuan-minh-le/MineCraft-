@@ -14,7 +14,7 @@ private:
     int hunger;
     std::vector<std::shared_ptr<Item>> inventory;
     bool opened_inventory = false;
-    float speed = 1.0f;
+    float speed = 0.01f;
     // std::string nameObj = "../../assets/Minecraft_steve/minecraft_steve.obj";
     // std::string nameTexture = "../../assets/Minecraft_steve/minecraft_steve_skin.jpg";
 
@@ -47,7 +47,7 @@ public:
     bool get_opened_inventory() const;
     bool& set_opened_inventory();
 
-    void move(float speed,const cgp::inputs_keyboard_parameters& keyboard);
+    void move(float speed,const cgp::inputs_keyboard_parameters& keyboard,cgp::mat4& camera_view_matrix);
 
     std::vector<std::shared_ptr<Item>> get_inventory() const;
     std::vector<std::shared_ptr<Item>>& set_inventory();

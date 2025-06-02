@@ -5,6 +5,9 @@
 #include "environment.hpp"
 #include "entity/player.hpp"
 #include "block/grass.hpp"
+#include "block/sand.hpp"
+#include "block/stone.hpp"
+#include "world/worldgenerator.hpp"
 
 using cgp::mesh_drawable;
 
@@ -24,6 +27,8 @@ struct scene_structure : cgp::scene_inputs_generic {
 	camera_projection_perspective camera_projection;
 	window_structure window;
 	Player player;
+
+	WorldGenerator world;
 
 	Grass grass;
 

@@ -12,7 +12,7 @@ class Entity{
     public:
 
     virtual void initialize(cgp::input_devices& inputs, cgp::window_structure& window) = 0;
-    virtual void move(float speed, const cgp::inputs_keyboard_parameters& keyboard) = 0;
+    virtual void move(float speed, const cgp::inputs_keyboard_parameters& keyboard,cgp::mat4& camera_view_matrix) = 0;
 
     //Getter and Setter
 

@@ -3,10 +3,10 @@
 
 
 
-class Grass : public Block {
+class Sand : public Block {
 public:
-    Grass();
-    ~Grass();
+    Sand();
+    ~Sand();
     
     void initialize() override;
     void setup_texture() override;

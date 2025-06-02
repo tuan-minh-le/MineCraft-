@@ -1,6 +1,7 @@
 #include "scene.hpp"
 #include "entity/player.hpp"
 
+
 using namespace cgp;
 
 
@@ -11,6 +12,7 @@ void scene_structure::initialize()
 	player.get_camera().look_at({ 3.0f, 2.0f, 2.0f }, {0,0,0}, {0,0,1});
 	global_frame.initialize_data_on_gpu(mesh_primitive_frame());
 
+	world.initialize();
 
 	environment.camera_view = player.get_camera().camera_model.matrix_view();
 
@@ -34,7 +36,7 @@ void scene_structure::display_frame()
 		for(int y : positions){
 			for(int z : positions){
 				cgp::vec3 position = {x, y, z};
-				Grass::draw_grass_at(position, environment);
+				grass.draw_block_at(position, environment);
 			}
 		}
 	}
@@ -48,7 +50,9 @@ void scene_structure::display_gui()
 {
 	ImGui::Checkbox("Frame", &gui.display_frame);
 	ImGui::Checkbox("Wireframe", &gui.display_wireframe);
-
+	ImGui::Text("x: %f", player.getPosition().x);
+	ImGui::Text("y: %f", player.getPosition().y);
+	ImGui::Text("z: %f", player.getPosition().z);
 }
 
 void scene_structure::mouse_move_event()
@@ -68,6 +72,6 @@ void scene_structure::idle_frame()
 {
 	player.handle_mouse_move(inputs.mouse.position.current, inputs.mouse.position.previous, environment.camera_view);
 	player.handle_keyboard_event(inputs.keyboard);
-	player.move(player.get_speed(),inputs.keyboard);
+	player.move(player.get_speed(),inputs.keyboard, environment.camera_view);
 }
 

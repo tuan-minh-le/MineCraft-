@@ -15,7 +15,7 @@ public:
     
     static void initialize_shared_mesh();
     
-    static void draw_cube_at(const cgp::vec3& position, const cgp::environment_generic_structure& environment);
+    virtual void draw_block_at(const cgp::vec3& position, const cgp::environment_generic_structure& environment);
     
     virtual void setup_texture() = 0;
     
