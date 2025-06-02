@@ -92,7 +92,7 @@ void Player::close_inventory(){
 void Player::handle_mouse_move(cgp::vec2 const& mouse_position_current, cgp::vec2 const& mouse_position_previous, cgp::mat4& camera_view_matrix) {
     
     if(cgp::norm(mouse_position_current - mouse_position_previous) < 0.01){
-        std::cout << "Ignoring input" << std::endl;
+        //std::cout << "Ignoring input" << std::endl;
         return;
     }
 
@@ -155,6 +155,7 @@ void Player::move(float speed,const cgp::inputs_keyboard_parameters& keyboard){
 
     if (keyboard.is_pressed(GLFW_KEY_W)){
         position += speed * forward;
+        std::cout<<"move z"<<std::endl;
 
     }
 
@@ -171,3 +172,18 @@ void Player::move(float speed,const cgp::inputs_keyboard_parameters& keyboard){
         position += speed * right;
     }
 }
+
+
+
+// std::string Player::getNameObj()const{
+//     return nameObj;
+// }
+// std::string& Player::setNameObj(){
+//     return nameObj;
+// }
+// std::string Player::getNameTexture()const{
+//     return nameTexture;
+// }
+// std::string& Player::setNameTexture(){
+//     return nameTexture;
+// }
