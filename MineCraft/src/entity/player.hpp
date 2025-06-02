@@ -3,7 +3,6 @@
 #include "cgp/cgp.hpp"
 #include "iostream"
 #include "block/item.hpp"
-#include "block/grass.hpp"
 #include <vector>
 #include <memory>
 #include "entity.hpp"
