@@ -6,5 +6,5 @@ Grass::~Grass(){}
 
 void Grass::initialize(){
     item_name = "Grass Block";
-    block
+    //block
 }
