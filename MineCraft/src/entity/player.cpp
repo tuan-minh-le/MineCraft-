@@ -10,7 +10,7 @@ Player::Player() : hunger(20)
 
 void Player::initialize(cgp::input_devices& inputs, cgp::window_structure& window){
     camera.initialize(inputs, window);
-    camera.set_rotation_axis_z();
+    camera.set_rotation_axis_y();
 }
 
 Player::~Player()
@@ -56,6 +56,11 @@ std::vector<std::shared_ptr<Item>>& Player::set_inventory(){
 
 void Player::handle_mouse_move(cgp::vec2 const& mouse_position_current, cgp::vec2 const& mouse_position_previous, cgp::mat4& camera_view_matrix) {
     
+    if(cgp::norm(mouse_position_current - mouse_position_previous) < 0.01){
+        std::cout << "Ignoring input" << std::endl;
+        return;
+    }
+
     camera.action_mouse_move(camera_view_matrix);
     
     float& current_cam_pitch_rad = camera.camera_model.pitch;    
@@ -64,8 +69,6 @@ void Player::handle_mouse_move(cgp::vec2 const& mouse_position_current, cgp::vec
     float local_max_pitch_down_rad = max_pitch_down * cgp::Pi / 180.0f; 
 
     current_cam_pitch_rad = cgp::clamp(current_cam_pitch_rad, local_max_pitch_down_rad, local_max_pitch_up_rad);
-
-    std::cout << mouse_position_current << mouse_position_previous << std::endl;
     
     camera_view_matrix = camera.camera_model.matrix_view();
 }

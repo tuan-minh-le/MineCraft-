@@ -28,6 +28,6 @@ namespace cgp
 
 	protected:
 		// true = cursor captured (/infinite motion), false = cursor free
-		bool is_cursor_trapped = false; 
+		bool is_cursor_trapped = true; 
 	};
 }
