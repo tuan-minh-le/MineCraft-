@@ -181,7 +181,6 @@ void Player::handle_mouse_event(const cgp::inputs_mouse_parameters& mouse){
         }
     }
 }
-}
 
 
 
