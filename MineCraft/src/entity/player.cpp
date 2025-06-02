@@ -87,8 +87,8 @@ void Player::handle_keyboard_event(const cgp::inputs_keyboard_parameters& keyboa
         set_speed() = 0.005f;
     }
 
-    if (position.z <= 0) {
-        position.z = 0;  
+    if (position.y <= 0) {
+        position.y = 0;  
         isGrounded = true;    
         verticalVelocity = 0.0f; 
     }
