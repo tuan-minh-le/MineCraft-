@@ -15,6 +15,8 @@ private:
     std::vector<std::shared_ptr<Item>> inventory;
     bool opened_inventory = false;
     float speed = 0.01f;
+    // std::string nameObj = "../../assets/Minecraft_steve/minecraft_steve.obj";
+    // std::string nameTexture = "../../assets/Minecraft_steve/minecraft_steve_skin.jpg";
 
 public:
     Player();
@@ -53,4 +55,9 @@ public:
     void handle_mouse_move(cgp::vec2 const& mouse_position_current, cgp::vec2 const& mouse_position_previous, cgp::mat4& camera_view_matrix);
 
     void handle_keyboard_event(const cgp::inputs_keyboard_parameters& keyboard);
+
+    // std::string getNameObj()const;
+    // std::string& setNameObj();
+    // std::string getNameTexture()const;
+    // std::string& setNameTexture();
 };

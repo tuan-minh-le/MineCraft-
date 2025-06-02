@@ -1,5 +1,5 @@
 #include "scene.hpp"
-
+#include "entity/player.hpp"
 
 
 using namespace cgp;
@@ -7,6 +7,7 @@ using namespace cgp;
 
 void scene_structure::initialize()
 {
+	
 	player.initialize(inputs,window);
 	player.get_camera().look_at({ 3.0f, 2.0f, 2.0f }, {0,0,0}, {0,0,1});
 	global_frame.initialize_data_on_gpu(mesh_primitive_frame());
