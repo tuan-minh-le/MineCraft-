@@ -13,7 +13,6 @@ void scene_structure::initialize()
 }
 
 
-
 void scene_structure::display_frame()
 {
 	// Set the light to the current position of the camera
