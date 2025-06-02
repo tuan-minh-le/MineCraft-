@@ -8,7 +8,7 @@ Grass::~Grass(){}
 
 void Grass::initialize(){
     item_name = "Grass Block";
-    block_texture.clear();
+    //block_texture.clear();
     
 
 }
