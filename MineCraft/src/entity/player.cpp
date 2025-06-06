@@ -243,8 +243,6 @@ bool Player::check_cube(const cgp::vec3& origin, const cgp::vec3& direction, flo
         }
     }
 
-    std::cout<<"Position "<<pos<<"Delta "<<deltaDist<<"step "<<step<<"Sidedist "<<sideDist<<std::endl; 
-
     for (float distance = 0.0f; distance < maxDistance;) {
 
         int axis;
@@ -253,17 +251,15 @@ bool Player::check_cube(const cgp::vec3& origin, const cgp::vec3& direction, flo
         } else {
             axis = (sideDist.y < sideDist.z) ? 1 : 2;
         }
-        // auto blockpos_int = worldToLocal(blockPos);
 
-        // if (isSolidBlock(blockpos_int.x,blockpos_int.y,blockpos_int.z)){
-        //     hitBlock = blockPos;
-        //     hitNormal[axis] = -step[axis];
-        //     return true;
-        // }
+        if (world.getBlock(blockPos)){
+            hitBlock = blockPos;
+            hitNormal[axis] = -step[axis];
+            return true;
+        }
 
         blockPos[axis] += step[axis];
         distance = sideDist[axis];
-        std::cout<<"Distance"<< blockPos<<std::endl;
         sideDist[axis] += deltaDist[axis];
     }
 
