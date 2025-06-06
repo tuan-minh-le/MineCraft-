@@ -32,4 +32,11 @@ class World{
         Block* getBlockObject(const cgp::vec3& worldPos) const;
 
         int getRenderDistance() const;
+
+        Chunk* getChunkByIndex(size_t index) const;
+        size_t getChunkCount() const;
+        void debugFirstChunk() const;
+
+        void debugWorldState() const;
+        void checkChunkIntegrity() const;
 };

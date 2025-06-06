@@ -192,7 +192,7 @@ void Player::handle_mouse_event(const cgp::inputs_mouse_parameters& mouse){
         cgp::vec3 hitblock;
         cgp::vec3 hitnormal;
         if(check_cube(camera.camera_model.position(),camera.camera_model.front(),5.0f, hitblock,hitnormal)){
-            //casser_cube
+            std::cout << "Broke a block!" << std::endl;
         }
     }
 
@@ -200,7 +200,7 @@ void Player::handle_mouse_event(const cgp::inputs_mouse_parameters& mouse){
         cgp::vec3 hitblock;
         cgp::vec3 hitnormal;
         if(check_cube(camera.camera_model.position(),camera.camera_model.front(),5.0f, hitblock,hitnormal)){
-            //Poser_cube
+            std::cout << "Placed a block!" << std::endl;
         }
     }
 
@@ -251,6 +251,10 @@ bool Player::check_cube(const cgp::vec3& origin, const cgp::vec3& direction, flo
         } else {
             axis = (sideDist.y < sideDist.z) ? 1 : 2;
         }
+
+        std::cout << "Block position :" << blockPos << "is a " << world.getBlock(blockPos) << std::endl;
+
+        std::cout << world.getBlock({0,0,0}) << std::endl;
 
         if (world.getBlock(blockPos)){
             hitBlock = blockPos;

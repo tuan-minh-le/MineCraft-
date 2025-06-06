@@ -79,5 +79,8 @@ public:
     void populateBlockObjects();
 
     cgp::vec3 getChunkCenter() const;
+
+    void debugChunkContents() const;
+    void testCoordinate(int x, int y, int z) const;
     
 };

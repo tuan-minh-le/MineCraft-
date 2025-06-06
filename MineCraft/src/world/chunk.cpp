@@ -1,4 +1,3 @@
-
 #include "chunk.hpp"
 
 Chunk::Chunk():chunkWorldPosition({0, 0, 0}){}
@@ -10,14 +9,22 @@ Chunk::~Chunk(){
 }
 
 void Chunk::initialize(){
-    blockData.resize(chunkSize.width * chunkSize.height * chunkSize.depth, AIR);
-    blockObjects.resize(chunkSize.width * chunkSize.height * chunkSize.depth, nullptr);
+    std::cout << "Initializing chunk at position: (" << chunkWorldPosition.x << ", " << chunkWorldPosition.y << ", " << chunkWorldPosition.z << ")" << std::endl;
+    std::cout << "Chunk size: " << chunkSize.width << "x" << chunkSize.height << "x" << chunkSize.depth << std::endl;
+    
+    int totalBlocks = chunkSize.width * chunkSize.height * chunkSize.depth;
+    std::cout << "Total block slots: " << totalBlocks << std::endl;
+    
+    blockData.resize(totalBlocks, AIR);
+    blockObjects.resize(totalBlocks, nullptr);
 
     grass.initialize();
     stone.initialize();
     sand.initialize();
 
     surfaceBlocksCached = false;
+    
+    std::cout << "Chunk initialized with " << blockData.size() << " block data slots" << std::endl;
 }
 
 Block* Chunk::createBlockObject(BlockType type, const cgp::vec3& position) {
@@ -59,7 +66,6 @@ void Chunk::cleanupBlockObjects() {
     blockObjects.clear();
 }
 
-// NEW: Populate block objects from block data
 void Chunk::populateBlockObjects() {
     std::cout << "Populating Block objects..." << std::endl;
     
@@ -200,24 +206,57 @@ void Chunk::setWorldPosition(const cgp::vec3& position){
     surfaceBlocksCached = false;
 }
 
-void Chunk::setBlock(int x, int y , int z, BlockType blockType){
+void Chunk::setBlock(int x, int y, int z, BlockType blockType){
     if (!isValidCoordinate(x, y, z)) {
-        std::cerr << "Invalid coordinates: " << x << ", " << y << ", " << z << std::endl;
+        std::cerr << "Invalid coordinates for setBlock: " << x << ", " << y << ", " << z << std::endl;
+        std::cerr << "Valid range: [0-" << (chunkSize.width-1) << ", 0-" << (chunkSize.height-1) << ", 0-" << (chunkSize.depth-1) << "]" << std::endl;
         return;
     }
+    
     int index = coordinateToIndex(x, y, z);
+    if(index < 0 || index >= blockData.size()) {
+        std::cerr << "Invalid index " << index << " for blockData size " << blockData.size() << std::endl;
+        return;
+    }
+    
     blockData[index] = blockType;
-    surfaceBlocksCached = false;    
+    surfaceBlocksCached = false;
+    
+    // Debug output for first few blocks set
+    static int blocksSet = 0;
+    if(blocksSet < 10 && blockType != AIR) {
+        std::cout << "Set block " << blocksSet << ": type " << static_cast<int>(blockType) 
+                  << " at local(" << x << "," << y << "," << z << ") index " << index << std::endl;
+        blocksSet++;
+    }
+    
     updateBlockObject(x, y, z, blockType);
 }
 
 BlockType Chunk::getBlock(int x, int y, int z) const{
     if(!isValidCoordinate(x, y, z)){
+        std::cout << "getBlock: Invalid coordinates (" << x << ", " << y << ", " << z << ")" << std::endl;
+        std::cout << "Valid range: [0-" << (chunkSize.width-1) << ", 0-" << (chunkSize.height-1) << ", 0-" << (chunkSize.depth-1) << "]" << std::endl;
         return AIR;
     }
 
     int index = coordinateToIndex(x, y, z);
-    return blockData[index];
+    if(index < 0 || index >= blockData.size()) {
+        std::cout << "getBlock: Invalid index " << index << " for size " << blockData.size() << std::endl;
+        return AIR;
+    }
+    
+    BlockType result = blockData[index];
+    
+    // Debug output for first few successful gets
+    static int getsCount = 0;
+    if(getsCount < 5) {
+        std::cout << "getBlock " << getsCount << ": coords(" << x << "," << y << "," << z 
+                  << ") index(" << index << ") = " << static_cast<int>(result) << std::endl;
+        getsCount++;
+    }
+    
+    return result;
 }
 
 bool Chunk::isBlockSolid(int x, int y, int z) const{
@@ -251,7 +290,18 @@ cgp::vec3 Chunk::localToWorld(const cgp::vec3& localPos) const {
 }
 
 cgp::vec3 Chunk::worldToLocal(const cgp::vec3& worldPos) const {
-    return worldPos - chunkWorldPosition;
+    cgp::vec3 localPos = worldPos - chunkWorldPosition;
+    
+    // Debug output
+    static int conversionCount = 0;
+    if(conversionCount < 5) {
+        std::cout << "worldToLocal " << conversionCount << ": world(" << worldPos.x << "," << worldPos.y << "," << worldPos.z 
+                  << ") - chunk(" << chunkWorldPosition.x << "," << chunkWorldPosition.y << "," << chunkWorldPosition.z
+                  << ") = local(" << localPos.x << "," << localPos.y << "," << localPos.z << ")" << std::endl;
+        conversionCount++;
+    }
+    
+    return localPos;
 }
 
 bool Chunk::isValidCoordinate(int x, int y, int z) const{
@@ -268,4 +318,59 @@ cgp::vec3 Chunk::getChunkCenter() const{
     return chunkWorldPosition + cgp::vec3({chunkSize.width / 2.0f, 
                                         chunkSize.height / 2.0f, 
                                         chunkSize.depth / 2.0f});
+}
+
+// Debug methods
+void Chunk::debugChunkContents() const {
+    std::cout << "\n=== CHUNK CONTENTS DEBUG ===" << std::endl;
+    std::cout << "Chunk at world position: (" << chunkWorldPosition.x << ", " << chunkWorldPosition.y << ", " << chunkWorldPosition.z << ")" << std::endl;
+    
+    int airCount = 0;
+    int solidCount = 0;
+    std::map<BlockType, int> blockCounts;
+    
+    for(int x = 0; x < chunkSize.width; x++) {
+        for(int y = 0; y < chunkSize.height; y++) {
+            for(int z = 0; z < chunkSize.depth; z++) {
+                BlockType block = getBlock(x, y, z);
+                blockCounts[block]++;
+                
+                if(block == AIR) {
+                    airCount++;
+                } else {
+                    solidCount++;
+                    // Print first few solid blocks found
+                    if(solidCount <= 10) {
+                        std::cout << "Solid block " << solidCount << ": type " << static_cast<int>(block) 
+                                  << " at (" << x << "," << y << "," << z << ")" << std::endl;
+                    }
+                }
+            }
+        }
+    }
+    
+    std::cout << "Block type counts:" << std::endl;
+    for(const auto& [type, count] : blockCounts) {
+        std::cout << "  Type " << static_cast<int>(type) << ": " << count << " blocks" << std::endl;
+    }
+    
+    std::cout << "Total: " << airCount << " air, " << solidCount << " solid blocks" << std::endl;
+    std::cout << "=========================" << std::endl;
+}
+
+void Chunk::testCoordinate(int x, int y, int z) const {
+    std::cout << "\n=== TESTING COORDINATE (" << x << "," << y << "," << z << ") ===" << std::endl;
+    std::cout << "Chunk world position: (" << chunkWorldPosition.x << ", " << chunkWorldPosition.y << ", " << chunkWorldPosition.z << ")" << std::endl;
+    
+    if(isValidCoordinate(x, y, z)) {
+        int index = coordinateToIndex(x, y, z);
+        BlockType block = blockData[index];
+        
+        std::cout << "Valid coordinate - Index: " << index << ", Block type: " << static_cast<int>(block) << std::endl;
+        
+        cgp::vec3 worldPos = localToWorld({static_cast<float>(x), static_cast<float>(y), static_cast<float>(z)});
+        std::cout << "World position: (" << worldPos.x << ", " << worldPos.y << ", " << worldPos.z << ")" << std::endl;
+    } else {
+        std::cout << "Invalid coordinate for chunk size " << chunkSize.width << "x" << chunkSize.height << "x" << chunkSize.depth << std::endl;
+    }
 }
