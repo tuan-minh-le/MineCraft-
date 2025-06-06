@@ -74,19 +74,19 @@ void WorldGenerator::drawChunk(const cgp::environment_generic_structure& environ
                     switch(blockType) {
                         case 1: // Grass
         
-                            grass.draw_block_at(worldPos, environment);
+                            grass.draw_block_at(environment);//worldPos, 
                             // std::cout << "Drew grass at: " << worldPos << std::endl;
                             break;
                         case 2: // Sand
-                            grass.draw_block_at(worldPos, environment);
+                            grass.draw_block_at(environment);
                             // std::cout << "Drew sand at: " << cgp::vec3(x, y, z) << std::endl;
                             break;
                         case 3: // Stone
-                            sand.draw_block_at(worldPos, environment);
+                            sand.draw_block_at(environment);
                             // std::cout << "Drew stone at: " << worldPos << std::endl;
                             break;
                         case 4:
-                            stone.draw_block_at(worldPos, environment);
+                            stone.draw_block_at(environment);
                             // std::cout << "Drew stone at: " << worldPos << std::endl;
                             break;
                     }

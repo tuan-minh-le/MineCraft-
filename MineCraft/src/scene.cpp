@@ -50,7 +50,7 @@ void scene_structure::display_frame()
 	// Set the light to the current position of the camera
 	environment.light = player.get_camera().camera_model.position();
 
-	//world.drawChunk(environment);
+	// world.drawChunk(environment);
 
 	for (size_t i = 0; i < vectorBlockType.size(); ++i) {
     	vectorBlockType[i]->draw_block_at(environment);
