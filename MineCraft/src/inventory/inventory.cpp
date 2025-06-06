@@ -1,8 +1,19 @@
 #include "inventory.hpp"
 
-//Methode
-void Inventory::initialize(){
-    
+Inventory::Inventory(){
+
+}
+Inventory::~Inventory(){
+
+}
+
+
+void Inventory::initialize(int size){
+    inventory_size = size;
+    for (int i = 0; i < inventory_size; i++)
+    {
+        inventory.push_back(nullptr);
+    }
 }
 
 

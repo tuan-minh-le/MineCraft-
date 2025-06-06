@@ -14,7 +14,9 @@ void scene_structure::initialize()
 	player.get_camera().look_at({ 3.0f, 2.0f, 2.0f }, {0,0,0}, {0,0,1});
 	global_frame.initialize_data_on_gpu(mesh_primitive_frame());
 	world.initialize();
-	
+	world.setCenter({0, 0, 0});
+
+
 	environment.camera_view = player.get_camera().camera_model.matrix_view();
 	
 	Block::initialize_shared_mesh();
@@ -47,6 +49,8 @@ void scene_structure::display_frame()
 {
 	// Set the light to the current position of the camera
 	environment.light = player.get_camera().camera_model.position();
+
+	//world.drawChunk(environment);
 
 	for (size_t i = 0; i < vectorBlockType.size(); ++i) {
     	vectorBlockType[i]->draw_block_at(environment);
@@ -98,7 +102,8 @@ void scene_structure::keyboard_event()
 void scene_structure::idle_frame()
 {
 	player.handle_mouse_move(inputs.mouse.position.current, inputs.mouse.position.previous, environment.camera_view);
-	player.handle_keyboard_event(inputs.keyboard);
+	player.handle_keyboard_event(inputs.keyboard,environment.camera_view);
 	player.move(player.get_speed(),inputs.keyboard, environment.camera_view);
+	player.handle_mouse_event(inputs.mouse);
 }
 

@@ -24,7 +24,7 @@ void Stone::draw_block_at(const cgp::environment_generic_structure& environment)
     
     if (!drawable_initialized) {
         stone_drawable.initialize_data_on_gpu(shared_cube_mesh);
-        stone_drawable.material.color = cgp::vec3{0.2f, 0.8f, 0.2f}; // Nice green color
+        stone_drawable.material.color = cgp::vec3{0.1f, 0.1f, 0.1f};
         drawable_initialized = true;
     }
     
