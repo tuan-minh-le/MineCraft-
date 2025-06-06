@@ -58,7 +58,6 @@ void WorldGenerator::generateChunk(Chunk& chunk, const cgp::vec3& position) {
                 // Determine block type based on height and position
                 BlockType blockType = getBlockTypeAt(worldX, worldY, worldZ, surfaceHeight);
                 
-                // Only set blocks that are within this chunk
                 if(worldY >= chunkWorldPos.y && worldY < chunkWorldPos.y + size.height) {
                     chunk.setBlock(x, y, z, blockType);
                 }

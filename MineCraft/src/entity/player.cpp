@@ -211,13 +211,13 @@ void Player::handle_mouse_event(const cgp::inputs_mouse_parameters& mouse){
 
 bool Player::colision(){
     for(size_t i = 0; i < primary_world.getVectorBlockType().size(); ++i){
-        std::cout<<primary_world.getVectorBlockType()[i]->getPosition()[0] - 0.5f << " <= " << position.x <<" <= " << primary_world.getVectorBlockType()[i]->getPosition()[0] + 0.5f   << " / " << primary_world.getVectorBlockType()[i]->getPosition()[1] - 0.5f << " <= " << position.y <<" <= " << primary_world.getVectorBlockType()[i]->getPosition()[1] + 0.5f   << " / "<< primary_world.getVectorBlockType()[i]->getPosition()[2] - 0.5f << " <= " << position.z <<" <= " << primary_world.getVectorBlockType()[i]->getPosition()[2] + 0.5f   << " / " << std::endl;
+        // std::cout<<primary_world.getVectorBlockType()[i]->getPosition()[0] - 0.5f << " <= " << position.x <<" <= " << primary_world.getVectorBlockType()[i]->getPosition()[0] + 0.5f   << " / " << primary_world.getVectorBlockType()[i]->getPosition()[1] - 0.5f << " <= " << position.y <<" <= " << primary_world.getVectorBlockType()[i]->getPosition()[1] + 0.5f   << " / "<< primary_world.getVectorBlockType()[i]->getPosition()[2] - 0.5f << " <= " << position.z <<" <= " << primary_world.getVectorBlockType()[i]->getPosition()[2] + 0.5f   << " / " << std::endl;
         if((primary_world.getVectorBlockType()[i]->getPosition()[0] - 0.5f <= position.x && position.x <= primary_world.getVectorBlockType()[i]->getPosition()[0] + 0.5f) && (primary_world.getVectorBlockType()[i]->getPosition()[1] - 0.5f <= position.y && position.y <= primary_world.getVectorBlockType()[i]->getPosition()[1] + 0.5f) && (primary_world.getVectorBlockType()[i]->getPosition()[2] - 0.5f <= position.z && position.z <=  primary_world.getVectorBlockType()[i]->getPosition()[2] + 0.5)){
-            std::cout<<"Colision"<<std::endl;
+            // std::cout<<"Colision"<<std::endl;
             return true;
         }
     }
-    std::cout<<"Pas de Colision"<<std::endl;
+    // std::cout<<"Pas de Colision"<<std::endl;
     return false;
 }
 
