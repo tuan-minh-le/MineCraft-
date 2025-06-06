@@ -18,54 +18,54 @@ void scene_structure::initialize()
 	world.initialize(1, 1, 20);
 	player.initialize(inputs,window,world);
     
-    // === DEBUG TESTING ===
-    std::cout << "\n=== SCENE DEBUG TESTING ===" << std::endl;
+    // // === DEBUG TESTING ===
+    // std::cout << "\n=== SCENE DEBUG TESTING ===" << std::endl;
     
-    // Test 1: Check chunk dimensions
-    Chunk dummyChunk;
-    ChunkSize size = dummyChunk.getSize();
-    std::cout << "Default chunk size: " << size.width << "x" << size.height << "x" << size.depth << std::endl;
+    // // Test 1: Check chunk dimensions
+    // Chunk dummyChunk;
+    // ChunkSize size = dummyChunk.getSize();
+    // std::cout << "Default chunk size: " << size.width << "x" << size.height << "x" << size.depth << std::endl;
     
-    // Test 2: Check player starting position
-    std::cout << "Player starting position: (" << player.getPosition().x << ", " << player.getPosition().y << ", " << player.getPosition().z << ")" << std::endl;
+    // // Test 2: Check player starting position
+    // std::cout << "Player starting position: (" << player.getPosition().x << ", " << player.getPosition().y << ", " << player.getPosition().z << ")" << std::endl;
     
-    // Test 3: Test known world positions
-    std::vector<cgp::vec3> testPositions = {
-        {0, 0, 0},      // Should be in first chunk
-        {5, 5, 5},      // Should be in first chunk
-        {15, 15, 15},   // Should be in first chunk
-        {8, 0, 8},      // Should be in first chunk
-        {0, 5, 0},      // Should be in first chunk, middle height
-        {player.getPosition().x, player.getPosition().y, player.getPosition().z} // Player position
-    };
+    // // Test 3: Test known world positions
+    // std::vector<cgp::vec3> testPositions = {
+    //     {0, 0, 0},      // Should be in first chunk
+    //     {5, 5, 5},      // Should be in first chunk
+    //     {15, 15, 15},   // Should be in first chunk
+    //     {8, 0, 8},      // Should be in first chunk
+    //     {0, 5, 0},      // Should be in first chunk, middle height
+    //     {player.getPosition().x, player.getPosition().y, player.getPosition().z} // Player position
+    // };
     
-    std::cout << "\nTesting world block access:" << std::endl;
-    for(size_t i = 0; i < testPositions.size(); i++) {
-        cgp::vec3 pos = testPositions[i];
-        std::cout << "\n--- Test " << i+1 << ": Position (" << pos.x << ", " << pos.y << ", " << pos.z << ") ---" << std::endl;
+    // std::cout << "\nTesting world block access:" << std::endl;
+    // for(size_t i = 0; i < testPositions.size(); i++) {
+    //     cgp::vec3 pos = testPositions[i];
+    //     std::cout << "\n--- Test " << i+1 << ": Position (" << pos.x << ", " << pos.y << ", " << pos.z << ") ---" << std::endl;
         
-        BlockType block = world.getBlock(pos);
-        std::cout << "Result: Block type " << static_cast<int>(block) << std::endl;
+    //     BlockType block = world.getBlock(pos);
+    //     std::cout << "Result: Block type " << static_cast<int>(block) << std::endl;
         
-        if(block != AIR) {
-            std::cout << "SUCCESS: Found non-air block!" << std::endl;
-            break; // Found at least one working block
-        }
-    }
+    //     if(block != AIR) {
+    //         std::cout << "SUCCESS: Found non-air block!" << std::endl;
+    //         break; // Found at least one working block
+    //     }
+    // }
     
-    // Test 4: Get first chunk and debug its contents
-    std::cout << "\n=== FIRST CHUNK DEBUG ===" << std::endl;
-    // You'll need to add a method to World to get chunk by index
-    // For now, let's test by getting the chunk at (0,0,0)
+    // // Test 4: Get first chunk and debug its contents
+    // std::cout << "\n=== FIRST CHUNK DEBUG ===" << std::endl;
+    // // You'll need to add a method to World to get chunk by index
+    // // For now, let's test by getting the chunk at (0,0,0)
     
-    std::cout << "=== END DEBUG TESTING ===" << std::endl;
+    // std::cout << "=== END DEBUG TESTING ===" << std::endl;
 
 
-	environment.camera_view = player.get_camera().camera_model.matrix_view();
+	// environment.camera_view = player.get_camera().camera_model.matrix_view();
 	
-	Block::initialize_shared_mesh();
-	grass.initialize();
-	primary_world.initialize();
+	// Block::initialize_shared_mesh();
+	// grass.initialize();
+	// primary_world.initialize();
 	// //primary world initialization
 
 
@@ -124,15 +124,15 @@ void scene_structure::display_frame()
 	if (gui.display_frame)
 		draw(global_frame, environment);
 	
-	if(frameCount % 60 == 1) {
-        std::cout << "\n=== FRAME " << frameCount << " WORLD CHECK ===" << std::endl;
-        world.debugWorldState();
+	// if(frameCount % 60 == 1) {
+    //     std::cout << "\n=== FRAME " << frameCount << " WORLD CHECK ===" << std::endl;
+    //     world.debugWorldState();
         
-        if(world.getChunkCount() == 0) {
-            std::cout << "CRITICAL: All chunks have been lost!" << std::endl;
-            // You might want to reinitialize or exit here
-        }
-    }
+    //     if(world.getChunkCount() == 0) {
+    //         std::cout << "CRITICAL: All chunks have been lost!" << std::endl;
+    //         // You might want to reinitialize or exit here
+    //     }
+    // }
 
 }
 

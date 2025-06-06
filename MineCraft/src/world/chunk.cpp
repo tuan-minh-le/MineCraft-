@@ -295,9 +295,9 @@ cgp::vec3 Chunk::worldToLocal(const cgp::vec3& worldPos) const {
     // Debug output
     static int conversionCount = 0;
     if(conversionCount < 5) {
-        std::cout << "worldToLocal " << conversionCount << ": world(" << worldPos.x << "," << worldPos.y << "," << worldPos.z 
-                  << ") - chunk(" << chunkWorldPosition.x << "," << chunkWorldPosition.y << "," << chunkWorldPosition.z
-                  << ") = local(" << localPos.x << "," << localPos.y << "," << localPos.z << ")" << std::endl;
+        // std::cout << "worldToLocal " << conversionCount << ": world(" << worldPos.x << "," << worldPos.y << "," << worldPos.z 
+        //           << ") - chunk(" << chunkWorldPosition.x << "," << chunkWorldPosition.y << "," << chunkWorldPosition.z
+        //           << ") = local(" << localPos.x << "," << localPos.y << "," << localPos.z << ")" << std::endl;
         conversionCount++;
     }
     
@@ -322,8 +322,8 @@ cgp::vec3 Chunk::getChunkCenter() const{
 
 // Debug methods
 void Chunk::debugChunkContents() const {
-    std::cout << "\n=== CHUNK CONTENTS DEBUG ===" << std::endl;
-    std::cout << "Chunk at world position: (" << chunkWorldPosition.x << ", " << chunkWorldPosition.y << ", " << chunkWorldPosition.z << ")" << std::endl;
+    // std::cout << "\n=== CHUNK CONTENTS DEBUG ===" << std::endl;
+    // std::cout << "Chunk at world position: (" << chunkWorldPosition.x << ", " << chunkWorldPosition.y << ", " << chunkWorldPosition.z << ")" << std::endl;
     
     int airCount = 0;
     int solidCount = 0;
@@ -341,36 +341,36 @@ void Chunk::debugChunkContents() const {
                     solidCount++;
                     // Print first few solid blocks found
                     if(solidCount <= 10) {
-                        std::cout << "Solid block " << solidCount << ": type " << static_cast<int>(block) 
-                                  << " at (" << x << "," << y << "," << z << ")" << std::endl;
+                        // std::cout << "Solid block " << solidCount << ": type " << static_cast<int>(block) 
+                        //           << " at (" << x << "," << y << "," << z << ")" << std::endl;
                     }
                 }
             }
         }
     }
     
-    std::cout << "Block type counts:" << std::endl;
-    for(const auto& [type, count] : blockCounts) {
-        std::cout << "  Type " << static_cast<int>(type) << ": " << count << " blocks" << std::endl;
-    }
+    // std::cout << "Block type counts:" << std::endl;
+    // for(const auto& [type, count] : blockCounts) {
+    //     std::cout << "  Type " << static_cast<int>(type) << ": " << count << " blocks" << std::endl;
+    // }
     
-    std::cout << "Total: " << airCount << " air, " << solidCount << " solid blocks" << std::endl;
-    std::cout << "=========================" << std::endl;
+    // std::cout << "Total: " << airCount << " air, " << solidCount << " solid blocks" << std::endl;
+    // std::cout << "=========================" << std::endl;
 }
 
 void Chunk::testCoordinate(int x, int y, int z) const {
-    std::cout << "\n=== TESTING COORDINATE (" << x << "," << y << "," << z << ") ===" << std::endl;
-    std::cout << "Chunk world position: (" << chunkWorldPosition.x << ", " << chunkWorldPosition.y << ", " << chunkWorldPosition.z << ")" << std::endl;
+    // std::cout << "\n=== TESTING COORDINATE (" << x << "," << y << "," << z << ") ===" << std::endl;
+    // std::cout << "Chunk world position: (" << chunkWorldPosition.x << ", " << chunkWorldPosition.y << ", " << chunkWorldPosition.z << ")" << std::endl;
     
-    if(isValidCoordinate(x, y, z)) {
-        int index = coordinateToIndex(x, y, z);
-        BlockType block = blockData[index];
+    // if(isValidCoordinate(x, y, z)) {
+    //     int index = coordinateToIndex(x, y, z);
+    //     BlockType block = blockData[index];
         
-        std::cout << "Valid coordinate - Index: " << index << ", Block type: " << static_cast<int>(block) << std::endl;
+    //     std::cout << "Valid coordinate - Index: " << index << ", Block type: " << static_cast<int>(block) << std::endl;
         
-        cgp::vec3 worldPos = localToWorld({static_cast<float>(x), static_cast<float>(y), static_cast<float>(z)});
-        std::cout << "World position: (" << worldPos.x << ", " << worldPos.y << ", " << worldPos.z << ")" << std::endl;
-    } else {
-        std::cout << "Invalid coordinate for chunk size " << chunkSize.width << "x" << chunkSize.height << "x" << chunkSize.depth << std::endl;
-    }
+    //     cgp::vec3 worldPos = localToWorld({static_cast<float>(x), static_cast<float>(y), static_cast<float>(z)});
+    //     std::cout << "World position: (" << worldPos.x << ", " << worldPos.y << ", " << worldPos.z << ")" << std::endl;
+    // } else {
+    //     std::cout << "Invalid coordinate for chunk size " << chunkSize.width << "x" << chunkSize.height << "x" << chunkSize.depth << std::endl;
+    // }
 }

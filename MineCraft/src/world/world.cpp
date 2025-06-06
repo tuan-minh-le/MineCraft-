@@ -125,7 +125,7 @@ Block* World::getBlockObject(const cgp::vec3& worldPos) const {
 }
 
 BlockType World::getBlock(const cgp::vec3& worldPos) const {
-    std::cout << "getBlock called for position (" << worldPos.x << ", " << worldPos.y << ", " << worldPos.z << ")" << std::endl;
+    // std::cout << "getBlock called for position (" << worldPos.x << ", " << worldPos.y << ", " << worldPos.z << ")" << std::endl;
     
     Chunk* chunk = getChunkAt(worldPos);
     if(chunk) {
