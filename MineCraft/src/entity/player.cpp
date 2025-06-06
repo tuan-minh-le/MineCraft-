@@ -15,6 +15,7 @@ void Player::initialize(cgp::input_devices& inputs, cgp::window_structure& windo
     std::shared_ptr<Item> itemPtr = inventory.get_inventory()[ind_inventory];
     primary_world.initialize();
     isGrounded = true;
+    isCreativeMode = true;
     verticalVelocity = 0;
     gravity = 9.81f;
     dt = 0.01f;
@@ -94,18 +95,29 @@ void Player::handle_keyboard_event(const cgp::inputs_keyboard_parameters& keyboa
         verticalVelocity = 0.0f; 
     }
 
-    if (isGrounded) {
+    verticalVelocity = 0.f;
+
+    if(!isCreativeMode){
+        if (isGrounded) {
         verticalVelocity = 0.0f; 
         if (keyboard.is_pressed(GLFW_KEY_SPACE)) {
             verticalVelocity = 5.0f; 
             isGrounded = false;          
         }
+        }
+        else {
+            verticalVelocity -= gravity * dt; 
+        }
     }
-    else {
-        verticalVelocity -= gravity * dt; 
+    else{
+        if(keyboard.is_pressed(GLFW_KEY_SPACE)){
+            verticalVelocity = 20.0;
+        }
+        if(keyboard.is_pressed(GLFW_KEY_LEFT_CONTROL)){
+            verticalVelocity = -20.0;
+        }
     }
 
-    
     position.y += verticalVelocity * dt;
 
     camera.camera_model.position_camera = position;
@@ -113,7 +125,7 @@ void Player::handle_keyboard_event(const cgp::inputs_keyboard_parameters& keyboa
 }
 
 void Player::move(float speed,const cgp::inputs_keyboard_parameters& keyboard,cgp::mat4& camera_view_matrix){
-
+    
     static cgp::vec3 forward;
     static cgp::vec3 right;
 
@@ -130,8 +142,11 @@ void Player::move(float speed,const cgp::inputs_keyboard_parameters& keyboard,cg
 
         // std::cout<< "speed" << speed<<std::endl;
         // std::cout<< "position before" << position<<std::endl;
+        // std::cout<< "speed" << speed<<std::endl;
+        // std::cout<< "position before" << position<<std::endl;
 
         position += speed * forward;
+        // std::cout<<"move z"<<std::endl;
         // std::cout<<"move z"<<std::endl;
 
         // std::cout<< "position after" << position<<std::endl;
@@ -162,7 +177,6 @@ void Player::move(float speed,const cgp::inputs_keyboard_parameters& keyboard,cg
     }
     camera.camera_model.position_camera = position;
     camera_view_matrix = camera.camera_model.matrix_view();
-
 }
 
 void Player::handle_mouse_event(const cgp::inputs_mouse_parameters& mouse){

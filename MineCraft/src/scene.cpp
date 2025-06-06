@@ -14,8 +14,11 @@ void scene_structure::initialize()
 	player.initialize(inputs,window);
 	player.get_camera().look_at({ 3.0f, 2.0f, 2.0f }, {0,0,0}, {0,0,1});
 	global_frame.initialize_data_on_gpu(mesh_primitive_frame());
+
+	chunk.initialize();
+
 	world.initialize();
-	world.setCenter({0, 0, 0});
+	world.generateChunk(chunk, {0, 0, 0});
 
 
 	environment.camera_view = player.get_camera().camera_model.matrix_view();
@@ -52,7 +55,8 @@ void scene_structure::display_frame()
 	// Set the light to the current position of the camera
 	environment.light = player.get_camera().camera_model.position();
 
-	//world.drawChunk(environment);
+	//chunk.render(environment);
+	// world.drawChunk(environment);
 
 	for (size_t i = 0; i < primary_world.getVectorBlockType().size(); ++i) {
     	primary_world.getVectorBlockType()[i]->draw_block_at(environment);
