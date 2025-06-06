@@ -3,7 +3,7 @@
 #include "block/grass.hpp"
 #include "block/sand.hpp" 
 #include "block/stone.hpp"
-#include <vector>
+#include <unordered_set>
 
 enum BlockType {
     AIR = 0,
@@ -33,6 +33,9 @@ private:
     
     bool isDataGenerated = false;
 
+    std::vector<std::tuple<int, int, int>> cachedSurfaceBlocks;
+    bool surfaceBlocksCached = false;
+
     bool isValidCoordinate(int x, int y, int z) const;
     int coordinateToIndex(int x, int y, int z) const;
     
@@ -57,10 +60,9 @@ public:
     void markAsGenerated() { isDataGenerated = true; }
     
     void render(const cgp::environment_generic_structure& environment);
+    
+    void findSurfaceBlocksBFS(std::vector<std::tuple<int, int, int>>& surfaceBlocks) const;
 
     void drawBlockAt(int x, int y, int z, BlockType block, const cgp::environment_generic_structure& environment);
     
-    bool shouldRenderFace(int x, int y, int z, int faceDirection) const;
-    
-
 };
