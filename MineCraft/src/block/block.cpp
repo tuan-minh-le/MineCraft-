@@ -12,7 +12,7 @@ void Block::initialize_shared_mesh() {
     }
 }
 
-void Block::draw_block_at(const cgp::vec3& position, const cgp::environment_generic_structure& environment) {
+void Block::draw_block_at(const cgp::environment_generic_structure& environment) {
     initialize_shared_mesh();
     
     static cgp::mesh_drawable cube_drawable;
@@ -29,4 +29,12 @@ void Block::draw_block_at(const cgp::vec3& position, const cgp::environment_gene
 
 int Block::getDimension() const {
     return dimension;
+}
+
+cgp::vec3 Block::getPosition()const{
+    return position;
+}
+
+cgp::vec3& Block::setPosition(){
+    return position;
 }

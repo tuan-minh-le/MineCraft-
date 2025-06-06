@@ -1,12 +1,14 @@
 #include "grass.hpp"
 
-Grass::Grass() : Block() {}
+Grass::Grass() : Block() {
+    item_name = "Grass Block";
+
+
+}
 
 Grass::~Grass() {}
 
 void Grass::initialize() {
-    item_name = "Grass Block";
-
     initialize_shared_mesh();
 }
 
@@ -14,7 +16,8 @@ void Grass::setup_texture() {
 
 }
 
-void Grass::draw_block_at(const cgp::vec3& position, const cgp::environment_generic_structure& environment) {
+
+void Grass::draw_block_at(const cgp::environment_generic_structure& environment) {
 
     initialize_shared_mesh();
     

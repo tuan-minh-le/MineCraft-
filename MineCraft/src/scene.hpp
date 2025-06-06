@@ -30,7 +30,9 @@ struct scene_structure : cgp::scene_inputs_generic {
 
 	WorldGenerator world;
 
+	//Grass* grass;
 	Grass grass;
+	std::vector<Block*> vectorBlockType;
 
 	mesh_drawable global_frame;          // The standard global frame
 	environment_structure environment;   // Standard environment controler

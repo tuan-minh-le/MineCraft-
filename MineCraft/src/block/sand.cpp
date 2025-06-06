@@ -14,7 +14,7 @@ void Sand::setup_texture() {
 
 }
 
-void Sand::draw_block_at(const cgp::vec3& position, const cgp::environment_generic_structure& environment) {
+void Sand::draw_block_at(const cgp::environment_generic_structure& environment) {
 
     initialize_shared_mesh();
     

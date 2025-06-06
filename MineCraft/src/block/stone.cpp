@@ -14,7 +14,7 @@ void Stone::setup_texture() {
 
 }
 
-void Stone::draw_block_at(const cgp::vec3& position, const cgp::environment_generic_structure& environment) {
+void Stone::draw_block_at(const cgp::environment_generic_structure& environment) {
 
     initialize_shared_mesh();
     

@@ -41,13 +41,11 @@ int main(int, char* argv[])
 	// ************************ //
 	//     INITIALISATION
 	// ************************ //
-	
 	// Standard Initialization of an OpenGL ready window
 	scene.window = standard_window_initialization();
-
 	// Initialize default path for assets
 	project::path = cgp::project_path_find(argv[0], "shaders/");
-
+	
 	// Initialize default shaders
 	initialize_default_shaders();
 
@@ -63,7 +61,7 @@ int main(int, char* argv[])
 	// ************************ //
 	std::cout << "Start animation loop ..." << std::endl;
 	fps_record.start();
-
+	
 
 	// Call the main display loop in the function animation_loop
 	//  The following part is simply a loop that call the function "animation_loop"
@@ -178,7 +176,7 @@ window_structure standard_window_initialization()
 {
 	// Initialize GLFW and create window
 	// ***************************************************** //
-
+	
 	// First initialize GLFW
 	scene.window.initialize_glfw();
 
@@ -189,12 +187,12 @@ window_structure standard_window_initialization()
 		window_width = project::initial_window_size_width * scene.window.monitor_width();
 	if(project::initial_window_size_height<1)
 		window_height = project::initial_window_size_height * scene.window.monitor_height();
-
+	
 	// Create the window using GLFW
 	window_structure window;
 	window.create_window(window_width, window_height, "CGP Display", CGP_OPENGL_VERSION_MAJOR, CGP_OPENGL_VERSION_MINOR);
 
-
+	
 	// Display information
 	// ***************************************************** //
 

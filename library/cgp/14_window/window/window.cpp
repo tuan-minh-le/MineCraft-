@@ -136,7 +136,6 @@ namespace cgp
     void window_structure::create_window(int width_arg, int height_arg, std::string const& window_title, int opengl_version_major, int opengl_version_minor)
     {
         glfw_window = glfw_create_window(width_arg, height_arg, window_title, opengl_version_major, opengl_version_minor);
-
         monitor = glfwGetPrimaryMonitor();
         const GLFWvidmode* mode = glfwGetVideoMode(monitor);
         screen_resolution_width = mode->width;
