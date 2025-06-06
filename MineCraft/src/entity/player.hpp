@@ -62,7 +62,6 @@ public:
 
     bool check_cube(const cgp::vec3& origin, const cgp::vec3& direction, float maxDistance, cgp::vec3& hitBlock, cgp::vec3& hitNormal);
 
-    bool check_cube(const cgp::vec3& origin, const cgp::vec3& direction, float maxDistance, cgp::vec3& hitBlock, cgp::vec3& hitNormal);
     bool colision();
     // std::string getNameObj()const;
     // std::string& setNameObj();
