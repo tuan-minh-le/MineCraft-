@@ -36,12 +36,12 @@ public:
     Player();
     ~Player();
 
-    void initialize(cgp::input_devices& inputs, cgp::window_structure& window);
+    void initialize(cgp::input_devices& inputs, cgp::window_structure& window, World& wrd);
 
     float max_pitch_up = 85.0f;
     float max_pitch_down = -85.0f;
 
-    int inventory_size = 40;
+    int inventory_size = 36;
 
     int get_hunger() const;
     int& set_hunger();

@@ -11,13 +11,12 @@ using namespace cgp;
 
 void scene_structure::initialize()
 {
-	
-	player.initialize(inputs,window);
 	player.get_camera().look_at({ 3.0f, 2.0f, 2.0f }, {0,0,0}, {0,0,1});
 	global_frame.initialize_data_on_gpu(mesh_primitive_frame());
 
 
-	world.initialize(100, 100, 20);
+	world.initialize(1, 1, 20);
+	player.initialize(inputs,window,world);
 
 
 	environment.camera_view = player.get_camera().camera_model.matrix_view();
@@ -174,23 +173,38 @@ void scene_structure::display_inventory_ui()
 		columns = 9;
 		rows = 4;
 
+		Inventory inventory = player.get_inventory();
+
 		for (int i = 0; i < rows * columns; ++i) {
-			int row = i / columns;
+			int row = rows - 1 - (i / columns);
 			int col = i % columns;
-			if (i>=(rows-1)*columns)
-			{
+
+			if (row == rows-1) {
 				slotSpacingy = 15;
 			}
+			else
+			{
+				slotSpacingy = 5;
+			}
+			
 
+			std::shared_ptr<Item> item = inventory.get_inventory()[i];
+
+			std::string text;
+			if (item != nullptr) {
+				text = item->getItemName();
+			} else {
+				text = std::string(" ");
+			}
+			
 			ImVec2 pos = ImVec2(
 				basePos.x + col * (slotSize + slotSpacingx),
 				basePos.y + 250 + row * (slotSize + slotSpacingy)
 			);
 			ImVec2 size = ImVec2(pos.x + slotSize, pos.y + slotSize);
 
-			drawList->AddRectFilled(pos,size,IM_COL32(180, 180, 180, 255));
+			drawList->AddRectFilled(pos, size, IM_COL32(180, 180, 180, 255));
 
-			std::string text = std::to_string(i);
 			ImVec2 textSize = ImGui::CalcTextSize(text.c_str());
 			ImVec2 textPos = ImVec2(
 				pos.x + (slotSize - textSize.x) / 2,
@@ -274,6 +288,8 @@ void scene_structure::display_inventory_ui()
 		int slotSize = 64;
 		int slotSpacing = 0;
 
+		Inventory inventory = player.get_inventory();
+
 		for (int i = 0; i < 9; ++i) {
 			// Position du slot i
 			ImVec2 pos = ImVec2(basePos.x + i * (slotSize + slotSpacing), basePos.y);
@@ -283,8 +299,15 @@ void scene_structure::display_inventory_ui()
 			// Bordure blanche
 			drawList->AddRect(pos, size, IM_COL32(255, 255, 255, 255), 0.0f, 0, 5.0f); // épaisseur 2
 
-			// Texte centré (numéro du slot)
-			std::string text = std::to_string(i);
+			std::shared_ptr<Item> item = inventory.get_inventory()[i];
+
+			std::string text;
+			if (item != nullptr) {text = item->getItemName();}
+			else
+			{
+				text = std::string(" ");
+			}
+
 			ImVec2 textSize = ImGui::CalcTextSize(text.c_str());
 			ImVec2 textPos = ImVec2(
 				pos.x + (slotSize - textSize.x) / 2,

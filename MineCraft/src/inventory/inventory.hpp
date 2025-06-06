@@ -2,6 +2,7 @@
 
 #include "cgp/cgp.hpp"
 #include "block/item.hpp" //Take care Forward declaration maybe
+#include "block/grass.hpp"
 #include <vector>
 #include <memory>
 #include <string>
@@ -24,8 +25,6 @@ class Inventory{
         void switch_inventory(int ind1, int ind2);
         void open_inventory();
         void close_inventory();
-
-        void draw_inventory();
 
 
         bool get_opened_inventory() const;
