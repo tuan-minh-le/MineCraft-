@@ -250,6 +250,10 @@ bool Player::check_cube(const cgp::vec3& origin, const cgp::vec3& direction, flo
             axis = (sideDist.y < sideDist.z) ? 1 : 2;
         }
 
+        std::cout << "Block position :" << blockPos << "is a " << world.getBlock(blockPos) << std::endl;
+
+        std::cout << world.getBlock({0,0,0}) << std::endl;
+
         if (world.getBlock(blockPos)){
             hitBlock = blockPos;
             hitNormal[axis] = -step[axis];
