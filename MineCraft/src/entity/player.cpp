@@ -155,10 +155,7 @@ void Player::move(float speed,const cgp::inputs_keyboard_parameters& keyboard,cg
 
     if (keyboard.is_pressed(GLFW_KEY_W)){
         position += speed * forward;
-        // std::cout<<"move z"<<std::endl;
-        // std::cout<<"move z"<<std::endl;
 
-        // std::cout<< "position after" << position<<std::endl;
         if(colision()==true){
             position -= speed * forward;
         }
@@ -193,7 +190,7 @@ void Player::handle_mouse_event(const cgp::inputs_mouse_parameters& mouse){
         cgp::vec3 hitblock;
         cgp::vec3 hitnormal;
         if(check_cube(camera.camera_model.position(),camera.camera_model.front(),5.0f, hitblock,hitnormal)){
-            std::cout << "Broke a block!" << std::endl;
+            world.setBlock(hitblock,AIR);
         }
     }
 
@@ -201,7 +198,7 @@ void Player::handle_mouse_event(const cgp::inputs_mouse_parameters& mouse){
         cgp::vec3 hitblock;
         cgp::vec3 hitnormal;
         if(check_cube(camera.camera_model.position(),camera.camera_model.front(),5.0f, hitblock,hitnormal)){
-            std::cout << "Placed a block!" << std::endl;
+            world.setBlock(hitnormal,GRASS);
         }
     }
 

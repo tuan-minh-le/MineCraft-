@@ -20,10 +20,6 @@ void Inventory::initialize(int size){
     {
         inventory.push_back(nullptr);
     }
-
-    add_inventory (std::make_shared<Grass>(),15);
-    erase_inventory (3);
-    switch_inventory(1,34);
 }
 
 
