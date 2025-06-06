@@ -37,7 +37,7 @@ void World::generateWorld(){
 
             chunks.push_back(chunk);
 
-            std::cout << "Generated chunk at: " << chunkWorldPos << std::endl;
+            // std::cout << "Generated chunk at: " << chunkWorldPos << std::endl;
         }
     }
 }

@@ -18,7 +18,7 @@ void Player::initialize(cgp::input_devices& inputs, cgp::window_structure& windo
     std::shared_ptr<Item> itemPtr = inventory.get_inventory()[ind_inventory];
     primary_world.initialize();
     isGrounded = true;
-    isCreativeMode = false;
+    isCreativeMode = true;
     verticalVelocity = 0;
     gravity = 9.81f;
     dt = 0.01f;
