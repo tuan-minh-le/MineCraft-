@@ -5,10 +5,13 @@ Player::Player()
 
 }
 
+static bool lastE = false;
+
 void Player::initialize(cgp::input_devices& inputs, cgp::window_structure& window){
     camera.initialize(inputs, window);
     camera.set_rotation_axis_y();
     set_hunger() = 20;
+    setLife() = 20;
     speed = 1.0f;
     ind_inventory = 0;
     inventory.initialize(inventory_size);
@@ -42,6 +45,14 @@ float& Player::set_speed(){
     return speed;
 }
 
+Inventory Player::get_inventory() const{
+    return inventory;
+}
+
+Inventory& Player::set_inventory(){
+    return inventory;
+}
+
 cgp::camera_controller_first_person_euler Player::get_camera() const{
     return camera;
 }
@@ -70,16 +81,14 @@ void Player::handle_mouse_move(cgp::vec2 const& mouse_position_current, cgp::vec
 }
 
 void Player::handle_keyboard_event(const cgp::inputs_keyboard_parameters& keyboard,cgp::mat4& camera_view_matrix){
-    if (keyboard.is_pressed(GLFW_KEY_E) && inventory.get_opened_inventory()){
-        inventory.close_inventory();
-        inventory.set_opened_inventory() = false;               
-    }
-    else if (keyboard.is_pressed(GLFW_KEY_E))
+
+    lastE = false; 
+    if (keyboard.is_pressed(GLFW_KEY_E) && !lastE)
     {
-        inventory.open_inventory();
-        inventory.set_opened_inventory() = true;
-        position.x += 1.0f;
+        inventory.set_opened_inventory() = !inventory.get_opened_inventory();
     }
+
+    lastE = keyboard.is_pressed(GLFW_KEY_E);
 
     if (keyboard.is_pressed(GLFW_KEY_Q)){
         set_speed() = 0.05f;
@@ -144,12 +153,6 @@ void Player::move(float speed,const cgp::inputs_keyboard_parameters& keyboard,cg
     right.y = 0;
 
     if (keyboard.is_pressed(GLFW_KEY_W)){
-
-        // std::cout<< "speed" << speed<<std::endl;
-        // std::cout<< "position before" << position<<std::endl;
-        // std::cout<< "speed" << speed<<std::endl;
-        // std::cout<< "position before" << position<<std::endl;
-
         position += speed * forward;
         // std::cout<<"move z"<<std::endl;
         // std::cout<<"move z"<<std::endl;
@@ -186,11 +189,19 @@ void Player::move(float speed,const cgp::inputs_keyboard_parameters& keyboard,cg
 
 void Player::handle_mouse_event(const cgp::inputs_mouse_parameters& mouse){
     if (mouse.click.left){
-        //std::cout<<"bouton gauche"<<std::endl;
+        cgp::vec3 hitblock;
+        cgp::vec3 hitnormal;
+        if(check_cube(camera.camera_model.position(),camera.camera_model.front(),5.0f, hitblock,hitnormal)){
+            //casser_cube
+        }
     }
 
     if (mouse.click.right){
-        //std::cout<<"bouton droit"<<std::endl;
+        cgp::vec3 hitblock;
+        cgp::vec3 hitnormal;
+        if(check_cube(camera.camera_model.position(),camera.camera_model.front(),5.0f, hitblock,hitnormal)){
+            //Poser_cube
+        }
     }
 
     if (mouse.scroll == 1){
@@ -214,15 +225,63 @@ void Player::handle_mouse_event(const cgp::inputs_mouse_parameters& mouse){
     }
 }
 
+bool Player::check_cube(const cgp::vec3& origin, const cgp::vec3& direction, float maxDistance, cgp::vec3& hitBlock, cgp::vec3& hitNormal) {
+    cgp::vec3 pos = origin;
+    cgp::vec3 blockPos = cgp::vec3({std::floor(pos.x),std::floor(pos.y),std::floor(pos.z)});
+    
+    cgp::vec3 deltaDist = cgp::vec3({std::abs(1.0f/direction.x),std::abs(1.0f/direction.y),std::abs(1.0f/direction.z)});
+    cgp::vec3 step;
+    cgp::vec3 sideDist;
+
+    for (int i = 0; i < 3; ++i) {
+        if (direction[i] < 0) {
+            step[i] = -1;
+            sideDist[i] = (pos[i] - blockPos[i]) * deltaDist[i];
+        } else {
+            step[i] = 1;
+            sideDist[i] = (blockPos[i] + 1.0f - pos[i]) * deltaDist[i];
+        }
+    }
+
+    std::cout<<"Position "<<pos<<"Delta "<<deltaDist<<"step "<<step<<"Sidedist "<<sideDist<<std::endl; 
+
+    for (float distance = 0.0f; distance < maxDistance;) {
+
+        int axis;
+        if (sideDist.x < sideDist.y){
+            axis = (sideDist.x < sideDist.z) ? 0 : 2;
+        } else {
+            axis = (sideDist.y < sideDist.z) ? 1 : 2;
+        }
+        // auto blockpos_int = worldToLocal(blockPos);
+
+        // if (isSolidBlock(blockpos_int.x,blockpos_int.y,blockpos_int.z)){
+        //     hitBlock = blockPos;
+        //     hitNormal[axis] = -step[axis];
+        //     return true;
+        // }
+
+        blockPos[axis] += step[axis];
+        distance = sideDist[axis];
+        std::cout<<"Distance"<< blockPos<<std::endl;
+        sideDist[axis] += deltaDist[axis];
+    }
+
+    return false;
+}
+
+    
+
+
 bool Player::colision(){
     for(size_t i = 0; i < primary_world.getVectorBlockType().size(); ++i){
-        std::cout<<primary_world.getVectorBlockType()[i]->getPosition()[0] - 0.5f << " <= " << position.x <<" <= " << primary_world.getVectorBlockType()[i]->getPosition()[0] + 0.5f   << " / " << primary_world.getVectorBlockType()[i]->getPosition()[1] - 0.5f << " <= " << position.y <<" <= " << primary_world.getVectorBlockType()[i]->getPosition()[1] + 0.5f   << " / "<< primary_world.getVectorBlockType()[i]->getPosition()[2] - 0.5f << " <= " << position.z <<" <= " << primary_world.getVectorBlockType()[i]->getPosition()[2] + 0.5f   << " / " << std::endl;
+        // std::cout<<primary_world.getVectorBlockType()[i]->getPosition()[0] - 0.5f << " <= " << position.x <<" <= " << primary_world.getVectorBlockType()[i]->getPosition()[0] + 0.5f   << " / " << primary_world.getVectorBlockType()[i]->getPosition()[1] - 0.5f << " <= " << position.y <<" <= " << primary_world.getVectorBlockType()[i]->getPosition()[1] + 0.5f   << " / "<< primary_world.getVectorBlockType()[i]->getPosition()[2] - 0.5f << " <= " << position.z <<" <= " << primary_world.getVectorBlockType()[i]->getPosition()[2] + 0.5f   << " / " << std::endl;
         if((primary_world.getVectorBlockType()[i]->getPosition()[0] - 0.5f <= position.x && position.x <= primary_world.getVectorBlockType()[i]->getPosition()[0] + 0.5f) && (primary_world.getVectorBlockType()[i]->getPosition()[1] - 0.5f <= position.y && position.y <= primary_world.getVectorBlockType()[i]->getPosition()[1] + 0.5f) && (primary_world.getVectorBlockType()[i]->getPosition()[2] - 0.5f <= position.z && position.z <=  primary_world.getVectorBlockType()[i]->getPosition()[2] + 0.5)){
-            std::cout<<"Colision"<<std::endl;
+            // std::cout<<"Colision"<<std::endl;
             return true;
         }
     }
-    std::cout<<"Pas de Colision"<<std::endl;
+    // std::cout<<"Pas de Colision"<<std::endl;
     return false;
 }
 

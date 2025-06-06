@@ -25,6 +25,9 @@ class Inventory{
         void open_inventory();
         void close_inventory();
 
+        void draw_inventory();
+
+
         bool get_opened_inventory() const;
         bool& set_opened_inventory();
 

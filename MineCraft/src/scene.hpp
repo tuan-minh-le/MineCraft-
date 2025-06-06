@@ -7,9 +7,10 @@
 #include "block/grass.hpp"
 #include "block/sand.hpp"
 #include "block/stone.hpp"
-#include "world/worldgenerator.hpp"
+#include "world/world.hpp"
 #include "world/primary_world.hpp"
 #include "world/chunk.hpp"
+#include "inventory/inventory.hpp"
 
 using cgp::mesh_drawable;
 
@@ -32,7 +33,7 @@ struct scene_structure : cgp::scene_inputs_generic {
 
 
 	Chunk chunk;
-	WorldGenerator world;
+	World world;
 	Primary_World primary_world;
 
 	//Grass* grass;
@@ -50,6 +51,7 @@ struct scene_structure : cgp::scene_inputs_generic {
 
 
 
+
 	// ****************************** //
 	// Functions
 	// ****************************** //
@@ -57,6 +59,8 @@ struct scene_structure : cgp::scene_inputs_generic {
 	void initialize();    // Standard initialization to be called before the animation loop
 	void display_frame(); // The frame display to be called within the animation loop
 	void display_gui();   // The display of the GUI, also called within the animation loop
+
+	void display_inventory_ui();
 
 
 	void mouse_move_event();

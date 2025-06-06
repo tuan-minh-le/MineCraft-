@@ -2,8 +2,8 @@
 #include "cgp/cgp.hpp"
 #include "chunk.hpp"
 
-const int HEIGHTOFFSET = 10;
-const float HEIGHTINTENSITY = 20.f; 
+const int HEIGHTOFFSET = 5;
+const float HEIGHTINTENSITY = 5.f; 
 
 class WorldGenerator {
 private:

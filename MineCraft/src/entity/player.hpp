@@ -8,6 +8,7 @@
 #include "entity.hpp"
 #include "inventory/inventory.hpp"
 #include "world/primary_world.hpp"
+#include "world/chunk.hpp"
 
 class Player : public Entity
 {
@@ -43,6 +44,9 @@ public:
     int get_hunger() const;
     int& set_hunger();
 
+    Inventory get_inventory() const;
+    Inventory& set_inventory();
+
     float get_speed() const;
     float& set_speed();
 
@@ -57,6 +61,9 @@ public:
 
     void handle_mouse_event(const cgp::inputs_mouse_parameters& mouse);
 
+    bool check_cube(const cgp::vec3& origin, const cgp::vec3& direction, float maxDistance, cgp::vec3& hitBlock, cgp::vec3& hitNormal);
+
+    bool check_cube(const cgp::vec3& origin, const cgp::vec3& direction, float maxDistance, cgp::vec3& hitBlock, cgp::vec3& hitNormal);
     bool colision();
     // std::string getNameObj()const;
     // std::string& setNameObj();
