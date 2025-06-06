@@ -7,6 +7,24 @@ Inventory::~Inventory(){
 
 }
 
+void Inventory::draw_inventory(){
+    glDisable(GL_DEPTH_TEST); // Pour HUD
+    // setupOrtho(); // Matrice ortho
+
+    // for (int i = 0; i < inventory_size; i++) {
+    //     float x = col * slotWidth;
+    //     float y = row * slotHeight;
+
+    //     drawSlotBackground(x, y);
+    //     if (inventory[row][col].itemId != 0) {
+    //         drawItemIcon(inventory[row][col].itemId, x, y);
+    //         drawItemCount(inventory[row][col].count, x, y);
+    //     }
+    // }
+
+    glEnable(GL_DEPTH_TEST);
+}
+
 
 void Inventory::initialize(int size){
     inventory_size = size;
@@ -18,7 +36,7 @@ void Inventory::initialize(int size){
 
 
 void Inventory::open_inventory(){
-
+    
 }
 
 void Inventory::close_inventory(){

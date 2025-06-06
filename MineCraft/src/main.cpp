@@ -135,6 +135,8 @@ void animation_loop()
 
 	// End of ImGui display and handle GLFW events
 	ImGui::End();
+
+	scene.display_inventory_ui();
 	imgui_render_frame(scene.window.glfw_window);
 	glfwSwapBuffers(scene.window.glfw_window);
 	glfwPollEvents();
@@ -159,9 +161,6 @@ void initialize_default_shaders()
 	// Set standard uniform color for curve/segment_drawable
 	curve_drawable::default_shader.load(default_path_shaders +"single_color/single_color.vert.glsl", default_path_shaders+"single_color/single_color.frag.glsl");
 }
-
-
-
 
 
 //Callback functions

@@ -7,6 +7,7 @@
 #include <memory>
 #include "entity.hpp"
 #include "inventory/inventory.hpp"
+#include "world/chunk.hpp"
 
 class Player : public Entity
 {
@@ -39,6 +40,9 @@ public:
     int get_hunger() const;
     int& set_hunger();
 
+    Inventory get_inventory() const;
+    Inventory& set_inventory();
+
     float get_speed() const;
     float& set_speed();
 
@@ -52,6 +56,8 @@ public:
     void handle_keyboard_event(const cgp::inputs_keyboard_parameters& keyboard,cgp::mat4& camera_view_matrix);
 
     void handle_mouse_event(const cgp::inputs_mouse_parameters& mouse);
+
+    bool check_cube(const cgp::vec3& origin, const cgp::vec3& direction, float maxDistance, cgp::vec3& hitBlock, cgp::vec3& hitNormal);
 
     // std::string getNameObj()const;
     // std::string& setNameObj();
