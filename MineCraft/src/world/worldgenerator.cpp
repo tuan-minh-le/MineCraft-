@@ -11,7 +11,7 @@ void WorldGenerator::initialize(){
             float perlinCoord_x = noiseOffset.x + x / (float)chunkSize.width * noiseScale.x;
             float perlinCoord_y = noiseOffset.y + z / (float)chunkSize.depth * noiseScale.y;
             int HeightGen = HEIGHTINTENSITY * (cgp::noise_perlin({perlinCoord_x, perlinCoord_y}));
-            std::cout << "Height Gen: " << HeightGen << std::endl;
+            //std::cout << "Height Gen: " << HeightGen << std::endl;
             HeightGen = std::min(HeightGen, chunkSize.height - 1);
             for(int y = HeightGen; y >= 0; y--){
                 int blockType;
