@@ -1,97 +1,116 @@
 #include "worldgenerator.hpp"
 
-WorldGenerator::WorldGenerator(){}
+WorldGenerator::WorldGenerator() {}
 
-WorldGenerator::~WorldGenerator(){}
+WorldGenerator::~WorldGenerator() {}
 
-void WorldGenerator::initialize(){
-    tempData.resize(chunkSize.depth * chunkSize.height * chunkSize.width);
-    for(int x = 0; x < chunkSize.width; x++){
-        for(int z = 0; z < chunkSize.depth; z++){
-            float perlinCoord_x = noiseOffset.x + x / (float)chunkSize.width * noiseScale.x;
-            float perlinCoord_y = noiseOffset.y + z / (float)chunkSize.depth * noiseScale.y;
-            int HeightGen = HEIGHTINTENSITY * (cgp::noise_perlin({perlinCoord_x, perlinCoord_y}));
-            std::cout << "Height Gen: " << HeightGen << std::endl;
-            HeightGen = std::min(HeightGen, chunkSize.height - 1);
-            for(int y = HeightGen; y >= 0; y--){
-                int blockType;
+void WorldGenerator::initialize() {}
+
+void WorldGenerator::generateChunk(Chunk& chunk) {
+    ChunkSize size = chunk.getSize();
+    cgp::vec3 chunkWorldPos = chunk.getWorldPosition();
+    
+    for(int x = 0; x < size.width; x++) {
+        for(int z = 0; z < size.depth; z++) {
+            // Convert local chunk coordinates to world coordinates
+            float worldX = chunkWorldPos.x + x;
+            float worldZ = chunkWorldPos.z + z;
+            
+            // Generate height using Perlin noise
+            int surfaceHeight = generateHeightAt(worldX, worldZ);
+            
+            // Fill the column from bottom to surface height
+            for(int y = 0; y < size.height; y++) {
+                float worldY = chunkWorldPos.y + y;
                 
-                if(y == HeightGen) blockType = 1;
-
-                if(y < HeightGen && y > HeightGen - 4) blockType = 2;
-
-                if(y <= HeightGen - 4 && y > 0) blockType = 3;
-
-                if(y == 0) blockType = 4;
-
-                setData(x, y, z) = blockType;
-            }
-        }
-    }
-}
-
-void WorldGenerator::setCenter(const cgp::vec3& center){
-    chunkCenter = center;
-
-    chunkWorldMin.x = std::floor(chunkCenter.x - chunkSize.width * 0.5f);
-    chunkWorldMin.y = std::floor(chunkCenter.y - chunkSize.height * 0.5f);
-    chunkWorldMin.z = std::floor(chunkCenter.z - chunkSize.depth * 0.5f);
-}
-
-cgp::vec3 WorldGenerator::localtoWorld(const cgp::vec3& localPos) const{
-    return chunkWorldMin + localPos;
-}
-
-cgp::vec3 WorldGenerator::worldtoLocal(const cgp::vec3& worldPos) const{
-    return worldPos - chunkWorldMin;
-}
-
-int WorldGenerator::getData(int x, int y, int z) const{
-    if(x < 0 || x >= chunkSize.width || y < 0 || y >= chunkSize.height || z < 0 || z >= chunkSize.depth){
-        std::cout << "Invalid coordinates" << std::endl;
-    }
-    int idx = z * (chunkSize.width * chunkSize.height) + y * chunkSize.width + x;
-    return tempData[idx];
-}
-
-int& WorldGenerator::setData(int x, int y, int z){
-    if(x < 0 || x >= chunkSize.width || y < 0 || y >= chunkSize.height || z < 0 || z >= chunkSize.depth){
-        std::cout << "Invalid coordinates" << std::endl;
-    }
-    int idx = z * (chunkSize.width * chunkSize.height) + y * chunkSize.width + x;
-    return tempData[idx];
-}
-
-void WorldGenerator::drawChunk(const cgp::environment_generic_structure& environment){
-    for(int x = 0; x < chunkSize.width; x++) {
-        for(int y = 0; y < chunkSize.height; y++) {
-            for(int z = 0; z < chunkSize.depth; z++) {
-                int blockType = getData(x, y, z);
-                if(blockType > 0) {
-                    cgp::vec3 worldPos = localtoWorld({static_cast<float>(x), static_cast<float>(y), static_cast<float>(z)});
-                    
-                    // Draw different block types
-                    switch(blockType) {
-                        case 1: // Grass
-        
-                            grass.draw_block_at(environment);//worldPos, 
-                            // std::cout << "Drew grass at: " << worldPos << std::endl;
-                            break;
-                        case 2: // Sand
-                            grass.draw_block_at(environment);
-                            // std::cout << "Drew sand at: " << cgp::vec3(x, y, z) << std::endl;
-                            break;
-                        case 3: // Stone
-                            sand.draw_block_at(environment);
-                            // std::cout << "Drew stone at: " << worldPos << std::endl;
-                            break;
-                        case 4:
-                            stone.draw_block_at(environment);
-                            // std::cout << "Drew stone at: " << worldPos << std::endl;
-                            break;
-                    }
+                // Determine block type based on height and position
+                BlockType blockType = getBlockTypeAt(worldX, worldY, worldZ, surfaceHeight);
+                
+                // Only set blocks that are within this chunk
+                if(worldY >= chunkWorldPos.y && worldY < chunkWorldPos.y + size.height) {
+                    chunk.setBlock(x, y, z, blockType);
                 }
             }
         }
     }
+    
+    chunk.markAsGenerated();
+}
+
+void WorldGenerator::generateChunk(Chunk& chunk, const cgp::vec3& position) {
+    ChunkSize size = chunk.getSize();
+    chunk.setWorldPosition(position);
+    cgp::vec3 chunkWorldPos = chunk.getWorldPosition();
+    
+    for(int x = 0; x < size.width; x++) {
+        for(int z = 0; z < size.depth; z++) {
+            // Convert local chunk coordinates to world coordinates
+            float worldX = chunkWorldPos.x + x;
+            float worldZ = chunkWorldPos.z + z;
+            
+            // Generate height using Perlin noise
+            int surfaceHeight = generateHeightAt(worldX, worldZ);
+            
+            // Fill the column from bottom to surface height
+            for(int y = 0; y < size.height; y++) {
+                float worldY = chunkWorldPos.y + y;
+                
+                // Determine block type based on height and position
+                BlockType blockType = getBlockTypeAt(worldX, worldY, worldZ, surfaceHeight);
+                
+                // Only set blocks that are within this chunk
+                if(worldY >= chunkWorldPos.y && worldY < chunkWorldPos.y + size.height) {
+                    chunk.setBlock(x, y, z, blockType);
+                }
+            }
+        }
+    }
+    
+    chunk.markAsGenerated();
+}
+
+int WorldGenerator::generateHeightAt(float worldX, float worldZ) {
+    float perlinCoord_x = noiseOffset.x + worldX * noiseScale.x;
+    float perlinCoord_y = noiseOffset.y + worldZ * noiseScale.y;
+    
+    float noiseValue = cgp::noise_perlin({perlinCoord_x, perlinCoord_y});
+    int height = static_cast<int>(HEIGHTOFFSET + HEIGHTINTENSITY * noiseValue);
+    
+    return std::max(0, height); 
+}
+
+BlockType WorldGenerator::getBlockTypeAt(float worldX, float worldY, float worldZ, int surfaceHeight) {
+    int blockY = static_cast<int>(worldY);
+    
+    if(blockY > surfaceHeight) {
+        return AIR;
+    }
+    else if(blockY == surfaceHeight) {
+        return GRASS; 
+    }
+    else if(blockY > surfaceHeight - 4) {
+        return DIRT; 
+    }
+    else if(blockY > 0) {
+        return STONE; 
+    }
+    else {
+        return BEDROCK; 
+    }
+}
+
+void WorldGenerator::setNoiseScale(const cgp::vec2& scale){
+    noiseScale = scale;
+}
+
+void WorldGenerator::setNoiseOffset(const cgp::vec2& offset){
+    noiseOffset = offset;
+}
+
+cgp::vec2 WorldGenerator::getNoiseScale() const{
+    return noiseScale;
+}
+
+cgp::vec2 WorldGenerator::getNoiseOffset() const{
+    return noiseOffset;
 }
