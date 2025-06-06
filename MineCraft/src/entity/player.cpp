@@ -18,7 +18,7 @@ void Player::initialize(cgp::input_devices& inputs, cgp::window_structure& windo
     std::shared_ptr<Item> itemPtr = inventory.get_inventory()[ind_inventory];
     primary_world.initialize();
     isGrounded = true;
-    isCreativeMode = false;
+    isCreativeMode = true;
     verticalVelocity = 0;
     gravity = 9.81f;
     dt = 0.01f;
@@ -243,7 +243,7 @@ bool Player::check_cube(const cgp::vec3& origin, const cgp::vec3& direction, flo
         }
     }
 
-    std::cout<<"Position "<<pos<<"Delta "<<deltaDist<<"step "<<step<<"Sidedist "<<sideDist<<std::endl; 
+    // std::cout<<"Position "<<pos<<"Delta "<<deltaDist<<"step "<<step<<"Sidedist "<<sideDist<<std::endl; 
 
     for (float distance = 0.0f; distance < maxDistance;) {
 
@@ -263,7 +263,7 @@ bool Player::check_cube(const cgp::vec3& origin, const cgp::vec3& direction, flo
 
         blockPos[axis] += step[axis];
         distance = sideDist[axis];
-        std::cout<<"Distance"<< blockPos<<std::endl;
+        // std::cout<<"Distance"<< blockPos<<std::endl;
         sideDist[axis] += deltaDist[axis];
     }
 
