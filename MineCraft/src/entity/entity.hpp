@@ -1,6 +1,7 @@
 #pragma once
 
 #include "cgp/cgp.hpp"
+#include "world/world.hpp"
 #include "iostream"
 
 class Entity{
@@ -11,7 +12,7 @@ class Entity{
 
     public:
 
-    virtual void initialize(cgp::input_devices& inputs, cgp::window_structure& window) = 0;
+    virtual void initialize(cgp::input_devices& inputs, cgp::window_structure& window,World& wrd) = 0;
     virtual void move(float speed, const cgp::inputs_keyboard_parameters& keyboard,cgp::mat4& camera_view_matrix) = 0;
 
     //Getter and Setter

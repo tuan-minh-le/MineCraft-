@@ -7,31 +7,23 @@ Inventory::~Inventory(){
 
 }
 
-void Inventory::draw_inventory(){
-    glDisable(GL_DEPTH_TEST); // Pour HUD
-    // setupOrtho(); // Matrice ortho
-
-    // for (int i = 0; i < inventory_size; i++) {
-    //     float x = col * slotWidth;
-    //     float y = row * slotHeight;
-
-    //     drawSlotBackground(x, y);
-    //     if (inventory[row][col].itemId != 0) {
-    //         drawItemIcon(inventory[row][col].itemId, x, y);
-    //         drawItemCount(inventory[row][col].count, x, y);
-    //     }
-    // }
-
-    glEnable(GL_DEPTH_TEST);
-}
-
 
 void Inventory::initialize(int size){
     inventory_size = size;
-    for (int i = 0; i < inventory_size; i++)
+
+    for (int i = 0; i < 5; i++)
+    {
+        inventory.push_back(std::make_shared<Grass>());
+    }
+
+    for (int i = 0; i < inventory_size-5; i++)
     {
         inventory.push_back(nullptr);
     }
+
+    add_inventory (std::make_shared<Grass>(),15);
+    erase_inventory (3);
+    switch_inventory(1,34);
 }
 
 
@@ -44,12 +36,10 @@ void Inventory::close_inventory(){
 }
 
 void Inventory::add_inventory (std::shared_ptr<Item> item, int ind){
-    if (ind > inventory_size) {
+    if (ind >= inventory_size) {
         throw std::out_of_range("Index out of range");
-    }
-    if (ind == inventory_size) {
-        inventory.push_back(item);
-    } else {
+    } 
+    else {
         inventory.insert(inventory.begin() + ind, item);
     }
 }
@@ -58,7 +48,7 @@ void Inventory::erase_inventory (int ind){
     if (ind >= inventory_size) {
         throw std::out_of_range("Index out of range");
     }
-    inventory.erase(inventory.begin() + ind);
+    inventory[ind] = nullptr;
 }
 
 void Inventory::switch_inventory(int ind1, int ind2){

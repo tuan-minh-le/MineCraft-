@@ -7,7 +7,7 @@ Player::Player()
 
 static bool lastE = false;
 
-void Player::initialize(cgp::input_devices& inputs, cgp::window_structure& window){
+void Player::initialize(cgp::input_devices& inputs, cgp::window_structure& window, World& wrd){
     camera.initialize(inputs, window);
     camera.set_rotation_axis_y();
     set_hunger() = 20;
@@ -17,6 +17,7 @@ void Player::initialize(cgp::input_devices& inputs, cgp::window_structure& windo
     inventory.initialize(inventory_size);
     std::shared_ptr<Item> itemPtr = inventory.get_inventory()[ind_inventory];
     primary_world.initialize();
+    world = wrd;
     isGrounded = true;
     isCreativeMode = true;
     verticalVelocity = 0;
