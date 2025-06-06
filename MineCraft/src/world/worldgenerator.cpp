@@ -58,7 +58,6 @@ void WorldGenerator::generateChunk(Chunk& chunk, const cgp::vec3& position) {
                 // Determine block type based on height and position
                 BlockType blockType = getBlockTypeAt(worldX, worldY, worldZ, surfaceHeight);
                 
-                // Only set blocks that are within this chunk
                 if(worldY >= chunkWorldPos.y && worldY < chunkWorldPos.y + size.height) {
                     chunk.setBlock(x, y, z, blockType);
                 }
@@ -85,11 +84,11 @@ BlockType WorldGenerator::getBlockTypeAt(float worldX, float worldY, float world
     if(blockY > surfaceHeight) {
         return AIR;
     }
-    else if(blockY == surfaceHeight) {
+    else if(blockY <= surfaceHeight && blockY >= surfaceHeight - 3) {
         return GRASS; 
     }
-    else if(blockY > surfaceHeight - 4) {
-        return DIRT; 
+    else if(blockY <= surfaceHeight - 3 && blockY >= surfaceHeight - 7) {
+        return SAND; 
     }
     else if(blockY > 0) {
         return STONE; 

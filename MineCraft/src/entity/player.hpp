@@ -7,6 +7,7 @@
 #include <memory>
 #include "entity.hpp"
 #include "inventory/inventory.hpp"
+#include "world/primary_world.hpp"
 #include "world/chunk.hpp"
 
 class Player : public Entity
@@ -20,9 +21,11 @@ private:
     int ind_inventory;
 
     bool isGrounded;
+    bool isCreativeMode;
     float verticalVelocity;
     float gravity;
     float dt;
+    Primary_World primary_world;
     // std::string nameObj = "../../assets/Minecraft_steve/minecraft_steve.obj";
     // std::string nameTexture = "../../assets/Minecraft_steve/minecraft_steve_skin.jpg";
 
@@ -59,6 +62,8 @@ public:
 
     bool check_cube(const cgp::vec3& origin, const cgp::vec3& direction, float maxDistance, cgp::vec3& hitBlock, cgp::vec3& hitNormal);
 
+    bool check_cube(const cgp::vec3& origin, const cgp::vec3& direction, float maxDistance, cgp::vec3& hitBlock, cgp::vec3& hitNormal);
+    bool colision();
     // std::string getNameObj()const;
     // std::string& setNameObj();
     // std::string getNameTexture()const;

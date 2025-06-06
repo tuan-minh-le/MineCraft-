@@ -2,12 +2,12 @@
 #include "cgp/cgp.hpp"
 #include "chunk.hpp"
 
-const int HEIGHTOFFSET = 60;
-const float HEIGHTINTENSITY = 31.f; 
+const int HEIGHTOFFSET = 5;
+const float HEIGHTINTENSITY = 5.f; 
 
 class WorldGenerator {
 private:
-    cgp::vec2 noiseScale = {1, 1};
+    cgp::vec2 noiseScale = {0.01, 0.01};
     cgp::vec2 noiseOffset = {0, 0};
     
 public:

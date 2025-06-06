@@ -7,7 +7,8 @@
 #include "block/grass.hpp"
 #include "block/sand.hpp"
 #include "block/stone.hpp"
-#include "world/worldgenerator.hpp"
+#include "world/world.hpp"
+#include "world/primary_world.hpp"
 #include "world/chunk.hpp"
 #include "inventory/inventory.hpp"
 
@@ -32,7 +33,8 @@ struct scene_structure : cgp::scene_inputs_generic {
 
 
 	Chunk chunk;
-	WorldGenerator world;
+	World world;
+	Primary_World primary_world;
 
 	//Grass* grass;
 	Grass grass;
