@@ -17,13 +17,12 @@ void scene_structure::initialize()
 	chunk.initialize();
 
 	world.initialize();
-	world.generateChunk(chunk, {0,0,0});
+	world.generateChunk(chunk, {0, 0, 0});
 
 
 	environment.camera_view = player.get_camera().camera_model.matrix_view();
 	
 	Block::initialize_shared_mesh();
-
 	//primary world initialization
 
 	// std::vector<int> positions = {0, 1, 2};

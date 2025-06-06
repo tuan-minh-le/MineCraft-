@@ -91,22 +91,27 @@ void Chunk::drawBlockAt(int x, int y, int z, BlockType block, const cgp::environ
         case GRASS:
             grass.setPosition() = worldPos;
             grass.draw_block_at(environment);
+            std::cout << "Drew grass at: " << worldPos << std::endl;
             break;
         case DIRT:
             grass.setPosition() = worldPos;
             grass.draw_block_at(environment);
+            std::cout << "Drew dirt at: " << worldPos << std::endl;
             break;
         case SAND:
             sand.setPosition() = worldPos;
             sand.draw_block_at(environment);
+            std::cout << "Drew sand at: " << worldPos << std::endl;
             break;
         case STONE:
             stone.setPosition() = worldPos;
             stone.draw_block_at(environment);
+            std::cout << "Drew stone at: " << worldPos << std::endl;
             break;
         case BEDROCK:
             stone.setPosition() = worldPos;
             stone.draw_block_at(environment);
+            std::cout << "Drew bedrock at: " << worldPos << std::endl;
             break;
         case AIR:
             break;

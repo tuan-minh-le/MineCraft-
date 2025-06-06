@@ -19,6 +19,7 @@ private:
     int ind_inventory;
 
     bool isGrounded;
+    bool isCreativeMode;
     float verticalVelocity;
     float gravity;
     float dt;
