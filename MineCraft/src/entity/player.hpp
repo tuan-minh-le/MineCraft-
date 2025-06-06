@@ -25,6 +25,7 @@ private:
     float gravity;
     float dt;
     Primary_World primary_world;
+    
     // std::string nameObj = "../../assets/Minecraft_steve/minecraft_steve.obj";
     // std::string nameTexture = "../../assets/Minecraft_steve/minecraft_steve_skin.jpg";
 

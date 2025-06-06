@@ -56,7 +56,7 @@ void scene_structure::display_frame()
 	environment.light = player.get_camera().camera_model.position();
 
 	//chunk.render(environment);
-	// world.drawChunk(environment);
+	
 
 	for (size_t i = 0; i < primary_world.getVectorBlockType().size(); ++i) {
     	primary_world.getVectorBlockType()[i]->draw_block_at(environment);
