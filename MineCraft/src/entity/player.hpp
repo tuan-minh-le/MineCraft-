@@ -7,6 +7,7 @@
 #include <memory>
 #include "entity.hpp"
 #include "inventory/inventory.hpp"
+#include "world/primary_world.hpp"
 
 class Player : public Entity
 {
@@ -23,6 +24,7 @@ private:
     float verticalVelocity;
     float gravity;
     float dt;
+    Primary_World primary_world;
     // std::string nameObj = "../../assets/Minecraft_steve/minecraft_steve.obj";
     // std::string nameTexture = "../../assets/Minecraft_steve/minecraft_steve_skin.jpg";
 
@@ -54,6 +56,7 @@ public:
 
     void handle_mouse_event(const cgp::inputs_mouse_parameters& mouse);
 
+    bool colision();
     // std::string getNameObj()const;
     // std::string& setNameObj();
     // std::string getNameTexture()const;

@@ -13,7 +13,7 @@ void Player::initialize(cgp::input_devices& inputs, cgp::window_structure& windo
     ind_inventory = 0;
     inventory.initialize(inventory_size);
     std::shared_ptr<Item> itemPtr = inventory.get_inventory()[ind_inventory];
-
+    primary_world.initialize();
     isGrounded = true;
     isCreativeMode = true;
     verticalVelocity = 0;
@@ -78,6 +78,7 @@ void Player::handle_keyboard_event(const cgp::inputs_keyboard_parameters& keyboa
     {
         inventory.open_inventory();
         inventory.set_opened_inventory() = true;
+        position.x += 1.0f;
     }
 
     if (keyboard.is_pressed(GLFW_KEY_Q)){
@@ -141,23 +142,38 @@ void Player::move(float speed,const cgp::inputs_keyboard_parameters& keyboard,cg
 
         // std::cout<< "speed" << speed<<std::endl;
         // std::cout<< "position before" << position<<std::endl;
+        // std::cout<< "speed" << speed<<std::endl;
+        // std::cout<< "position before" << position<<std::endl;
 
         position += speed * forward;
         // std::cout<<"move z"<<std::endl;
+        // std::cout<<"move z"<<std::endl;
 
         // std::cout<< "position after" << position<<std::endl;
+        if(colision()==true){
+            position -= speed * forward;
+        }
     }
 
     if (keyboard.is_pressed(GLFW_KEY_A)){
         position -= speed * right;
+        if(colision()==true){
+            position += speed * right;
+        }
     }
 
     if (keyboard.is_pressed(GLFW_KEY_S)){
         position -= speed * forward; 
+        if(colision()==true){
+            position += speed * forward;
+        }
     }
 
     if (keyboard.is_pressed(GLFW_KEY_D)){
         position += speed * right;
+         if(colision()==true){
+            position -= speed * right;
+        }
     }
     camera.camera_model.position_camera = position;
     camera_view_matrix = camera.camera_model.matrix_view();
@@ -165,11 +181,11 @@ void Player::move(float speed,const cgp::inputs_keyboard_parameters& keyboard,cg
 
 void Player::handle_mouse_event(const cgp::inputs_mouse_parameters& mouse){
     if (mouse.click.left){
-        std::cout<<"bouton gauche"<<std::endl;
+        //std::cout<<"bouton gauche"<<std::endl;
     }
 
     if (mouse.click.right){
-        std::cout<<"bouton droit"<<std::endl;
+        //std::cout<<"bouton droit"<<std::endl;
     }
 
     if (mouse.scroll == 1){
@@ -193,7 +209,17 @@ void Player::handle_mouse_event(const cgp::inputs_mouse_parameters& mouse){
     }
 }
 
-
+bool Player::colision(){
+    for(size_t i = 0; i < primary_world.getVectorBlockType().size(); ++i){
+        std::cout<<primary_world.getVectorBlockType()[i]->getPosition()[0] - 0.5f << " <= " << position.x <<" <= " << primary_world.getVectorBlockType()[i]->getPosition()[0] + 0.5f   << " / " << primary_world.getVectorBlockType()[i]->getPosition()[1] - 0.5f << " <= " << position.y <<" <= " << primary_world.getVectorBlockType()[i]->getPosition()[1] + 0.5f   << " / "<< primary_world.getVectorBlockType()[i]->getPosition()[2] - 0.5f << " <= " << position.z <<" <= " << primary_world.getVectorBlockType()[i]->getPosition()[2] + 0.5f   << " / " << std::endl;
+        if((primary_world.getVectorBlockType()[i]->getPosition()[0] - 0.5f <= position.x && position.x <= primary_world.getVectorBlockType()[i]->getPosition()[0] + 0.5f) && (primary_world.getVectorBlockType()[i]->getPosition()[1] - 0.5f <= position.y && position.y <= primary_world.getVectorBlockType()[i]->getPosition()[1] + 0.5f) && (primary_world.getVectorBlockType()[i]->getPosition()[2] - 0.5f <= position.z && position.z <=  primary_world.getVectorBlockType()[i]->getPosition()[2] + 0.5)){
+            std::cout<<"Colision"<<std::endl;
+            return true;
+        }
+    }
+    std::cout<<"Pas de Colision"<<std::endl;
+    return false;
+}
 
 // std::string Player::getNameObj()const{
 //     return nameObj;

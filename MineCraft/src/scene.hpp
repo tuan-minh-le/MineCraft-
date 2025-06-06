@@ -8,6 +8,7 @@
 #include "block/sand.hpp"
 #include "block/stone.hpp"
 #include "world/worldgenerator.hpp"
+#include "world/primary_world.hpp"
 #include "world/chunk.hpp"
 
 using cgp::mesh_drawable;
@@ -32,6 +33,7 @@ struct scene_structure : cgp::scene_inputs_generic {
 
 	Chunk chunk;
 	WorldGenerator world;
+	Primary_World primary_world;
 
 	//Grass* grass;
 	Grass grass;
