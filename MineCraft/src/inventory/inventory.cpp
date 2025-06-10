@@ -31,16 +31,21 @@ void Inventory::close_inventory(){
 }
 
 void Inventory::add_inventory (std::shared_ptr<Item> item){
+    std::cout<<"caca"<<std::endl;
+    std::cout<<item->getItemName()<<std::endl;
     for (auto it : inventory)
     {
         if (it.empty())
         {
+            std::cout<<"prout"<<std::endl;
             it.push_back(item);
             return;
         }
         else if (it[0]->getItemName()==item->getItemName() && it.size()<max_size)
         {
+            std::cout<<"piprout"<<std::endl;
             it.push_back(item);
+            std::cout<<"pipi"<<std::endl;
             return;
         }
     }
