@@ -2,8 +2,6 @@
 
 Grass::Grass() : Block() {
     item_name = "Grass";
-
-
 }
 
 Grass::~Grass() {}

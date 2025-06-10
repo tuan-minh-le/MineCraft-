@@ -14,8 +14,11 @@ void Player::initialize(cgp::input_devices& inputs, cgp::window_structure& windo
     setLife() = 20;
     speed = 1.0f;
     ind_inventory = 0;
+
     inventory.initialize(inventory_size);
-    std::shared_ptr<Item> itemPtr = inventory.get_inventory()[ind_inventory];
+    craft.initialize(craft_size);
+
+    std::shared_ptr<Item> itemPtr = inventory.get_inventory()[ind_inventory][0];
     primary_world.initialize();
     world = wrd;
     isGrounded = true;
@@ -46,12 +49,19 @@ float& Player::set_speed(){
     return speed;
 }
 
-Inventory Player::get_inventory() const{
+Inventory& Player::get_inventory(){
     return inventory;
 }
 
 Inventory& Player::set_inventory(){
     return inventory;
+}
+
+Inventory& Player::get_craft(){
+    return craft;
+}
+Inventory& Player::set_craft(){
+    return craft;
 }
 
 cgp::camera_controller_first_person_euler Player::get_camera() const{
@@ -60,6 +70,22 @@ cgp::camera_controller_first_person_euler Player::get_camera() const{
 
 cgp::camera_controller_first_person_euler& Player::set_camera(){
     return camera;
+}
+
+Item Player::get_item_in_hand() const{
+    return item_in_hand;
+}
+
+Item& Player::set_item_in_hand(){
+    return item_in_hand;
+}
+
+int Player::get_item_ind() const{
+    return ind_inventory;
+}
+
+int& Player::set_item_ind(){
+    return ind_inventory;
 }
 
 void Player::handle_mouse_move(cgp::vec2 const& mouse_position_current, cgp::vec2 const& mouse_position_previous, cgp::mat4& camera_view_matrix) {
@@ -83,7 +109,6 @@ void Player::handle_mouse_move(cgp::vec2 const& mouse_position_current, cgp::vec
 
 void Player::handle_keyboard_event(const cgp::inputs_keyboard_parameters& keyboard,cgp::mat4& camera_view_matrix){
 
-    lastE = false; 
     if (keyboard.is_pressed(GLFW_KEY_E) && !lastE)
     {
         inventory.set_opened_inventory() = !inventory.get_opened_inventory();
@@ -186,7 +211,7 @@ void Player::move(float speed,const cgp::inputs_keyboard_parameters& keyboard,cg
 }
 
 void Player::handle_mouse_event(const cgp::inputs_mouse_parameters& mouse){
-    if (mouse.click.left){
+    if (mouse.click.left && inventory.get_opened_inventory()){
         cgp::vec3 hitblock;
         cgp::vec3 hitnormal;
         if(check_cube(camera.camera_model.position(),camera.camera_model.front(),5.0f, hitblock,hitnormal)){
@@ -194,7 +219,7 @@ void Player::handle_mouse_event(const cgp::inputs_mouse_parameters& mouse){
         }
     }
 
-    if (mouse.click.right){
+    if (mouse.click.right && inventory.get_opened_inventory()){
         cgp::vec3 hitblock;
         cgp::vec3 hitnormal;
         if(check_cube(camera.camera_model.position(),camera.camera_model.front(),5.0f, hitblock,hitnormal)){
@@ -202,23 +227,17 @@ void Player::handle_mouse_event(const cgp::inputs_mouse_parameters& mouse){
         }
     }
 
-    if (mouse.scroll == 1){
-        if (ind_inventory+1 >= inventory_size) {
-            throw std::out_of_range("No next item");
-        }
-        else
+    if (ImGui::GetIO().MouseWheel<0){
+        if (ind_inventory+1 < inventory_size/4)
         {
-            std::shared_ptr<Item> itemPtr = inventory.get_inventory()[ind_inventory + 1];
+            ind_inventory++;
         }
     }
 
-    if (mouse.scroll == -1){
-        if (ind_inventory-1 < 0) {
-            throw std::out_of_range("No previous item");
-        }
-        else
+    if (ImGui::GetIO().MouseWheel>0){
+        if (ind_inventory - 1 >= 0)
         {
-            std::shared_ptr<Item> itemPtr = inventory.get_inventory()[ind_inventory - 1];
+            ind_inventory--;
         }
     }
 }
@@ -252,7 +271,7 @@ bool Player::check_cube(const cgp::vec3& origin, const cgp::vec3& direction, flo
 
         std::cout << "Block position :" << blockPos << "is a " << world.getBlock(blockPos) << std::endl;
 
-        std::cout << world.getBlock({0,0,0}) << std::endl;
+        // std::cout << world.getBlock({0,0,0}) << std::endl;
 
         if (world.getBlock(blockPos)){
             hitBlock = blockPos;

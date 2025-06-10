@@ -17,6 +17,7 @@ private:
     cgp::camera_controller_first_person_euler camera;
     int hunger;
     Inventory inventory;
+    Inventory craft;
     Item item_in_hand;
     float speed;
     int ind_inventory;
@@ -42,12 +43,22 @@ public:
     float max_pitch_down = -85.0f;
 
     int inventory_size = 36;
+    int craft_size = 5;
 
     int get_hunger() const;
     int& set_hunger();
 
-    Inventory get_inventory() const;
+    Inventory& get_inventory();
     Inventory& set_inventory();
+
+    Inventory& get_craft();
+    Inventory& set_craft();
+
+    Item get_item_in_hand() const;
+    Item& set_item_in_hand();
+
+    int get_item_ind() const;
+    int& set_item_ind();
 
     float get_speed() const;
     float& set_speed();

@@ -5,9 +5,7 @@
 #include <memory>
 #include "stb_image.h"
 
-
 using namespace cgp;
-
 
 void scene_structure::initialize()
 {
@@ -82,9 +80,6 @@ void scene_structure::initialize()
 	// 		}
 	// 	}
 	// }
-	
-
-
 	glfwSetInputMode(window.glfw_window,GLFW_CURSOR,GLFW_CURSOR_DISABLED);
 
 }
@@ -174,6 +169,7 @@ GLuint LoadTextureFromFile(const char* filename)
 void scene_structure::display_inventory_ui()
 {
 	if (player.get_inventory().get_opened_inventory()){
+		glfwSetInputMode(window.glfw_window,GLFW_CURSOR,GLFW_CURSOR_NORMAL);
 		ImGui::SetNextWindowPos(ImVec2(700, 250));
 		ImGui::SetNextWindowSize(ImVec2(700, 600));
 		ImGui::Begin("full_inventory", nullptr,
@@ -202,6 +198,9 @@ void scene_structure::display_inventory_ui()
 		int columns = 3;
 		int rows = 2;
 
+		Inventory& craft = player.get_craft();
+		Inventory& inventory = player.get_inventory();
+
 		for (int i = 0; i < rows * columns-1; ++i) {
 			int row = i / columns;
 			int col = i % columns;
@@ -212,23 +211,60 @@ void scene_structure::display_inventory_ui()
 
 			if (i == 2) {pos.y += slotSize/2; pos.x += 40;}
 			
-			ImVec2 size = ImVec2(pos.x + slotSize, pos.y + slotSize);
-			
-			drawList->AddRectFilled(pos,size,IM_COL32(180, 180, 180, 255));
+			std::vector<std::shared_ptr<Item>> vec_item = craft.get_inventory()[i];
 
-			std::string text = std::to_string(i);
-			ImVec2 textSize = ImGui::CalcTextSize(text.c_str());
-			ImVec2 textPos = ImVec2(
-				pos.x + (slotSize - textSize.x) / 2,
-				pos.y + (slotSize - textSize.y) / 2
-			);
-			drawList->AddText(textPos, IM_COL32(0, 0, 0, 255), text.c_str());
+			std::string text;
+			if (!vec_item.empty()) {text = vec_item[0]->getItemName() + std::to_string(vec_item.size()) + " craft " + std::to_string(i);}
+			else
+			{
+				text = std::to_string(i);
+			}
+
+			std::string label = "craft " + std::to_string(i);
+			ImGui::SetCursorScreenPos(pos);
+
+			if (ImGui::Button(text.c_str(), ImVec2(slotSize, slotSize))) {
+				
+				if (inputs.keyboard.is_pressed(GLFW_KEY_LEFT_SHIFT))
+				{
+					player.set_craft().fast_switch_inventory(i,SlotType::CRAFT,inventory);
+					player.set_craft().check_craft();
+				}				
+			}
+
+			if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID)) {
+				DragPayload payload_data = { i, SlotType::CRAFT };
+				ImGui::SetDragDropPayload("ITEM_SLOT", &payload_data, sizeof(DragPayload));
+				ImGui::Text("Déplacer %s", text.c_str()); // Apparence de l'objet en drag
+				ImGui::EndDragDropSource();
+			}
+
+			if (ImGui::BeginDragDropTarget()) {
+				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("ITEM_SLOT")) {
+					const DragPayload* payload_data = static_cast<const DragPayload*>(payload->Data);
+					int from_index = payload_data->index;
+					SlotType from_type = payload_data->source;
+					std::string bjr;
+					if (from_type == SlotType::CRAFT) {bjr = "craft";}else{bjr = "inventory";}
+					if (i!=from_index || from_type != SlotType::CRAFT)
+					{
+						player.set_craft().switch_inventory(from_index, i,from_type,SlotType::CRAFT,inventory,inputs.keyboard.is_pressed(GLFW_KEY_R),inputs.keyboard.is_pressed(GLFW_KEY_T));
+						player.set_craft().check_craft();
+
+						if (from_type== SlotType::CRAFT and from_index == 2)
+						{
+							player.set_craft().finish_craft(true);
+							player.set_craft().check_craft();
+						}
+						
+					}
+				}
+				ImGui::EndDragDropTarget();
+			}
 		}
 
 		columns = 9;
 		rows = 4;
-
-		Inventory inventory = player.get_inventory();
 
 		for (int i = 0; i < rows * columns; ++i) {
 			int row = rows - 1 - (i / columns);
@@ -243,34 +279,66 @@ void scene_structure::display_inventory_ui()
 			}
 			
 
-			std::shared_ptr<Item> item = inventory.get_inventory()[i];
+			std::vector<std::shared_ptr<Item>> vec_item = inventory.get_inventory()[i];
 
 			std::string text;
-			if (item != nullptr) {
-				text = item->getItemName();
-			} else {
-				text = std::string(" ");
+			if (!vec_item.empty()) {text = vec_item[0]->getItemName() + std::to_string(vec_item.size()) + " inv " + std::to_string(i);}
+			else
+			{
+				text = std::to_string(i);
 			}
 			
 			ImVec2 pos = ImVec2(
 				basePos.x + col * (slotSize + slotSpacingx),
 				basePos.y + 250 + row * (slotSize + slotSpacingy)
 			);
-			ImVec2 size = ImVec2(pos.x + slotSize, pos.y + slotSize);
 
-			drawList->AddRectFilled(pos, size, IM_COL32(180, 180, 180, 255));
+			std::string label = "inv " + std::to_string(i);
+			ImGui::SetCursorScreenPos(pos);
 
-			ImVec2 textSize = ImGui::CalcTextSize(text.c_str());
-			ImVec2 textPos = ImVec2(
-				pos.x + (slotSize - textSize.x) / 2,
-				pos.y + (slotSize - textSize.y) / 2
-			);
-			drawList->AddText(textPos, IM_COL32(0, 0, 0, 255), text.c_str());
+			if (ImGui::Button(text.c_str(), ImVec2(slotSize, slotSize))) {
+				
+				if (inputs.keyboard.is_pressed(GLFW_KEY_LEFT_SHIFT))
+				{
+					player.set_inventory().fast_switch_inventory(i,SlotType::INVENTORY,inventory);
+				}
+			}
+
+			// Si l'utilisateur commence à "tirer" le bouton
+			if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID)) {
+				DragPayload payload_data = { i, SlotType::INVENTORY };
+				ImGui::SetDragDropPayload("ITEM_SLOT", &payload_data, sizeof(DragPayload));
+				ImGui::Text("Déplacer %s", text.c_str()); // Apparence de l'objet en drag
+				ImGui::EndDragDropSource();
+			}
+
+			// Si c’est une cible de drop
+			if (ImGui::BeginDragDropTarget()) {
+				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("ITEM_SLOT")) {
+					const DragPayload* payload_data = static_cast<const DragPayload*>(payload->Data);
+					int from_index = payload_data->index;
+					SlotType from_type = payload_data->source;
+					std::string bjr;
+					if (from_type == SlotType::CRAFT) {bjr = "craft";}else{bjr = "inventory";}
+					if (i!=from_index || from_type != SlotType::INVENTORY)
+					{
+						player.set_inventory().switch_inventory(from_index, i,from_type,SlotType::INVENTORY,craft,inputs.keyboard.is_pressed(GLFW_KEY_R),inputs.keyboard.is_pressed(GLFW_KEY_T));
+						player.set_craft().check_craft();
+						if (from_type== SlotType::CRAFT and from_index == 2)
+						{
+							player.set_craft().finish_craft(true);
+							player.set_craft().check_craft();
+						}
+					}
+				}
+				ImGui::EndDragDropTarget();
+			}
 		}
 
 		ImGui::End();
 	}
 	else{
+		glfwSetInputMode(window.glfw_window,GLFW_CURSOR,GLFW_CURSOR_DISABLED);
 
 		ImGui::SetNextWindowPos(ImVec2(500, 870));
 		ImGui::SetNextWindowSize(ImVec2(500, 450));
@@ -344,20 +412,26 @@ void scene_structure::display_inventory_ui()
 		int slotSpacing = 0;
 
 		Inventory inventory = player.get_inventory();
+		ImU32 color;
 
 		for (int i = 0; i < 9; ++i) {
 			// Position du slot i
 			ImVec2 pos = ImVec2(basePos.x + i * (slotSize + slotSpacing), basePos.y);
 			ImVec2 size = ImVec2(pos.x + slotSize, pos.y + slotSize);
 
-			// Fond transparent (ne rien dessiner ou transparent total)
-			// Bordure blanche
-			drawList->AddRect(pos, size, IM_COL32(255, 255, 255, 255), 0.0f, 0, 5.0f); // épaisseur 2
+			if (player.get_item_ind() == i){
+				color = IM_COL32(250,30,30,255);
+			}
+			else{
+				color = IM_COL32(255, 255, 255, 255);
+			}
 
-			std::shared_ptr<Item> item = inventory.get_inventory()[i];
+			drawList->AddRect(pos, size, color, 0.0f, 0, 2.0f);
+
+			std::vector<std::shared_ptr<Item>> vec_item = inventory.get_inventory()[i];
 
 			std::string text;
-			if (item != nullptr) {text = item->getItemName();}
+			if (!vec_item.empty()) {text = vec_item[0]->getItemName() + std::to_string(vec_item.size());}
 			else
 			{
 				text = std::string(" ");
