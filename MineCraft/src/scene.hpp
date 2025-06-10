@@ -13,6 +13,7 @@
 #include "inventory/inventory.hpp"
 #include "entity/mob.hpp"
 #include "entity/chicken.hpp"
+#include "entity/zombie.hpp"
 #include <map> 
 #include <memory>
 #include "stb_image.h"
@@ -36,6 +37,7 @@ struct scene_structure : cgp::scene_inputs_generic {
 	window_structure window;
 	Player player;
 	Chicken chick;
+	Zombie zombie;
 
 
 	Chunk chunk;
