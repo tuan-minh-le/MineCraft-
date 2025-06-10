@@ -266,6 +266,7 @@ void initialize_default_shaders()
 
 	// Set standard uniform color for curve/segment_drawable
 	curve_drawable::default_shader.load(default_path_shaders +"single_color/single_color.vert.glsl", default_path_shaders+"single_color/single_color.frag.glsl");
+	glCullFace(GL_BACK);
 }
 
 

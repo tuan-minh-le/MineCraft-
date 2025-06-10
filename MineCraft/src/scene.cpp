@@ -12,7 +12,6 @@ void scene_structure::initialize()
 	player.get_camera().look_at({ 3.0f, 2.0f, 2.0f }, {0,0,0}, {0,0,1});
 	global_frame.initialize_data_on_gpu(mesh_primitive_frame());
 
-
 	world.initialize(10, 10, 20);
 	player.initialize(inputs,window,world);
     
@@ -62,7 +61,6 @@ void scene_structure::display_frame()
 	environment.light = player.get_camera().camera_model.position();
 
 	world.renderCached(player.getPosition(), environment);
-
 
 	if (gui.display_frame)
 		draw(global_frame, environment);
