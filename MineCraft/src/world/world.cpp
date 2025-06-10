@@ -80,7 +80,18 @@ void World::generateWorld(){
     }
 }
 
-void World::render(const cgp::vec3& position, const cgp::environment_generic_structure& environment){
+void World::renderBasic(const cgp::vec3& position, const cgp::environment_generic_structure& environment){
+    for(const auto& chunk : chunks){
+        cgp::vec3 chunkCenter = chunk->getChunkCenter();
+
+        float distance = cgp::norm(position - chunkCenter);
+        if(distance < renderDistance){
+            chunk->renderCached(environment);
+        }
+    }
+}
+
+void World::renderCached(const cgp::vec3& position, const cgp::environment_generic_structure& environment){
     for(const auto& chunk : chunks){
         if(chunk && chunk->isGenerated()){
             cgp::vec3 chunkCenter = chunk->getChunkCenter();
@@ -88,7 +99,7 @@ void World::render(const cgp::vec3& position, const cgp::environment_generic_str
             float distance = cgp::norm(position - chunkCenter);
 
             if(distance < renderDistance){
-                chunk->render(environment);
+                chunk->renderCached(environment);
             }
         }
     }

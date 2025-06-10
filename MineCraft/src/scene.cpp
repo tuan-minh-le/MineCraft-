@@ -15,7 +15,7 @@ void scene_structure::initialize()
 	global_frame.initialize_data_on_gpu(mesh_primitive_frame());
 
 
-	world.initialize(1, 1, 20);
+	world.initialize(10, 10, 20);
 	player.initialize(inputs,window,world);
     
     // // === DEBUG TESTING ===
@@ -95,7 +95,7 @@ void scene_structure::display_frame()
 	// Set the light to the current position of the camera
 	environment.light = player.get_camera().camera_model.position();
 
-	world.render(player.getPosition(), environment);
+	world.renderBasic(player.getPosition(), environment);
 
 	static int frameCount = 0;
     frameCount++;

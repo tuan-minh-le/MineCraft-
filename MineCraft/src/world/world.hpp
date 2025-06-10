@@ -23,7 +23,9 @@ class World{
         void initialize(int pWorldSizeX, int pWorldSizeZ, int pRenderDistance);
         void generateWorld();
 
-        void render(const cgp::vec3& position, const cgp::environment_generic_structure& environment);
+        void renderBasic(const cgp::vec3& position, const cgp::environment_generic_structure& environment);
+
+        void renderCached(const cgp::vec3& position, const cgp::environment_generic_structure& environment);
 
 
         // Block access

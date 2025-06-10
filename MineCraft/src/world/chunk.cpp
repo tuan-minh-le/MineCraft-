@@ -35,7 +35,7 @@ Block* Chunk::createBlockObject(BlockType type, const cgp::vec3& position) {
             block = new Grass();
             break;
         case DIRT:
-            block = new Grass(); // Using Grass for dirt too
+            block = new Grass(); 
             break;
         case SAND:
             block = new Sand();
@@ -44,11 +44,11 @@ Block* Chunk::createBlockObject(BlockType type, const cgp::vec3& position) {
             block = new Stone();
             break;
         case BEDROCK:
-            block = new Stone(); // Using Stone for bedrock
+            block = new Stone(); 
             break;
         case AIR:
         default:
-            return nullptr; // No object for air blocks
+            return nullptr; 
     }
     
     if(block) {
@@ -114,6 +114,100 @@ Block* Chunk::getBlockObject(int x, int y, int z) const {
     
     int index = coordinateToIndex(x, y, z);
     return blockObjects[index];
+}
+
+std::vector<std::tuple<int, int, int>> Chunk::findSurfaceBlocksBFS() const{
+    std::vector<std::tuple<int, int, int>> ret;
+    int totalBlocks = chunkSize.width * chunkSize.height * chunkSize.depth;
+    std::vector<bool> visited(totalBlocks, false);
+    std::queue<std::tuple<int, int, int>> queue;
+    
+   // 26-directional movement (6 faces + 12 edges + 8 corners)
+    static const int directions[26][3] = {
+        // 6 face neighbors
+        {-1, 0, 0}, {1, 0, 0},   // X axis (left, right)
+        {0, -1, 0}, {0, 1, 0},   // Y axis (down, up)
+        {0, 0, -1}, {0, 0, 1},   // Z axis (back, front)
+        
+        // 12 edge neighbors
+        {-1, -1, 0}, {-1, 1, 0}, {1, -1, 0}, {1, 1, 0},     // XY edges
+        {-1, 0, -1}, {-1, 0, 1}, {1, 0, -1}, {1, 0, 1},     // XZ edges  
+        {0, -1, -1}, {0, -1, 1}, {0, 1, -1}, {0, 1, 1},     // YZ edges
+        
+        // 8 corner neighbors
+        {-1, -1, -1}, {-1, -1, 1}, {-1, 1, -1}, {-1, 1, 1},
+        {1, -1, -1}, {1, -1, 1}, {1, 1, -1}, {1, 1, 1}
+    };
+    
+    // Fixed: Use only 6 face directions for exposure check (standard Minecraft rule)
+    auto isBlockExposed = [&](int x, int y, int z) -> bool {
+        if(getBlock(x, y, z) == AIR){
+            return false; 
+        }
+
+        for(int face = 0; face < 6; face++) {  // Only check 6 faces for exposure
+            int nx = x + directions[face][0];
+            int ny = y + directions[face][1];
+            int nz = z + directions[face][2];
+            
+            if(!isValidCoordinate(nx, ny, nz) || getBlock(nx, ny, nz) == AIR) {
+                return true;
+            }
+        }
+        return false; 
+    };
+    
+    bool foundStartBlock = false;
+    for(int x = 0; x < chunkSize.width && !foundStartBlock; x++) {
+        for(int y = 0; y < chunkSize.height && !foundStartBlock; y++) {
+            for(int z = 0; z < chunkSize.depth && !foundStartBlock; z++) {
+                if(isBlockExposed(x, y, z)) {
+                    queue.push({x, y, z});
+                    int index = coordinateToIndex(x, y, z);
+                    visited[index] = true;
+                    ret.push_back({x, y, z});
+                    foundStartBlock = true;
+                }
+            }
+        }
+    }
+    
+    if(!foundStartBlock) {
+        std::cout << "No exposed blocks found - chunk is completely buried or empty" << std::endl;
+    }
+
+    while(!queue.empty()) {
+        auto [x, y, z] = queue.front();
+        queue.pop();
+        
+        for(int dir = 0; dir < 26; dir++) {  
+            int nx = x + directions[dir][0];
+            int ny = y + directions[dir][1];
+            int nz = z + directions[dir][2];
+            
+            if(isValidCoordinate(nx, ny, nz)) {
+                int neighborIndex = coordinateToIndex(nx, ny, nz);
+                if(!visited[neighborIndex]) {
+                    if(isBlockExposed(nx, ny, nz)) {
+                        visited[neighborIndex] = true;
+                        queue.push({nx, ny, nz});
+                        ret.push_back({nx, ny, nz});
+                    }
+                }
+            }
+        }
+    }
+    return ret;
+}
+
+void Chunk::renderBasic(const cgp::environment_generic_structure& environment){
+    std::vector<std::tuple<int, int, int>> surfaceBlocks = findSurfaceBlocksBFS();
+    for(const auto [x, y, z] : surfaceBlocks){
+        Block* blockObj = getBlockObject(x, y, z);
+        if(blockObj){
+            blockObj->draw_block_at(environment);
+        }
+    }
 }
 
 void Chunk::findSurfaceBlocksBFS(std::vector<std::tuple<int, int, int>>& surfaceBlocks) const {
@@ -263,7 +357,7 @@ bool Chunk::isBlockSolid(int x, int y, int z) const{
     return getBlock(x, y, z) != AIR;
 }
 
-void Chunk::render(const cgp::environment_generic_structure& environment){
+void Chunk::renderCached(const cgp::environment_generic_structure& environment){
     if(!surfaceBlocksCached) {
         cachedSurfaceBlocks.clear();
         findSurfaceBlocksBFS(cachedSurfaceBlocks);
