@@ -11,6 +11,11 @@
 #include "world/primary_world.hpp"
 #include "world/chunk.hpp"
 #include "inventory/inventory.hpp"
+#include "entity/mob.hpp"
+#include "entity/chicken.hpp"
+#include <map> 
+#include <memory>
+#include "stb_image.h"
 
 using cgp::mesh_drawable;
 
@@ -30,6 +35,7 @@ struct scene_structure : cgp::scene_inputs_generic {
 	camera_projection_perspective camera_projection;
 	window_structure window;
 	Player player;
+	Chicken chick;
 
 
 	Chunk chunk;

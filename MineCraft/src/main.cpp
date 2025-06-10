@@ -9,8 +9,6 @@
 
 #define MINIAUDIO_IMPLEMENTATION
 #include "miniaudio.h"
-
-// Custom scene of this code
 #include "scene.hpp"
 
 
