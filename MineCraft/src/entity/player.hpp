@@ -5,10 +5,12 @@
 #include "block/item.hpp"
 #include <vector>
 #include <memory>
+#include <algorithm>
 #include "entity.hpp"
 #include "inventory/inventory.hpp"
 #include "world/primary_world.hpp"
 #include "world/chunk.hpp"
+#include "world/world.hpp"
 
 class Player : public Entity
 {
@@ -25,6 +27,7 @@ private:
     float verticalVelocity;
     float gravity;
     float dt;
+    World world;
     Primary_World primary_world;
     
     // std::string nameObj = "../../assets/Minecraft_steve/minecraft_steve.obj";
@@ -63,6 +66,7 @@ public:
 
     bool check_cube(const cgp::vec3& origin, const cgp::vec3& direction, float maxDistance, cgp::vec3& hitBlock, cgp::vec3& hitNormal);
 
+    float normeCarre();
     
     bool colision();
     // std::string getNameObj()const;

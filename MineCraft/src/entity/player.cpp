@@ -17,11 +17,16 @@ void Player::initialize(cgp::input_devices& inputs, cgp::window_structure& windo
     inventory.initialize(inventory_size);
     std::shared_ptr<Item> itemPtr = inventory.get_inventory()[ind_inventory];
     primary_world.initialize();
+    world.initialize(1, 1, 20);
     isGrounded = true;
     isCreativeMode = true;
     verticalVelocity = 0;
-    gravity = 9.81f;
+    gravity = 119.81f;
     dt = 0.01f;
+    position.x = 10.0f;
+    position.y = 15.0f;
+    position.z = 10.0f;
+    
 }
 
 Player::~Player()
@@ -90,12 +95,20 @@ void Player::handle_keyboard_event(const cgp::inputs_keyboard_parameters& keyboa
 
     lastE = keyboard.is_pressed(GLFW_KEY_E);
 
+    if (keyboard.is_pressed(GLFW_KEY_P) && !lastE)
+    {   
+        position.x = 10.0f;
+        position.y = 15.0f;
+        position.z = 10.0f;
+    }
+
     if (keyboard.is_pressed(GLFW_KEY_Q)){
         set_speed() = 0.05f;
     }
 
     if (keyboard.is_pressed(GLFW_KEY_LEFT_SHIFT)){
         set_speed() = 0.005f;
+        
     }
 
     if (position.y <= 0) {
@@ -274,15 +287,31 @@ bool Player::check_cube(const cgp::vec3& origin, const cgp::vec3& direction, flo
 
 
 bool Player::colision(){
-    for(size_t i = 0; i < primary_world.getVectorBlockType().size(); ++i){
-        // std::cout<<primary_world.getVectorBlockType()[i]->getPosition()[0] - 0.5f << " <= " << position.x <<" <= " << primary_world.getVectorBlockType()[i]->getPosition()[0] + 0.5f   << " / " << primary_world.getVectorBlockType()[i]->getPosition()[1] - 0.5f << " <= " << position.y <<" <= " << primary_world.getVectorBlockType()[i]->getPosition()[1] + 0.5f   << " / "<< primary_world.getVectorBlockType()[i]->getPosition()[2] - 0.5f << " <= " << position.z <<" <= " << primary_world.getVectorBlockType()[i]->getPosition()[2] + 0.5f   << " / " << std::endl;
-        if((primary_world.getVectorBlockType()[i]->getPosition()[0] - 0.5f <= position.x && position.x <= primary_world.getVectorBlockType()[i]->getPosition()[0] + 0.5f) && (primary_world.getVectorBlockType()[i]->getPosition()[1] - 0.5f <= position.y && position.y <= primary_world.getVectorBlockType()[i]->getPosition()[1] + 0.5f) && (primary_world.getVectorBlockType()[i]->getPosition()[2] - 0.5f <= position.z && position.z <=  primary_world.getVectorBlockType()[i]->getPosition()[2] + 0.5)){
-            // std::cout<<"Colision"<<std::endl;
+
+
+    if(world.getChunkAt(position) != nullptr){
+
+
+
+
+    int cpt = 0;
+    for(auto val: world.getChunkAt(position)->getBlockObjectList()){
+        cpt += 1;
+        if(val!=nullptr){
+
+        
+        if((val->getPosition()[0]  - 0.5f <= position.x && position.x <= val->getPosition()[0]  + 0.5f) && (val->getPosition()[1]  - 0.5f <= position.y && position.y <= val->getPosition()[1]  + 0.5f) && (val->getPosition()[2]  - 0.5f <= position.z && position.z <=  val->getPosition()[2]  + 0.5)){
             return true;
-        }
+            }
+        }  
     }
-    // std::cout<<"Pas de Colision"<<std::endl;
+    }
+
     return false;
+}
+
+float Player::normeCarre(){
+    return getPosition()[0]*getPosition()[0]+getPosition()[1]*getPosition()[1]+getPosition()[2]*getPosition()[2];
 }
 
 // std::string Player::getNameObj()const{

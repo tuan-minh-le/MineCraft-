@@ -17,7 +17,7 @@ void scene_structure::initialize()
 	global_frame.initialize_data_on_gpu(mesh_primitive_frame());
 
 
-	world.initialize(100, 100, 20);
+	world.initialize(1, 1, 20);
 
 
 	environment.camera_view = player.get_camera().camera_model.matrix_view();
