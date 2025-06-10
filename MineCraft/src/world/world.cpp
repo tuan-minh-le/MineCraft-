@@ -59,25 +59,6 @@ void World::generateWorld(){
         {15, 0, 15},
         {8, 8, 8}
     };
-    
-    // for(const auto& pos : testPositions) {
-    //     std::cout << "\nTesting position (" << pos.x << ", " << pos.y << ", " << pos.z << "):" << std::endl;
-    //     Chunk* foundChunk = getChunkAt(pos);
-    //     if(foundChunk) {
-    //         cgp::vec3 chunkPos = foundChunk->getWorldPosition();
-    //         std::cout << "Found in chunk at (" << chunkPos.x << ", " << chunkPos.y << ", " << chunkPos.z << ")" << std::endl;
-            
-    //         // Test getting a block from this chunk
-    //         cgp::vec3 localPos = foundChunk->worldToLocal(pos);
-    //         int localX = static_cast<int>(localPos.x);
-    //         int localY = static_cast<int>(localPos.y);
-    //         int localZ = static_cast<int>(localPos.z);
-    //         BlockType block = foundChunk->getBlock(localX, localY, localZ);
-    //         std::cout << "Block at local (" << localX << "," << localY << "," << localZ << "): " << static_cast<int>(block) << std::endl;
-    //     } else {
-    //         std::cout << "NO CHUNK FOUND!" << std::endl;
-    //     }
-    // }
 }
 
 void World::renderBasic(const cgp::vec3& position, const cgp::environment_generic_structure& environment){
@@ -172,104 +153,14 @@ size_t World::getChunkCount() const {
     return chunks.size();
 }
 
-void World::debugFirstChunk() const {
-    // std::cout << "\n=== DEBUGGING FIRST CHUNK ===" << std::endl;
-    // if(chunks.empty()) {
-    //     std::cout << "No chunks exist!" << std::endl;
-    //     return;
-    // }
-    
-    // Chunk* firstChunk = chunks[0];
-    // if(!firstChunk) {
-    //     std::cout << "First chunk is nullptr!" << std::endl;
-    //     return;
-    // }
-    
-    // std::cout << "First chunk exists at world position: (" 
-    //           << firstChunk->getWorldPosition().x << ", " 
-    //           << firstChunk->getWorldPosition().y << ", " 
-    //           << firstChunk->getWorldPosition().z << ")" << std::endl;
-    
-    // // Test some coordinates in the first chunk
-    // std::cout << "Testing coordinates in first chunk:" << std::endl;
-    // for(int y = 0; y < 10; y++) {
-    //     for(int x = 0; x < 3; x++) {
-    //         for(int z = 0; z < 3; z++) {
-    //             BlockType block = firstChunk->getBlock(x, y, z);
-    //             if(block != AIR) {
-    //                 std::cout << "Found block type " << static_cast<int>(block) 
-    //                           << " at (" << x << "," << y << "," << z << ")" << std::endl;
-    //             }
-    //         }
-    //     }
-    // }
-    
-    // // Call the chunk's debug method
-    // firstChunk->debugChunkContents();
-}
 
-void World::debugWorldState() const {
-//     std::cout << "\n=== WORLD STATE DEBUG ===" << std::endl;
-//     std::cout << "World size: " << worldSizeX << " x " << worldSizeZ << std::endl;
-//     std::cout << "Render distance: " << renderDistance << std::endl;
-//     std::cout << "Chunks vector size: " << chunks.size() << std::endl;
-//     std::cout << "Chunks vector capacity: " << chunks.capacity() << std::endl;
-    
-//     int validChunks = 0;
-//     int nullChunks = 0;
-    
-//     for(size_t i = 0; i < chunks.size(); i++) {
-//         if(chunks[i] == nullptr) {
-//             nullChunks++;
-//         } else {
-//             validChunks++;
-//         }
-//     }
-    
-//     std::cout << "Valid chunks: " << validChunks << std::endl;
-//     std::cout << "Null chunks: " << nullChunks << std::endl;
-//     std::cout << "=========================" << std::endl;
-// }
-
-// void World::checkChunkIntegrity() const {
-//     std::cout << "\n=== CHUNK INTEGRITY CHECK ===" << std::endl;
-    
-//     if(chunks.empty()) {
-//         std::cout << "ERROR: Chunks vector is empty!" << std::endl;
-//         return;
-//     }
-    
-//     std::cout << "Checking first 5 chunks:" << std::endl;
-//     for(size_t i = 0; i < std::min(size_t(5), chunks.size()); i++) {
-//         if(chunks[i] == nullptr) {
-//             std::cout << "Chunk " << i << ": NULL POINTER" << std::endl;
-//         } else {
-//             cgp::vec3 pos = chunks[i]->getWorldPosition();
-//             std::cout << "Chunk " << i << ": Valid at (" << pos.x << ", " << pos.y << ", " << pos.z << ")" << std::endl;
-//         }
-//     }
-//     std::cout << "=============================" << std::endl;
-}
 
 // Modified getChunkAt with better debugging:
 Chunk* World::getChunkAt(const cgp::vec3& worldPos) const {
     static int callCount = 0;
     callCount++;
     
-    // Only show detailed debug for first few calls or when chunks is empty
-    bool showDetailed = (callCount <= 3) || chunks.empty();
     
-    if(showDetailed) {
-        // std::cout << "\n=== getChunkAt DEBUG (call " << callCount << ") ===" << std::endl;
-        // std::cout << "Looking for world position: (" << worldPos.x << ", " << worldPos.y << ", " << worldPos.z << ")" << std::endl;
-        // std::cout << "Total chunks: " << chunks.size() << std::endl;
-        
-        // if(chunks.empty()) {
-        //     std::cout << "ERROR: Chunks vector is empty!" << std::endl;
-        //     std::cout << "World initialization may have failed or chunks were cleared." << std::endl;
-        //     debugWorldState();
-        // }
-    }
     
     for(size_t i = 0; i < chunks.size(); i++) {
         const auto& chunk = chunks[i];
@@ -346,4 +237,51 @@ void World::renderInstanced(const cgp::vec3& position, const cgp::environment_ge
     
     // Render all collected instances
     Block::render_all_instances(environment);
+}
+
+// Replace renderFrustum in world.cpp with this improved version:
+void World::renderFrustum(const cgp::vec3& position, const cgp::environment_generic_structure& environment,
+                          const cgp::mat4& viewMatrix, const cgp::mat4& projectionMatrix){
+    
+    // Extract camera forward direction
+    cgp::vec3 cameraForward = {-viewMatrix(0,2), -viewMatrix(1,2), -viewMatrix(2,2)};
+    cameraForward = cgp::normalize(cameraForward);
+    
+    int chunksRendered = 0;
+    int chunksDistanceCulled = 0;
+    int chunksFrustumCulled = 0;
+    
+    for(const auto& chunk : chunks){
+        if(chunk && chunk->isGenerated()){
+            cgp::vec3 chunkCenter = chunk->getChunkCenter();
+
+            // Distance culling first
+            float distance = cgp::norm(position - chunkCenter);
+            if(distance >= renderDistance) {
+                chunksDistanceCulled++;
+                continue;
+            }
+            
+            // Very simple frustum culling - only cull chunks directly behind
+            cgp::vec3 toChunk = cgp::normalize(chunkCenter - position);
+            float forwardDot = cgp::dot(toChunk, cameraForward);
+            
+            // Only cull if chunk is directly behind camera (very conservative)
+            if (forwardDot < -0.8f) {  // Only cull chunks more than 145 degrees behind
+                chunksFrustumCulled++;
+                continue;
+            }
+            
+            // Render everything else
+            chunk->renderCached(environment);
+            chunksRendered++;
+        }
+    }
+    
+    static int frameCount = 0;
+    if(++frameCount % 60 == 0) {
+        std::cout << "Minimal Camera Culling - Rendered: " << chunksRendered 
+                  << ", Distance culled: " << chunksDistanceCulled
+                  << ", Frustum culled: " << chunksFrustumCulled << std::endl;
+    }
 }
