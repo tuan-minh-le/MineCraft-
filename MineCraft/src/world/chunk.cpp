@@ -82,7 +82,7 @@ void Chunk::populateBlockObjects() {
                         static_cast<float>(y), 
                         static_cast<float>(z)
                     });
-                    std::cout << "Creating block at: " << worldPos << std::endl;
+                    //std::cout << "Creating block at: " << worldPos << std::endl;
                     // Create Block object
                     blockObjects[index] = createBlockObject(blockType, worldPos);
                     cpt+=1;

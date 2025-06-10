@@ -125,7 +125,7 @@ timer_fps fps_record;
 int main(int, char* argv[])
 {
 	std::cout << "Run " << argv[0] << std::endl;
-
+	music_manager();
 	
 
 	// ************************ //
@@ -200,6 +200,7 @@ void animation_loop()
 	glClear(GL_COLOR_BUFFER_BIT);
 	glClear(GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
 
 	float const time_interval = fps_record.update();
 	if (fps_record.event) {

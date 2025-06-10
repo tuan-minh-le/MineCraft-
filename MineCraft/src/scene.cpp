@@ -17,15 +17,15 @@ void scene_structure::initialize()
 	player.initialize(inputs,window,world);
     
     // === DEBUG TESTING ===
-    std::cout << "\n=== SCENE DEBUG TESTING ===" << std::endl;
+    //std::cout << "\n=== SCENE DEBUG TESTING ===" << std::endl;
     
     // Test 1: Check chunk dimensions
     Chunk dummyChunk;
     ChunkSize size = dummyChunk.getSize();
-    std::cout << "Default chunk size: " << size.width << "x" << size.height << "x" << size.depth << std::endl;
+    //std::cout << "Default chunk size: " << size.width << "x" << size.height << "x" << size.depth << std::endl;
     
     // Test 2: Check player starting position
-    std::cout << "Player starting position: (" << player.getPosition().x << ", " << player.getPosition().y << ", " << player.getPosition().z << ")" << std::endl;
+    //std::cout << "Player starting position: (" << player.getPosition().x << ", " << player.getPosition().y << ", " << player.getPosition().z << ")" << std::endl;
     
     // Test 3: Test known world positions
     std::vector<cgp::vec3> testPositions = {
@@ -37,16 +37,16 @@ void scene_structure::initialize()
         {player.getPosition().x, player.getPosition().y, player.getPosition().z} // Player position
     };
     
-    std::cout << "\nTesting world block access:" << std::endl;
+    //std::cout << "\nTesting world block access:" << std::endl;
     for(size_t i = 0; i < testPositions.size(); i++) {
         cgp::vec3 pos = testPositions[i];
-        std::cout << "\n--- Test " << i+1 << ": Position (" << pos.x << ", " << pos.y << ", " << pos.z << ") ---" << std::endl;
+        //std::cout << "\n--- Test " << i+1 << ": Position (" << pos.x << ", " << pos.y << ", " << pos.z << ") ---" << std::endl;
         
         BlockType block = world.getBlock(pos);
-        std::cout << "Result: Block type " << static_cast<int>(block) << std::endl;
+        //std::cout << "Result: Block type " << static_cast<int>(block) << std::endl;
         
         if(block != AIR) {
-            std::cout << "SUCCESS: Found non-air block!" << std::endl;
+            //std::cout << "SUCCESS: Found non-air block!" << std::endl;
             break; 
         }
     }
