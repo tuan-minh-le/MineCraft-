@@ -6,5 +6,7 @@ class Tool : public Item{
         
 
     public:
+
+    virtual void action () = 0;
         
 };

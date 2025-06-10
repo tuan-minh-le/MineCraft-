@@ -24,12 +24,19 @@ void Mob::initialize_drawable_mesh(){
 
 }
 
-
 cgp::mesh Mob::get_mesh() const{
     return mesh;
 }
 
 cgp::mesh_drawable Mob::get_mesh_drawable() const{
     return mesh_drawable;
+}
+
+std::shared_ptr<Item> Mob::get_drop(){
+    return drop;
+}
+
+std::shared_ptr<Item>& Mob::set_drop(){
+    return drop;
 }
 
