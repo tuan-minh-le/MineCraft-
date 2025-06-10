@@ -54,7 +54,13 @@ void Inventory::add_inventory (std::shared_ptr<Item> item){
 void Inventory::erase_inventory (int ind){
     if (0<=ind<get_inventory_size())
     {
-        inventory[ind].erase(inventory[ind].begin());
+        if (inventory[ind].empty())
+        {
+           return;
+        }
+        else{
+            inventory[ind].erase(inventory[ind].begin());
+        }
     }
 }
 
