@@ -18,7 +18,7 @@ void Player::initialize(cgp::input_devices& inputs, cgp::window_structure& windo
     inventory.initialize(inventory_size);
     craft.initialize(craft_size);
 
-    std::shared_ptr<Item> itemPtr = inventory.get_inventory()[ind_inventory][0];
+    item_in_hand = inventory.get_inventory()[ind_inventory][0];
     primary_world.initialize();
     world = wrd;
     isGrounded = true;
@@ -72,11 +72,11 @@ cgp::camera_controller_first_person_euler& Player::set_camera(){
     return camera;
 }
 
-Item Player::get_item_in_hand() const{
+std::shared_ptr<Item> Player::get_item_in_hand() const{
     return item_in_hand;
 }
 
-Item& Player::set_item_in_hand(){
+std::shared_ptr<Item>& Player::set_item_in_hand(){
     return item_in_hand;
 }
 
@@ -224,8 +224,9 @@ void Player::handle_mouse_event(const cgp::inputs_mouse_parameters& mouse){
     if (mouse.click.right && !inventory.get_opened_inventory()){
         cgp::vec3 hitblock;
         cgp::vec3 hitnormal;
-        if(check_cube(camera.camera_model.position(),camera.camera_model.front(),5.0f, hitblock,hitnormal)){
+        if(check_cube(camera.camera_model.position(),camera.camera_model.front(),5.0f, hitblock,hitnormal) && std::dynamic_pointer_cast<Block>(item_in_hand)){
             std::cout<<"poser bloc à pos: "<<hitblock+hitnormal<<std::endl;
+            inventory.erase_inventory(ind_inventory);
             world.setBlock(hitblock+hitnormal,GRASS);
         }
     }

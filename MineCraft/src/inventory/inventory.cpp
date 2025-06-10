@@ -33,18 +33,24 @@ void Inventory::close_inventory(){
 void Inventory::add_inventory (std::shared_ptr<Item> item){
     for (auto it : inventory)
     {
-        if (it[0]->getItemName()==item->getItemName() && it.size()<max_size)
+        if (it.empty())
         {
             it.push_back(item);
+            return;
+        }
+        else if (it[0]->getItemName()==item->getItemName() && it.size()<max_size)
+        {
+            it.push_back(item);
+            return;
         }
     }
 }
 
 void Inventory::erase_inventory (int ind){
-    if (ind >= get_inventory_size()) {
-        throw std::out_of_range("Index out of range");
+    if (0<=ind<get_inventory_size())
+    {
+        inventory[ind].erase(inventory[ind].begin());
     }
-    inventory[ind].clear();
 }
 
 void Inventory::fast_switch_inventory(int ind,SlotType from_type, Inventory& inv){

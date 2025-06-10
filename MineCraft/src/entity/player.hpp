@@ -18,7 +18,7 @@ private:
     int hunger;
     Inventory inventory;
     Inventory craft;
-    Item item_in_hand;
+    std::shared_ptr<Item> item_in_hand;
     float speed;
     int ind_inventory;
 
@@ -54,8 +54,8 @@ public:
     Inventory& get_craft();
     Inventory& set_craft();
 
-    Item get_item_in_hand() const;
-    Item& set_item_in_hand();
+    std::shared_ptr<Item> get_item_in_hand() const;
+    std::shared_ptr<Item>& set_item_in_hand();
 
     int get_item_ind() const;
     int& set_item_ind();
