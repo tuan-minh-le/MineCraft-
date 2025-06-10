@@ -445,6 +445,29 @@ void scene_structure::display_inventory_ui()
 			drawList->AddText(textPos, IM_COL32(0, 0, 0, 255), text.c_str());
 		}
 		ImGui::End();
+
+		ImVec2 center = ImVec2(window.width * 0.5f, window.height * 0.5f);
+		float size = 25.0f;
+
+		ImGui::SetNextWindowPos(ImVec2(center.x-2*size,center.y-2*size));
+		ImGui::SetNextWindowSize(ImVec2(5*size, 5*size));
+		ImGui::Begin("Cursor", nullptr,
+				ImGuiWindowFlags_NoTitleBar |
+				ImGuiWindowFlags_NoResize |
+				ImGuiWindowFlags_NoMove |
+				ImGuiWindowFlags_NoCollapse |
+				ImGuiWindowFlags_NoBackground);
+
+		basePos = ImGui::GetCursorScreenPos();
+		drawList = ImGui::GetWindowDrawList();
+		color = IM_COL32(0, 0, 0, 255);
+
+		drawList->AddLine(ImVec2(center.x - size, center.y),
+						ImVec2(center.x + size, center.y), color, 3.0f);
+
+		drawList->AddLine(ImVec2(center.x, center.y - size),
+                       ImVec2(center.x, center.y + size), color, 3.0f);
+		ImGui::End();
 	}
 }
 
