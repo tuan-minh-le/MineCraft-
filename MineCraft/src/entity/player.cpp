@@ -224,8 +224,8 @@ void Player::handle_mouse_event(const cgp::inputs_mouse_parameters& mouse){
         cgp::vec3 hitblock;
         cgp::vec3 hitnormal;
         if(check_cube(camera.camera_model.position(),camera.camera_model.front(),5.0f, hitblock,hitnormal)){
-            std::cout<<"poser bloc à pos: "<<hitnormal<<std::endl;
-            world.setBlock(hitnormal,GRASS);
+            std::cout<<"poser bloc à pos: "<<hitblock+hitnormal<<std::endl;
+            world.setBlock(hitblock+hitnormal,GRASS);
         }
     }
 
