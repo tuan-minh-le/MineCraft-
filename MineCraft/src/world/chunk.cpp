@@ -452,19 +452,43 @@ void Chunk::debugChunkContents() const {
     // std::cout << "=========================" << std::endl;
 }
 
-void Chunk::testCoordinate(int x, int y, int z) const {
-    // std::cout << "\n=== TESTING COORDINATE (" << x << "," << y << "," << z << ") ===" << std::endl;
-    // std::cout << "Chunk world position: (" << chunkWorldPosition.x << ", " << chunkWorldPosition.y << ", " << chunkWorldPosition.z << ")" << std::endl;
+void Chunk::renderInstanced(const cgp::environment_generic_structure& environment) {
+    if (!surfaceBlocksCached) {
+        cachedSurfaceBlocks.clear();
+        findSurfaceBlocksBFS(cachedSurfaceBlocks);
+        surfaceBlocksCached = true;
+    }
     
-    // if(isValidCoordinate(x, y, z)) {
-    //     int index = coordinateToIndex(x, y, z);
-    //     BlockType block = blockData[index];
+    // Clear previous frame's instances
+    Block::clear_all_instances();
+    
+    // Collect all visible blocks by type
+    for (const auto& [x, y, z] : cachedSurfaceBlocks) {
+        BlockType blockType = getBlock(x, y, z);
+        cgp::vec3 worldPos = localToWorld({
+            static_cast<float>(x), 
+            static_cast<float>(y), 
+            static_cast<float>(z)
+        });
         
-    //     std::cout << "Valid coordinate - Index: " << index << ", Block type: " << static_cast<int>(block) << std::endl;
-        
-    //     cgp::vec3 worldPos = localToWorld({static_cast<float>(x), static_cast<float>(y), static_cast<float>(z)});
-    //     std::cout << "World position: (" << worldPos.x << ", " << worldPos.y << ", " << worldPos.z << ")" << std::endl;
-    // } else {
-    //     std::cout << "Invalid coordinate for chunk size " << chunkSize.width << "x" << chunkSize.height << "x" << chunkSize.depth << std::endl;
-    // }
+        // Add to appropriate instance list based on block type
+        switch (blockType) {
+            case GRASS:
+                Block::add_grass_instance(worldPos);
+                break;
+            case STONE:
+                Block::add_stone_instance(worldPos);
+                break;
+            case SAND:
+                Block::add_sand_instance(worldPos);
+                break;
+            default:
+                // For other block types, you can add more instance lists
+                // or fall back to individual rendering
+                break;
+        }
+    }
+    
+    // Render all instances at once
+    Block::render_all_instances(environment);
 }
