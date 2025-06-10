@@ -1,12 +1,11 @@
 #include "stone.hpp"
 
-Stone::Stone() : Block() {}
+Stone::Stone() : Block() {item_name = "Stone";}
 
 Stone::~Stone() {}
 
 void Stone::initialize() {
-    item_name = "Stone Block";
-
+    item_name = "Stone";
     initialize_shared_mesh();
 }
 
