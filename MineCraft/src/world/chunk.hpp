@@ -22,7 +22,7 @@ struct ChunkSize {
 
 class Chunk {
 private:
-    ChunkSize chunkSize = {4, 4, 2};
+    ChunkSize chunkSize = {16, 16, 16};
     cgp::vec3 chunkWorldPosition; 
     std::vector<BlockType> blockData;
     std::vector<Block*> blockObjects;
@@ -35,8 +35,8 @@ private:
     
     bool isDataGenerated = false;
 
-    std::vector<std::tuple<int, int, int>> cachedSurfaceBlocks;
-    bool surfaceBlocksCached = false;
+    
+    
 
     bool isValidCoordinate(int x, int y, int z) const;
     int coordinateToIndex(int x, int y, int z) const;
@@ -51,6 +51,9 @@ public:
     Chunk();
     Chunk(const cgp::vec3& worldPos);
     ~Chunk();
+
+    std::vector<std::tuple<int, int, int>> cachedSurfaceBlocks;
+    bool surfaceBlocksCached = false;
     
     void initialize();
     void setWorldPosition(const cgp::vec3& worldPos);
@@ -73,6 +76,8 @@ public:
     void renderBasic(const cgp::environment_generic_structure& environment);
     
     void renderCached(const cgp::environment_generic_structure& environment);
+
+    void renderInstanced(const cgp::environment_generic_structure& environment);
 
     std::vector<std::tuple<int, int, int>> findSurfaceBlocksBFS() const;
     

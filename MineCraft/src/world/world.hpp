@@ -27,6 +27,7 @@ class World{
 
         void renderCached(const cgp::vec3& position, const cgp::environment_generic_structure& environment);
 
+        void renderInstanced(const cgp::vec3& position, const cgp::environment_generic_structure& environment);
 
         // Block access
         BlockType getBlock(const cgp::vec3& worldPos) const;

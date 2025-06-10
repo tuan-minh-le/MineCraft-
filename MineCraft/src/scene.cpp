@@ -13,7 +13,7 @@ void scene_structure::initialize()
 	global_frame.initialize_data_on_gpu(mesh_primitive_frame());
 
 
-	world.initialize(1, 1, 20);
+	world.initialize(10, 10, 20);
 	player.initialize(inputs,window,world);
     
     // === DEBUG TESTING ===
@@ -47,39 +47,10 @@ void scene_structure::initialize()
         
         if(block != AIR) {
             std::cout << "SUCCESS: Found non-air block!" << std::endl;
-            break; // Found at least one working block
+            break; 
         }
     }
-    
-    // // Test 4: Get first chunk and debug its contents
-    // std::cout << "\n=== FIRST CHUNK DEBUG ===" << std::endl;
-    // // You'll need to add a method to World to get chunk by index
-    // // For now, let's test by getting the chunk at (0,0,0)
-    
-    // std::cout << "=== END DEBUG TESTING ===" << std::endl;
 
-
-	// environment.camera_view = player.get_camera().camera_model.matrix_view();
-	
-	// Block::initialize_shared_mesh();
-	// grass.initialize();
-	// primary_world.initialize();
-	// //primary world initialization
-
-
-	// std::vector<int> positions = {0, 1, 2};
-	// //std::vector<Block*> vectorBlockType;
-	// for(int x : positions){
-	// 	for(int y : positions){
-	// 		for(int z : positions){
-	// 			cgp::vec3 position = {x, y, z};
-	// 			Grass* grass;
-	// 			grass = new Grass();
-	// 			grass->setPosition() = position;
-	// 			vectorBlockType.push_back(grass);
-	// 		}
-	// 	}
-	// }
 	glfwSetInputMode(window.glfw_window,GLFW_CURSOR,GLFW_CURSOR_DISABLED);
 
 }
@@ -90,44 +61,15 @@ void scene_structure::display_frame()
 	// Set the light to the current position of the camera
 	environment.light = player.get_camera().camera_model.position();
 
-	world.renderBasic(player.getPosition(), environment);
+	world.renderInstanced(player.getPosition(), environment);
 
 	static int frameCount = 0;
     frameCount++;
-	// world.drawChunk(environment);
 
-	// for (size_t i = 0; i < primary_world.getVectorBlockType().size(); ++i) {
-    // 	primary_world.getVectorBlockType()[i]->draw_block_at(environment);
-	// 	//std::cout<<primary_world.getVectorBlockType()[i]->getPosition()<<std::endl;
-	// }
-	// std::vector<int> positions = {0, 1, 2};
-	// std::vector<Block*> vectorBlockType;
-	// for(int x : positions){
-	// 	for(int y : positions){
-	// 		for(int z : positions){
-	// 			cgp::vec3 position = {x, y, z};
-	// 			Grass* grass;
-	// 			grass = new Grass();
-	// 			grass->setPosition() = position;
-	// 			vectorBlockType.push_back(grass);
-	// 			grass->draw_block_at(environment);
-
-	// 		}
-	// 	}
-	// }
-	// std::cout<<vectorBlockType[0]->getPosition()<<std::endl;
 	if (gui.display_frame)
 		draw(global_frame, environment);
 	
-	// if(frameCount % 60 == 1) {
-    //     std::cout << "\n=== FRAME " << frameCount << " WORLD CHECK ===" << std::endl;
-    //     world.debugWorldState();
-        
-    //     if(world.getChunkCount() == 0) {
-    //         std::cout << "CRITICAL: All chunks have been lost!" << std::endl;
-    //         // You might want to reinitialize or exit here
-    //     }
-    // }
+
 
 }
 

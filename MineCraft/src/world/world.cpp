@@ -295,3 +295,56 @@ Chunk* World::getChunkAt(const cgp::vec3& worldPos) const {
     // if(showDetailed) std::cout << "*** NO CHUNK FOUND ***" << std::endl;
     return nullptr;
 }
+
+void World::renderInstanced(const cgp::vec3& position, const cgp::environment_generic_structure& environment) {
+    // Initialize instanced drawables once
+    Block::initialize_instanced_drawables();
+    
+    // Clear all instances from previous frame
+    Block::clear_all_instances();
+    
+    // Collect instances from all chunks within render distance
+    for (const auto& chunk : chunks) {
+        if (chunk && chunk->isGenerated()) {
+            cgp::vec3 chunkCenter = chunk->getChunkCenter();
+            float distance = cgp::norm(position - chunkCenter);
+            
+            if (distance < renderDistance) {
+                // Get surface blocks for this chunk
+                if (!chunk->surfaceBlocksCached) {
+                    chunk->cachedSurfaceBlocks.clear();
+                    chunk->findSurfaceBlocksBFS(chunk->cachedSurfaceBlocks);
+                    chunk->surfaceBlocksCached = true;
+                }
+                
+                // Add instances for each surface block
+                for (const auto& [x, y, z] : chunk->cachedSurfaceBlocks) {
+                    BlockType blockType = chunk->getBlock(x, y, z);
+                    cgp::vec3 worldPos = chunk->localToWorld({
+                        static_cast<float>(x), 
+                        static_cast<float>(y), 
+                        static_cast<float>(z)
+                    });
+                    
+                    // Add to appropriate instance list
+                    switch (blockType) {
+                        case GRASS:
+                            Block::add_grass_instance(worldPos);
+                            break;
+                        case STONE:
+                            Block::add_stone_instance(worldPos);
+                            break;
+                        case SAND:
+                            Block::add_sand_instance(worldPos);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+        }
+    }
+    
+    // Render all collected instances
+    Block::render_all_instances(environment);
+}
