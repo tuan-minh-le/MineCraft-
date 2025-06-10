@@ -8,8 +8,8 @@
 #include <algorithm>
 #include "entity.hpp"
 #include "inventory/inventory.hpp"
-#include "world/primary_world.hpp"
 #include "world/chunk.hpp"
+#include "world/primary_world.hpp"
 #include "world/world.hpp"
 
 class Player : public Entity
@@ -18,7 +18,8 @@ private:
     cgp::camera_controller_first_person_euler camera;
     int hunger;
     Inventory inventory;
-    Item item_in_hand;
+    Inventory craft;
+    std::shared_ptr<Item> item_in_hand;
     float speed;
     int ind_inventory;
 
@@ -37,18 +38,28 @@ public:
     Player();
     ~Player();
 
-    void initialize(cgp::input_devices& inputs, cgp::window_structure& window);
+    void initialize(cgp::input_devices& inputs, cgp::window_structure& window, World& wrd);
 
     float max_pitch_up = 85.0f;
     float max_pitch_down = -85.0f;
 
-    int inventory_size = 40;
+    int inventory_size = 36;
+    int craft_size = 5;
 
     int get_hunger() const;
     int& set_hunger();
 
-    Inventory get_inventory() const;
+    Inventory& get_inventory();
     Inventory& set_inventory();
+
+    Inventory& get_craft();
+    Inventory& set_craft();
+
+    std::shared_ptr<Item> get_item_in_hand() const;
+    std::shared_ptr<Item>& set_item_in_hand();
+
+    int get_item_ind() const;
+    int& set_item_ind();
 
     float get_speed() const;
     float& set_speed();

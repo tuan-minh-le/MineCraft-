@@ -3,16 +3,8 @@
 #include "block/grass.hpp"
 #include "block/sand.hpp" 
 #include "block/stone.hpp"
+#include "block/block.hpp"
 #include <queue>
-
-enum BlockType {
-    AIR = 0,
-    GRASS = 1,
-    DIRT = 2,
-    SAND = 3,
-    STONE = 4,
-    BEDROCK = 5
-};
 
 struct ChunkSize {
     int width;
@@ -35,8 +27,8 @@ private:
     
     bool isDataGenerated = false;
 
-    std::vector<std::tuple<int, int, int>> cachedSurfaceBlocks;
-    bool surfaceBlocksCached = false;
+    
+    
 
     bool isValidCoordinate(int x, int y, int z) const;
     int coordinateToIndex(int x, int y, int z) const;
@@ -51,11 +43,15 @@ public:
     Chunk();
     Chunk(const cgp::vec3& worldPos);
     ~Chunk();
+
+    std::vector<std::tuple<int, int, int>> cachedSurfaceBlocks;
+    bool surfaceBlocksCached = false;
     
     void initialize();
     void setWorldPosition(const cgp::vec3& worldPos);
     
     BlockType getBlock(int x, int y, int z) const;
+    BlockType getBlock();
     void setBlock(int x, int y, int z, BlockType blockType);
     bool isBlockSolid(int x, int y, int z) const;
     
@@ -74,8 +70,14 @@ public:
     
     bool isGenerated() const { return isDataGenerated; }
     void markAsGenerated() { isDataGenerated = true; }
+
+    void renderBasic(const cgp::environment_generic_structure& environment);
     
-    void render(const cgp::environment_generic_structure& environment);
+    void renderCached(const cgp::environment_generic_structure& environment);
+
+    void renderInstanced(const cgp::environment_generic_structure& environment);
+
+    std::vector<std::tuple<int, int, int>> findSurfaceBlocksBFS() const;
     
     void findSurfaceBlocksBFS(std::vector<std::tuple<int, int, int>>& surfaceBlocks) const;
 
@@ -84,5 +86,8 @@ public:
     void populateBlockObjects();
 
     cgp::vec3 getChunkCenter() const;
+
+    void debugChunkContents() const;
+    void testCoordinate(int x, int y, int z) const;
     
 };

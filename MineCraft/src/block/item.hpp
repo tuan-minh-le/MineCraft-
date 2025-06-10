@@ -9,4 +9,5 @@ class Item{
         cgp::mesh_drawable inventory_texture;
     public:
         std::string getItemName() const;
+        virtual ~Item() = default;
 };

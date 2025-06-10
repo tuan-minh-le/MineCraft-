@@ -7,17 +7,20 @@ Player::Player()
 
 static bool lastE = false;
 
-void Player::initialize(cgp::input_devices& inputs, cgp::window_structure& window){
+void Player::initialize(cgp::input_devices& inputs, cgp::window_structure& window, World& wrd){
     camera.initialize(inputs, window);
     camera.set_rotation_axis_y();
     set_hunger() = 20;
     setLife() = 20;
     speed = 1.0f;
     ind_inventory = 0;
+
     inventory.initialize(inventory_size);
-    std::shared_ptr<Item> itemPtr = inventory.get_inventory()[ind_inventory];
+    craft.initialize(craft_size);
+
+    item_in_hand = inventory.get_inventory()[ind_inventory][0];
     primary_world.initialize();
-    world.initialize(1, 1, 20);
+    world = wrd;
     isGrounded = true;
     isCreativeMode = true;
     verticalVelocity = 0;
@@ -50,12 +53,19 @@ float& Player::set_speed(){
     return speed;
 }
 
-Inventory Player::get_inventory() const{
+Inventory& Player::get_inventory(){
     return inventory;
 }
 
 Inventory& Player::set_inventory(){
     return inventory;
+}
+
+Inventory& Player::get_craft(){
+    return craft;
+}
+Inventory& Player::set_craft(){
+    return craft;
 }
 
 cgp::camera_controller_first_person_euler Player::get_camera() const{
@@ -64,6 +74,22 @@ cgp::camera_controller_first_person_euler Player::get_camera() const{
 
 cgp::camera_controller_first_person_euler& Player::set_camera(){
     return camera;
+}
+
+std::shared_ptr<Item> Player::get_item_in_hand() const{
+    return item_in_hand;
+}
+
+std::shared_ptr<Item>& Player::set_item_in_hand(){
+    return item_in_hand;
+}
+
+int Player::get_item_ind() const{
+    return ind_inventory;
+}
+
+int& Player::set_item_ind(){
+    return ind_inventory;
 }
 
 void Player::handle_mouse_move(cgp::vec2 const& mouse_position_current, cgp::vec2 const& mouse_position_previous, cgp::mat4& camera_view_matrix) {
@@ -87,7 +113,6 @@ void Player::handle_mouse_move(cgp::vec2 const& mouse_position_current, cgp::vec
 
 void Player::handle_keyboard_event(const cgp::inputs_keyboard_parameters& keyboard,cgp::mat4& camera_view_matrix){
 
-    lastE = false; 
     if (keyboard.is_pressed(GLFW_KEY_E) && !lastE)
     {
         inventory.set_opened_inventory() = !inventory.get_opened_inventory();
@@ -110,6 +135,16 @@ void Player::handle_keyboard_event(const cgp::inputs_keyboard_parameters& keyboa
         set_speed() = 0.005f;
         
     }
+
+    if (keyboard.is_pressed(GLFW_KEY_1)) ind_inventory = 0;
+    if (keyboard.is_pressed(GLFW_KEY_2)) ind_inventory = 1;
+    if (keyboard.is_pressed(GLFW_KEY_3)) ind_inventory = 2;
+    if (keyboard.is_pressed(GLFW_KEY_4)) ind_inventory = 3;
+    if (keyboard.is_pressed(GLFW_KEY_5)) ind_inventory = 4;
+    if (keyboard.is_pressed(GLFW_KEY_6)) ind_inventory = 5;
+    if (keyboard.is_pressed(GLFW_KEY_7)) ind_inventory = 6;
+    if (keyboard.is_pressed(GLFW_KEY_8)) ind_inventory = 7;
+    if (keyboard.is_pressed(GLFW_KEY_9)) ind_inventory = 8;
 
     if (position.y <= 0) {
         position.y = 0;  
@@ -167,10 +202,7 @@ void Player::move(float speed,const cgp::inputs_keyboard_parameters& keyboard,cg
 
     if (keyboard.is_pressed(GLFW_KEY_W)){
         position += speed * forward;
-        // std::cout<<"move z"<<std::endl;
-        // std::cout<<"move z"<<std::endl;
 
-        // std::cout<< "position after" << position<<std::endl;
         if(colision()==true){
             position -= speed * forward;
         }
@@ -201,50 +233,55 @@ void Player::move(float speed,const cgp::inputs_keyboard_parameters& keyboard,cg
 }
 
 void Player::handle_mouse_event(const cgp::inputs_mouse_parameters& mouse){
-    if (mouse.click.left){
+    if (mouse.click.left && !inventory.get_opened_inventory()){
         cgp::vec3 hitblock;
         cgp::vec3 hitnormal;
-        if(check_cube(camera.camera_model.position(),camera.camera_model.front(),5.0f, hitblock,hitnormal)){
-            //casser_cube
-        }
+        if(check_cube(camera.camera_model.position(),camera.camera_model.front(), 5.0f, hitblock, hitnormal)){
+            if(inventory.add_inventory(std::shared_ptr<Item>((world.getBlockObject(hitblock))))){
+                world.setBlock(hitblock,AIR);
+            }
+        }        
     }
-
-    if (mouse.click.right){
+    if (mouse.click.right && !inventory.get_opened_inventory()){
         cgp::vec3 hitblock;
         cgp::vec3 hitnormal;
-        if(check_cube(camera.camera_model.position(),camera.camera_model.front(),5.0f, hitblock,hitnormal)){
-            //Poser_cube
+        if(check_cube(camera.camera_model.position(),camera.camera_model.front(),5.0f, hitblock,hitnormal) && std::dynamic_pointer_cast<Block>(item_in_hand)){
+            BlockType type = std::dynamic_pointer_cast<Block>(item_in_hand)->get_type();
+            if(inventory.erase_inventory(ind_inventory)){
+                world.setBlock(hitblock+hitnormal,type);
+            }
         }
     }
 
-    if (mouse.scroll == 1){
-        if (ind_inventory+1 >= inventory_size) {
-            throw std::out_of_range("No next item");
-        }
-        else
+    if (ImGui::GetIO().MouseWheel<0){
+        if (ind_inventory+1 < inventory_size/4)
         {
-            std::shared_ptr<Item> itemPtr = inventory.get_inventory()[ind_inventory + 1];
+            ind_inventory++;
         }
     }
 
-    if (mouse.scroll == -1){
-        if (ind_inventory-1 < 0) {
-            throw std::out_of_range("No previous item");
-        }
-        else
+    if (ImGui::GetIO().MouseWheel>0){
+        if (ind_inventory - 1 >= 0)
         {
-            std::shared_ptr<Item> itemPtr = inventory.get_inventory()[ind_inventory - 1];
+            ind_inventory--;
         }
     }
 }
 
 bool Player::check_cube(const cgp::vec3& origin, const cgp::vec3& direction, float maxDistance, cgp::vec3& hitBlock, cgp::vec3& hitNormal) {
-    cgp::vec3 pos = origin;
-    cgp::vec3 blockPos = cgp::vec3({std::floor(pos.x),std::floor(pos.y),std::floor(pos.z)});
-    
-    cgp::vec3 deltaDist = cgp::vec3({std::abs(1.0f/direction.x),std::abs(1.0f/direction.y),std::abs(1.0f/direction.z)});
-    cgp::vec3 step;
-    cgp::vec3 sideDist;
+    using namespace cgp;
+
+    vec3 pos = origin;
+    vec3 blockPos = vec3(std::floor(pos.x), std::floor(pos.y), std::floor(pos.z));
+
+    vec3 deltaDist = vec3(
+        direction.x != 0.0f ? std::abs(1.0f / direction.x) : std::numeric_limits<float>::infinity(),
+        direction.y != 0.0f ? std::abs(1.0f / direction.y) : std::numeric_limits<float>::infinity(),
+        direction.z != 0.0f ? std::abs(1.0f / direction.z) : std::numeric_limits<float>::infinity()
+    );
+
+    vec3 step;
+    vec3 sideDist;
 
     for (int i = 0; i < 3; ++i) {
         if (direction[i] < 0) {
@@ -256,35 +293,31 @@ bool Player::check_cube(const cgp::vec3& origin, const cgp::vec3& direction, flo
         }
     }
 
-    // std::cout<<"Position "<<pos<<"Delta "<<deltaDist<<"step "<<step<<"Sidedist "<<sideDist<<std::endl; 
+    float distance = 0.0f;
+    hitNormal = vec3({0,0,0}); // important : reset
 
-    for (float distance = 0.0f; distance < maxDistance;) {
-
+    while (distance < maxDistance) {
         int axis;
-        if (sideDist.x < sideDist.y){
+        if (sideDist.x < sideDist.y) {
             axis = (sideDist.x < sideDist.z) ? 0 : 2;
         } else {
             axis = (sideDist.y < sideDist.z) ? 1 : 2;
         }
-        // auto blockpos_int = worldToLocal(blockPos);
-
-        // if (isSolidBlock(blockpos_int.x,blockpos_int.y,blockpos_int.z)){
-        //     hitBlock = blockPos;
-        //     hitNormal[axis] = -step[axis];
-        //     return true;
-        // }
 
         blockPos[axis] += step[axis];
-        distance = sideDist[axis];
-        // std::cout<<"Distance"<< blockPos<<std::endl;
+        distance += deltaDist[axis];
         sideDist[axis] += deltaDist[axis];
+
+        if (world.getBlock(blockPos)) {
+            hitBlock = blockPos;
+            hitNormal = vec3({0,0,0});
+            hitNormal[axis] = -step[axis];
+            return true;
+        }
     }
 
     return false;
 }
-
-    
-
 
 bool Player::colision(){
 

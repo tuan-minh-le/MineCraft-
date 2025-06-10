@@ -23,8 +23,11 @@ class World{
         void initialize(int pWorldSizeX, int pWorldSizeZ, int pRenderDistance);
         void generateWorld();
 
-        void render(const cgp::vec3& position, const cgp::environment_generic_structure& environment);
+        void renderBasic(const cgp::vec3& position, const cgp::environment_generic_structure& environment);
+
+        void renderCached(const cgp::vec3& position, const cgp::environment_generic_structure& environment);
         
+        void renderInstanced(const cgp::vec3& position, const cgp::environment_generic_structure& environment);
         //Chunk Acces
         Chunk* getChunkAt(const cgp::vec3& worldPos) const;
         // Block access
@@ -33,4 +36,11 @@ class World{
         Block* getBlockObject(const cgp::vec3& worldPos) const;
 
         int getRenderDistance() const;
+
+        Chunk* getChunkByIndex(size_t index) const;
+        size_t getChunkCount() const;
+        void debugFirstChunk() const;
+
+        void debugWorldState() const;
+        void checkChunkIntegrity() const;
 };

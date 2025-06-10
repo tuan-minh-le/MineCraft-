@@ -2,15 +2,27 @@
 
 #include "cgp/cgp.hpp"
 #include "block/item.hpp" //Take care Forward declaration maybe
+#include "block/grass.hpp"
+#include "block/stone.hpp"
 #include <vector>
 #include <memory>
 #include <string>
+
+enum class SlotType {
+    INVENTORY,
+    CRAFT
+};
+
+struct DragPayload {
+    int index;
+    SlotType source;
+};
 
 class Inventory{
     protected:
     
         bool opened_inventory = false;
-        std::vector<std::shared_ptr<Item>> inventory;
+        std::vector<std::vector<std::shared_ptr<Item>>> inventory;
         int inventory_size;
 
     public:
@@ -18,19 +30,26 @@ class Inventory{
         Inventory();
         ~Inventory();
 
+        int max_size = 64;
+
         void initialize(int size);
-        void add_inventory (std::shared_ptr<Item> item, int ind);
-        void erase_inventory (int ind);
-        void switch_inventory(int ind1, int ind2);
+        bool add_inventory (std::shared_ptr<Item> item);
+        bool erase_inventory (int ind);
+        void switch_inventory(int ind1, int ind2, SlotType from_type, SlotType to_type, Inventory& from_inv,bool split, bool one);
         void open_inventory();
         void close_inventory();
 
-        void draw_inventory();
+        void fast_switch_inventory(int ind,SlotType from_type, Inventory& inv);
+        bool check_craft();
+		void finish_craft(bool erase);
 
 
         bool get_opened_inventory() const;
         bool& set_opened_inventory();
 
-        std::vector<std::shared_ptr<Item>> get_inventory() const;
-        std::vector<std::shared_ptr<Item>>& set_inventory();
+        int get_inventory_size() const;
+        int& set_inventory_size();
+
+        std::vector<std::vector<std::shared_ptr<Item>>>& get_inventory();
+        std::vector<std::vector<std::shared_ptr<Item>>>& set_inventory();
 };

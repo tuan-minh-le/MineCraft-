@@ -44,21 +44,6 @@ namespace cgp
 	}
 	void camera_controller_orbit_euler::idle_frame(mat4& camera_matrix_view)
 	{
-		// Preconditions
-		assert_cgp_no_msg(inputs != nullptr);
-		assert_cgp_no_msg(window != nullptr);
-		if (!is_active) return;
-
-		bool const shift = inputs->keyboard.shift;
-		float const angle_magnitude = 2 * inputs->time_interval;
-		if (shift && (inputs->keyboard.left || inputs->keyboard.is_pressed(GLFW_KEY_R))) {
-			camera_model.manipulator_twist_rotation_axis(angle_magnitude);
-		}
-		if (shift && (inputs->keyboard.right || inputs->keyboard.is_pressed(GLFW_KEY_F))) {
-			camera_model.manipulator_twist_rotation_axis(-angle_magnitude); 
-		}
-
-		update(camera_matrix_view);
 	}
 
 	void camera_controller_orbit_euler::set_rotation_axis(vec3 const& rotation_axis)

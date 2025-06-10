@@ -97,6 +97,8 @@ int main(int, char* argv[])
 void animation_loop()
 {
 
+	static std::vector<int> fps_vector;
+
 	emscripten_update_window_size(scene.window.width, scene.window.height); // update window size in case of use of emscripten (not used by default)
 
 	scene.camera_projection.aspect_ratio = scene.window.aspect_ratio();
@@ -132,6 +134,19 @@ void animation_loop()
 	// Call the display of the scene
 	scene.display_frame();
 
+	static int frameCount = 0;
+    frameCount++;
+	
+	fps_vector.push_back(fps_record.fps);
+
+	if(frameCount % 60 == 0){
+		int sum = 0;
+		for(int fps : fps_vector){
+			sum += fps;
+		}
+		float average_fps = float(sum) / fps_vector.size(); 
+		std::cout << "Average FPS: " << average_fps << std::endl;
+	}
 
 	// End of ImGui display and handle GLFW events
 	ImGui::End();
