@@ -14,7 +14,7 @@ class World{
         
         int renderDistance;
 
-        Chunk* getChunkAt(const cgp::vec3& worldPos) const;
+        
     
     public:
         World();
@@ -26,9 +26,10 @@ class World{
         void renderBasic(const cgp::vec3& position, const cgp::environment_generic_structure& environment);
 
         void renderCached(const cgp::vec3& position, const cgp::environment_generic_structure& environment);
-
+        
         void renderInstanced(const cgp::vec3& position, const cgp::environment_generic_structure& environment);
-
+        //Chunk Acces
+        Chunk* getChunkAt(const cgp::vec3& worldPos) const;
         // Block access
         BlockType getBlock(const cgp::vec3& worldPos) const;
         void setBlock(const cgp::vec3& worldPos, BlockType blockType);

@@ -18,7 +18,7 @@ private:
     cgp::vec3 chunkWorldPosition; 
     std::vector<BlockType> blockData;
     std::vector<Block*> blockObjects;
-
+    int nbBlockInChunk;
 
     // Block instances for rendering
     Grass grass;
@@ -62,6 +62,11 @@ public:
 
     // Get Block object for collision detection
     Block* getBlockObject(int x, int y, int z) const;
+    std::vector<Block*> getBlockObjectList()const;
+    int getBlockObjectListsize() const;
+    int& setBlockObjectListsize();
+    
+
     
     bool isGenerated() const { return isDataGenerated; }
     void markAsGenerated() { isDataGenerated = true; }

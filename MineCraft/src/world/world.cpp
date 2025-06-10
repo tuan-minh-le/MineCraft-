@@ -42,6 +42,7 @@ void World::generateWorld(){
 
             worldGenerator.generateChunk(*chunk, chunkWorldPos);
 
+
             chunk->populateBlockObjects();
             chunk->markAsGenerated();
 
