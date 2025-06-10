@@ -117,7 +117,6 @@ void World::setBlock(const cgp::vec3& worldPos, BlockType blockType) {
             blockType
         );
     } else {
-        // std::cout << "setBlock: No chunk found for position (" << worldPos.x << ", " << worldPos.y << ", " << worldPos.z << ")" << std::endl;
     }
 }
 
