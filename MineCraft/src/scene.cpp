@@ -61,15 +61,12 @@ void scene_structure::display_frame()
 	// Set the light to the current position of the camera
 	environment.light = player.get_camera().camera_model.position();
 
-	world.renderInstanced(player.getPosition(), environment);
+	world.renderCached(player.getPosition(), environment);
 
-	static int frameCount = 0;
-    frameCount++;
 
 	if (gui.display_frame)
 		draw(global_frame, environment);
 	
-
 
 }
 
