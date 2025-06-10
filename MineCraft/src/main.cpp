@@ -7,6 +7,9 @@
 #include <chrono>
 #include <thread>
 
+#define MINIAUDIO_IMPLEMENTATION
+#include "miniaudio.h"
+
 // Custom scene of this code
 #include "scene.hpp"
 
@@ -29,6 +32,93 @@ window_structure standard_window_initialization();
 void initialize_default_shaders();
 void animation_loop();
 void display_gui_default();
+void music_manager();
+
+ma_engine engine;
+ma_sound sound;
+
+enum MusicID {
+	HAGGSTROM,
+	MICE_VENUS
+};
+
+struct MusicInfo {
+	std::string filename;
+	bool hasCustomLoop;
+	double customLoopStartSeconds;
+};
+
+void music_manager() {
+	// Liste des musiques
+	std::vector<MusicInfo> musicList = {
+		{"music_1.mp3", false, 0.0},
+		{"music_2.mp3", false, 0.0},
+	};
+	std::string music_string = std::string("Haggstrom");
+
+	MusicID selected;
+	// Now you can do comparisons like:
+	if (music_string == "Haggstrom") {
+		selected = HAGGSTROM;
+	}
+	else if(music_string == "MICE_VENUS") {
+		selected = MICE_VENUS;
+	}
+
+	MusicInfo& music = musicList[selected];
+	std::string path = project::path + "assets/music/" + music.filename;
+
+	FILE* file = fopen(path.c_str(), "rb");
+	if (!file) {
+		std::cout << "Fichier introuvable!\n Music chosen : " << music.filename << std::endl;
+	}
+	else {
+		std::cout << "Music chosen : " << music.filename << std::endl;
+		fclose(file);
+	}
+
+	// Initialisation du moteur audio
+	ma_engine_init(NULL, &engine);
+
+	// Chargement du son
+	ma_result result = ma_sound_init_from_file(&engine, path.c_str(), MA_SOUND_FLAG_STREAM, NULL, NULL, &sound);
+	if (result != MA_SUCCESS) {
+		printf("Erreur chargement audio.\n");
+	}
+
+	// Obtenir la source de données du son
+	ma_data_source* pDataSource = ma_sound_get_data_source(&sound);
+	if (pDataSource == NULL && music.hasCustomLoop) {
+		printf("Impossible d'obtenir la source de donnees.\n");
+	}
+
+	// Getting Sample rate
+	ma_uint64 sampleRate = ma_engine_get_sample_rate(&engine);
+
+	// Setting up the loop
+	ma_uint64 loopStart;
+	if (music.hasCustomLoop) {
+		loopStart = static_cast<ma_uint64>(music.customLoopStartSeconds * sampleRate);
+	}
+	ma_uint64 loopEnd; // Fin du morceau
+	ma_uint64 totalFrames;
+	if (ma_data_source_get_length_in_pcm_frames(pDataSource, &totalFrames) != MA_SUCCESS) {
+		printf("Impossible d'obtenir la duree du fichier.\n");
+	}
+	loopEnd = totalFrames;
+
+	result = ma_data_source_set_loop_point_in_pcm_frames(pDataSource, loopStart, loopEnd);
+	if (result != MA_SUCCESS && music.hasCustomLoop) {
+		printf("Impossible de definir les points de boucle.\n");
+	}
+
+	// Activer le mode loop
+	ma_sound_set_looping(&sound, MA_TRUE);
+
+	// Demarrer le son
+	ma_sound_start(&sound);
+
+}
 
 timer_fps fps_record;
 
