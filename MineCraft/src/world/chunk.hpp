@@ -69,8 +69,12 @@ public:
     
     bool isGenerated() const { return isDataGenerated; }
     void markAsGenerated() { isDataGenerated = true; }
+
+    void renderBasic(const cgp::environment_generic_structure& environment);
     
-    void render(const cgp::environment_generic_structure& environment);
+    void renderCached(const cgp::environment_generic_structure& environment);
+
+    std::vector<std::tuple<int, int, int>> findSurfaceBlocksBFS() const;
     
     void findSurfaceBlocksBFS(std::vector<std::tuple<int, int, int>>& surfaceBlocks) const;
 
