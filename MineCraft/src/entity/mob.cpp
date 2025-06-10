@@ -19,7 +19,6 @@ void Mob::initialize_drawable_mesh(){
         // Initialize grass drawable
         mesh_drawable.initialize_data_on_gpu(mesh);
         mesh_drawable.texture.load_and_initialize_texture_2d_on_gpu(filename_mesh_texture);
-        
         mesh_drawable_initialized = true;
     }
 
