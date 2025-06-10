@@ -321,25 +321,18 @@ bool Player::check_cube(const cgp::vec3& origin, const cgp::vec3& direction, flo
 
 bool Player::colision(){
 
-
     if(world.getChunkAt(position) != nullptr){
-
-
-
-
     int cpt = 0;
     for(auto val: world.getChunkAt(position)->getBlockObjectList()){
         cpt += 1;
         if(val!=nullptr){
 
-        
         if((val->getPosition()[0]  - 0.5f <= position.x && position.x <= val->getPosition()[0]  + 0.5f) && (val->getPosition()[1]  - 0.5f <= position.y && position.y <= val->getPosition()[1]  + 0.5f) && (val->getPosition()[2]  - 0.5f <= position.z && position.z <=  val->getPosition()[2]  + 0.5)){
             return true;
             }
         }  
     }
     }
-
     return false;
 }
 
