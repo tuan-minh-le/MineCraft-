@@ -226,7 +226,9 @@ void Player::handle_mouse_event(const cgp::inputs_mouse_parameters& mouse){
         cgp::vec3 hitnormal;
         if(check_cube(camera.camera_model.position(),camera.camera_model.front(), 5.0f, hitblock, hitnormal)){
             if(inventory.add_inventory(std::shared_ptr<Item>((world.getBlockObject(hitblock))))){
+                std::cout<<"bloc va être ajouté"<<std::endl;
                 world.setBlock(hitblock,AIR);
+                std::cout<<"bloc ajouté"<<std::endl;
             }
         }        
     }

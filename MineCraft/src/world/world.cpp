@@ -110,14 +110,12 @@ void World::setBlock(const cgp::vec3& worldPos, BlockType blockType) {
     Chunk* chunk = getChunkAt(worldPos);
     if(chunk) {
         cgp::vec3 localPos = chunk->worldToLocal(worldPos);
-        std::cout<<"la"<<std::endl;
         chunk->setBlock(
             static_cast<int>(localPos.x), 
             static_cast<int>(localPos.y), 
             static_cast<int>(localPos.z), 
             blockType
         );
-        std::cout<<"ici"<<std::endl;
     } else {
     }
 }
