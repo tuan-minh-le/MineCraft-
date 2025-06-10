@@ -6,7 +6,7 @@ Sand::~Sand() {}
 
 void Sand::initialize() {
     item_name = "Sand Block";
-
+    type = BlockType::SAND;
     initialize_shared_mesh();
 }
 

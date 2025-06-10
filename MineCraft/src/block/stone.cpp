@@ -6,6 +6,7 @@ Stone::~Stone() {}
 
 void Stone::initialize() {
     item_name = "Stone";
+    type = BlockType::STONE;
     initialize_shared_mesh();
 }
 

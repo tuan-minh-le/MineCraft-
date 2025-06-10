@@ -2,6 +2,7 @@
 
 Grass::Grass() : Block() {
     item_name = "Grass";
+    type = BlockType::GRASS;
 }
 
 Grass::~Grass() {}

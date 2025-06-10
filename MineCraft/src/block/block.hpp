@@ -3,9 +3,19 @@
 #include "item.hpp"
 #include <vector>
 
+enum BlockType {
+    AIR = 0,
+    GRASS = 1,
+    DIRT = 2,
+    SAND = 3,
+    STONE = 4,
+    BEDROCK = 5
+};
+
 class Block : public Item {
 protected:
     int dimension = 1;
+    BlockType type;
     
     static cgp::mesh shared_cube_mesh;
     static bool mesh_initialized;
@@ -42,6 +52,9 @@ public:
     virtual void draw_block_at(const cgp::environment_generic_structure& environment);
     
     virtual void setup_texture() = 0;
+
+    BlockType get_type() const;
+    BlockType& set_type();
     
     // Getter Setter
     int getDimension() const;

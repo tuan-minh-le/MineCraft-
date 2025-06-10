@@ -226,9 +226,7 @@ void Player::handle_mouse_event(const cgp::inputs_mouse_parameters& mouse){
         cgp::vec3 hitnormal;
         if(check_cube(camera.camera_model.position(),camera.camera_model.front(), 5.0f, hitblock, hitnormal)){
             if(inventory.add_inventory(std::shared_ptr<Item>((world.getBlockObject(hitblock))))){
-                std::cout<<"bloc va être ajouté"<<std::endl;
                 world.setBlock(hitblock,AIR);
-                std::cout<<"bloc ajouté"<<std::endl;
             }
         }        
     }
@@ -236,8 +234,9 @@ void Player::handle_mouse_event(const cgp::inputs_mouse_parameters& mouse){
         cgp::vec3 hitblock;
         cgp::vec3 hitnormal;
         if(check_cube(camera.camera_model.position(),camera.camera_model.front(),5.0f, hitblock,hitnormal) && std::dynamic_pointer_cast<Block>(item_in_hand)){
+            BlockType type = std::dynamic_pointer_cast<Block>(item_in_hand)->get_type();
             if(inventory.erase_inventory(ind_inventory)){
-                world.setBlock(hitblock+hitnormal,GRASS);
+                world.setBlock(hitblock+hitnormal,type);
             }
         }
     }
@@ -296,8 +295,6 @@ bool Player::check_cube(const cgp::vec3& origin, const cgp::vec3& direction, flo
         blockPos[axis] += step[axis];
         distance += deltaDist[axis];
         sideDist[axis] += deltaDist[axis];
-
-        std::cout << "Block position: " << blockPos << " is a " << world.getBlock(blockPos) << std::endl;
 
         if (world.getBlock(blockPos)) {
             hitBlock = blockPos;
