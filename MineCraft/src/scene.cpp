@@ -58,7 +58,7 @@ void scene_structure::display_frame()
 
 	world.renderCached(player.getPosition(), environment);
 
-	cgp::draw(chick.get_mesh_drawable());
+	cgp::draw(chick.get_mesh_drawable(),environment);
 
 	if (gui.display_frame)
 		draw(global_frame, environment);
