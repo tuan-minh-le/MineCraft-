@@ -68,7 +68,7 @@ void Chunk::cleanupBlockObjects() {
 
 void Chunk::populateBlockObjects() {
     // std::cout << "Populating Block objects..." << std::endl;
-    
+    int cpt = 0;
     int objectsCreated = 0;
     for(int x = 0; x < chunkSize.width; x++) {
         for(int y = 0; y < chunkSize.height; y++) {
@@ -82,9 +82,10 @@ void Chunk::populateBlockObjects() {
                         static_cast<float>(y), 
                         static_cast<float>(z)
                     });
-                    
+                    std::cout << "Creating block at: " << worldPos << std::endl;
                     // Create Block object
                     blockObjects[index] = createBlockObject(blockType, worldPos);
+                    cpt+=1;
                     if(blockObjects[index] != nullptr) {
                         objectsCreated++;
                     }
@@ -92,7 +93,7 @@ void Chunk::populateBlockObjects() {
             }
         }
     }
-    
+    setBlockObjectListsize() = cpt;
     // std::cout << "Created " << objectsCreated << " Block objects" << std::endl;
 }
 
@@ -113,6 +114,18 @@ Block* Chunk::getBlockObject(int x, int y, int z) const {
     
     int index = coordinateToIndex(x, y, z);
     return blockObjects[index];
+}
+
+std::vector<Block*> Chunk::getBlockObjectList() const{
+    return blockObjects;
+}
+
+int Chunk::getBlockObjectListsize() const{
+   return nbBlockInChunk;
+}
+
+int& Chunk::setBlockObjectListsize(){
+   return nbBlockInChunk;
 }
 
 

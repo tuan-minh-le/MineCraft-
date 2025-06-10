@@ -1,0 +1,110 @@
+/*______________ Music Manager ______________*/
+
+enum MusicID {
+	TWIST_STONE,
+	ROAD_MAIN,
+	FLASH_CONTENT,
+	ADD_ON_DRIFT,
+	JUST_IN_TIME,
+	THIBOCALPYSPE,
+	MUSIC_COUNT
+};
+
+struct MusicInfo {
+	std::string filename;
+	bool hasCustomLoop;
+	double customLoopStartSeconds;
+};
+
+
+
+void music_manager() {
+	// Liste des musiques
+	std::vector<MusicInfo> musicList = {
+		{"Twist_Stone.mp3", true, 184.2},           // Specific loop at 3'04"2
+		{"Road_Main(Turbo_Crush).mp3", false, 0.0}, // No custom loop
+		{"Flash_Content.mp3", false, 0.0}  ,        // No custom loop
+		{"Add_on_Drift.mp3", false, 0.0}   ,       // No custom loop
+		{"Just_in_Time.mp3", false, 0.0},          // No custom loop
+		{"Thibocalypse.mp3", false, 0.0}           // No custom loop
+	};
+	std::string music_string = std::string(string_music);
+
+	MusicID selected;
+	// Now you can do comparisons like:
+	if (music_string == "Twist Stone") {
+		selected = TWIST_STONE;
+	}
+	else if(music_string == "Road Main") {
+		selected = ROAD_MAIN;
+	}
+	else if (music_string == "Flash Content") {
+		selected = FLASH_CONTENT;
+	}
+	else if (music_string == "Add on Drift") {
+		selected = ADD_ON_DRIFT;
+	}
+	else if (music_string == "Just in Time") {
+		selected = JUST_IN_TIME;
+	}
+	else if (music_string == "Thibocalypse") {
+		selected = THIBOCALPYSPE;
+	}
+	else{
+		std::srand((unsigned int)std::time(nullptr));
+		selected = static_cast<MusicID>(std::rand() % MUSIC_COUNT);
+	}
+	MusicInfo& music = musicList[selected];
+	std::string path = project::path + "assets/music/" + music.filename;
+
+	FILE* file = fopen(path.c_str(), "rb");
+	if (!file) {
+		std::cout << "Fichier introuvable!\n Music chosen : " << music.filename << std::endl;
+	}
+	else {
+		std::cout << "Music chosen : " << music.filename << std::endl;
+		fclose(file);
+	}
+
+	// Initialisation du moteur audio
+	ma_engine_init(NULL, &engine);
+
+	// Chargement du son
+	ma_result result = ma_sound_init_from_file(&engine, path.c_str(), MA_SOUND_FLAG_STREAM, NULL, NULL, &sound1);
+	if (result != MA_SUCCESS) {
+		printf("Erreur chargement audio.\n");
+	}
+
+	// Obtenir la source de données du son
+	ma_data_source* pDataSource = ma_sound_get_data_source(&sound1);
+	if (pDataSource == NULL && music.hasCustomLoop) {
+		printf("Impossible d'obtenir la source de donnees.\n");
+	}
+
+	// Getting Sample rate
+	ma_uint64 sampleRate = ma_engine_get_sample_rate(&engine);
+
+	// Setting up the loop
+	ma_uint64 loopStart;
+	if (music.hasCustomLoop) {
+		loopStart = static_cast<ma_uint64>(music.customLoopStartSeconds * sampleRate);
+	}
+	ma_uint64 loopEnd; // Fin du morceau
+	ma_uint64 totalFrames;
+	if (ma_data_source_get_length_in_pcm_frames(pDataSource, &totalFrames) != MA_SUCCESS) {
+		printf("Impossible d'obtenir la duree du fichier.\n");
+	}
+	loopEnd = totalFrames;
+
+	result = ma_data_source_set_loop_point_in_pcm_frames(pDataSource, loopStart, loopEnd);
+	if (result != MA_SUCCESS && music.hasCustomLoop) {
+		printf("Impossible de definir les points de boucle.\n");
+	}
+
+	// Activer le mode loop
+	ma_sound_set_looping(&sound1, MA_TRUE);
+
+	// Demarrer le son
+	ma_sound_start(&sound1);
+
+}

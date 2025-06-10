@@ -48,6 +48,14 @@ void Block::clear_all_instances() {
     sand_instances.clear();
 }
 
+BlockType Block::get_type() const{
+    return type;
+}
+
+BlockType& Block::set_type(){
+    return type;
+}
+
 void Block::add_grass_instance(const cgp::vec3& position) {
     grass_instances.push_back(position); // Store just the position
 }

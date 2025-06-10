@@ -5,11 +5,12 @@
 #include "block/item.hpp"
 #include <vector>
 #include <memory>
+#include <algorithm>
 #include "entity.hpp"
 #include "inventory/inventory.hpp"
-#include "world/world.hpp"
 #include "world/chunk.hpp"
 #include "world/primary_world.hpp"
+#include "world/world.hpp"
 
 class Player : public Entity
 {
@@ -76,6 +77,8 @@ public:
 
     bool check_cube(const cgp::vec3& origin, const cgp::vec3& direction, float maxDistance, cgp::vec3& hitBlock, cgp::vec3& hitNormal);
 
+    float normeCarre();
+    
     bool colision();
     // std::string getNameObj()const;
     // std::string& setNameObj();
