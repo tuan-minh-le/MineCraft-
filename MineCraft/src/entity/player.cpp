@@ -245,12 +245,19 @@ void Player::handle_mouse_event(const cgp::inputs_mouse_parameters& mouse){
 }
 
 bool Player::check_cube(const cgp::vec3& origin, const cgp::vec3& direction, float maxDistance, cgp::vec3& hitBlock, cgp::vec3& hitNormal) {
-    cgp::vec3 pos = origin;
-    cgp::vec3 blockPos = cgp::vec3({std::floor(pos.x),std::floor(pos.y),std::floor(pos.z)});
-    
-    cgp::vec3 deltaDist = cgp::vec3({std::abs(1.0f/direction.x),std::abs(1.0f/direction.y),std::abs(1.0f/direction.z)});
-    cgp::vec3 step;
-    cgp::vec3 sideDist;
+    using namespace cgp;
+
+    vec3 pos = origin;
+    vec3 blockPos = vec3(std::floor(pos.x), std::floor(pos.y), std::floor(pos.z));
+
+    vec3 deltaDist = vec3(
+        direction.x != 0.0f ? std::abs(1.0f / direction.x) : std::numeric_limits<float>::infinity(),
+        direction.y != 0.0f ? std::abs(1.0f / direction.y) : std::numeric_limits<float>::infinity(),
+        direction.z != 0.0f ? std::abs(1.0f / direction.z) : std::numeric_limits<float>::infinity()
+    );
+
+    vec3 step;
+    vec3 sideDist;
 
     for (int i = 0; i < 3; ++i) {
         if (direction[i] < 0) {
@@ -262,35 +269,33 @@ bool Player::check_cube(const cgp::vec3& origin, const cgp::vec3& direction, flo
         }
     }
 
-    for (float distance = 0.0f; distance < maxDistance;) {
+    float distance = 0.0f;
+    hitNormal = vec3({0,0,0}); // important : reset
 
+    while (distance < maxDistance) {
         int axis;
-        if (sideDist.x < sideDist.y){
+        if (sideDist.x < sideDist.y) {
             axis = (sideDist.x < sideDist.z) ? 0 : 2;
         } else {
             axis = (sideDist.y < sideDist.z) ? 1 : 2;
         }
 
-        std::cout << "Block position :" << blockPos << "is a " << world.getBlock(blockPos) << std::endl;
+        blockPos[axis] += step[axis];
+        distance += deltaDist[axis];
+        sideDist[axis] += deltaDist[axis];
 
-        // std::cout << world.getBlock({0,0,0}) << std::endl;
+        std::cout << "Block position: " << blockPos << " is a " << world.getBlock(blockPos) << std::endl;
 
-        if (world.getBlock(blockPos)){
+        if (world.getBlock(blockPos)) {
             hitBlock = blockPos;
+            hitNormal = vec3({0,0,0});
             hitNormal[axis] = -step[axis];
             return true;
         }
-
-        blockPos[axis] += step[axis];
-        distance = sideDist[axis];
-        sideDist[axis] += deltaDist[axis];
     }
 
     return false;
 }
-
-    
-
 
 bool Player::colision(){
     for(size_t i = 0; i < primary_world.getVectorBlockType().size(); ++i){
