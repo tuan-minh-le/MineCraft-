@@ -16,8 +16,8 @@ void Inventory::initialize(int size){
     }
     for (int i = 0; i < 40; i++)
     {
-        inventory[0].push_back(std::make_shared<Grass>());
-        inventory[1].push_back(std::make_shared<Stone>());
+        inventory[0].push_back(std::shared_ptr<Item>(new Grass()));
+        inventory[1].push_back(std::shared_ptr<Item>(new Stone()));
     }
 }
 
@@ -30,12 +30,13 @@ void Inventory::close_inventory(){
 
 }
 
-void Inventory::add_inventory (std::shared_ptr<Item> item, int ind){
-    if (ind >= get_inventory_size()) {
-        throw std::out_of_range("Index out of range");
-    } 
-    else {
-        inventory[ind].push_back(item);
+void Inventory::add_inventory (std::shared_ptr<Item> item){
+    for (auto it : inventory)
+    {
+        if (it[0]->getItemName()==item->getItemName() && it.size()<max_size)
+        {
+            it.push_back(item);
+        }
     }
 }
 
