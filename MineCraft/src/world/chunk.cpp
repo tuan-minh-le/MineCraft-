@@ -9,7 +9,7 @@ Chunk::~Chunk(){
 }
 
 void Chunk::initialize(){
-    // std::cout << "Initializing chunk at position: (" << chunkWorldPosition.x << ", " << chunkWorldPosition.y << ", " << chunkWorldPosition.z << ")" << std::endl;
+    //std::cout << "Initializing chunk at position: (" << chunkWorldPosition.x << ", " << chunkWorldPosition.y << ", " << chunkWorldPosition.z << ")" << std::endl;
     // std::cout << "Chunk size: " << chunkSize.width << "x" << chunkSize.height << "x" << chunkSize.depth << std::endl;
     
     int totalBlocks = chunkSize.width * chunkSize.height * chunkSize.depth;

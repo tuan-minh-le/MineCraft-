@@ -22,7 +22,7 @@ struct ChunkSize {
 
 class Chunk {
 private:
-    ChunkSize chunkSize = {16, 16, 16};
+    ChunkSize chunkSize = {4, 4, 2};
     cgp::vec3 chunkWorldPosition; 
     std::vector<BlockType> blockData;
     std::vector<Block*> blockObjects;

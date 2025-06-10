@@ -211,18 +211,20 @@ void Player::move(float speed,const cgp::inputs_keyboard_parameters& keyboard,cg
 }
 
 void Player::handle_mouse_event(const cgp::inputs_mouse_parameters& mouse){
-    if (mouse.click.left && inventory.get_opened_inventory()){
+    if (mouse.click.left && !inventory.get_opened_inventory()){
         cgp::vec3 hitblock;
         cgp::vec3 hitnormal;
         if(check_cube(camera.camera_model.position(),camera.camera_model.front(),5.0f, hitblock,hitnormal)){
+            std::cout<<"casser bloc à pos: "<<hitblock<<std::endl;
             world.setBlock(hitblock,AIR);
         }
     }
 
-    if (mouse.click.right && inventory.get_opened_inventory()){
+    if (mouse.click.right && !inventory.get_opened_inventory()){
         cgp::vec3 hitblock;
         cgp::vec3 hitnormal;
         if(check_cube(camera.camera_model.position(),camera.camera_model.front(),5.0f, hitblock,hitnormal)){
+            std::cout<<"poser bloc à pos: "<<hitnormal<<std::endl;
             world.setBlock(hitnormal,GRASS);
         }
     }
