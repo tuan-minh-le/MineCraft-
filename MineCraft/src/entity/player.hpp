@@ -80,6 +80,8 @@ public:
     float normeCarre();
     
     bool colision();
+
+    bool gravityAplication();
     // std::string getNameObj()const;
     // std::string& setNameObj();
     // std::string getNameTexture()const;
