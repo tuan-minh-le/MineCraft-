@@ -30,38 +30,37 @@ void Inventory::close_inventory(){
 
 }
 
-void Inventory::add_inventory (std::shared_ptr<Item> item){
-    std::cout<<"caca"<<std::endl;
+bool Inventory::add_inventory (std::shared_ptr<Item> item){
     std::cout<<item->getItemName()<<std::endl;
     for (auto it : inventory)
     {
         if (it.empty())
         {
-            std::cout<<"prout"<<std::endl;
             it.push_back(item);
-            return;
+            return true;
         }
         else if (it[0]->getItemName()==item->getItemName() && it.size()<max_size)
         {
-            std::cout<<"piprout"<<std::endl;
             it.push_back(item);
-            std::cout<<"pipi"<<std::endl;
-            return;
+            return true;
         }
     }
+    return false;
 }
 
-void Inventory::erase_inventory (int ind){
+bool Inventory::erase_inventory (int ind){
     if (0<=ind<get_inventory_size())
     {
         if (inventory[ind].empty())
         {
-           return;
+           return false;
         }
         else{
             inventory[ind].erase(inventory[ind].begin());
+            return true;
         }
     }
+    return false;
 }
 
 void Inventory::fast_switch_inventory(int ind,SlotType from_type, Inventory& inv){

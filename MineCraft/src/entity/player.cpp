@@ -124,6 +124,16 @@ void Player::handle_keyboard_event(const cgp::inputs_keyboard_parameters& keyboa
         set_speed() = 0.005f;
     }
 
+    if (keyboard.is_pressed(GLFW_KEY_1)) ind_inventory = 0;
+    if (keyboard.is_pressed(GLFW_KEY_2)) ind_inventory = 1;
+    if (keyboard.is_pressed(GLFW_KEY_3)) ind_inventory = 2;
+    if (keyboard.is_pressed(GLFW_KEY_4)) ind_inventory = 3;
+    if (keyboard.is_pressed(GLFW_KEY_5)) ind_inventory = 4;
+    if (keyboard.is_pressed(GLFW_KEY_6)) ind_inventory = 5;
+    if (keyboard.is_pressed(GLFW_KEY_7)) ind_inventory = 6;
+    if (keyboard.is_pressed(GLFW_KEY_8)) ind_inventory = 7;
+    if (keyboard.is_pressed(GLFW_KEY_9)) ind_inventory = 8;
+
     if (position.y <= 0) {
         position.y = 0;  
         isGrounded = true;    
@@ -215,21 +225,18 @@ void Player::handle_mouse_event(const cgp::inputs_mouse_parameters& mouse){
         cgp::vec3 hitblock;
         cgp::vec3 hitnormal;
         if(check_cube(camera.camera_model.position(),camera.camera_model.front(), 5.0f, hitblock, hitnormal)){
-            std::cout<<"casser bloc à pos: "<<hitblock<<std::endl;
-            inventory.add_inventory(std::shared_ptr<Item>((world.getBlockObject(hitblock))));
-            std::cout<<"casser"<<hitblock<<std::endl;
-            world.setBlock(hitblock,AIR);
-            std::cout<<"c'est fait"<<hitblock<<std::endl;
-        }
+            if(inventory.add_inventory(std::shared_ptr<Item>((world.getBlockObject(hitblock))))){
+                world.setBlock(hitblock,AIR);
+            }
+        }        
     }
-
     if (mouse.click.right && !inventory.get_opened_inventory()){
         cgp::vec3 hitblock;
         cgp::vec3 hitnormal;
         if(check_cube(camera.camera_model.position(),camera.camera_model.front(),5.0f, hitblock,hitnormal) && std::dynamic_pointer_cast<Block>(item_in_hand)){
-            std::cout<<"poser bloc à pos: "<<hitblock+hitnormal<<std::endl;
-            inventory.erase_inventory(ind_inventory);
-            world.setBlock(hitblock+hitnormal,GRASS);
+            if(inventory.erase_inventory(ind_inventory)){
+                world.setBlock(hitblock+hitnormal,GRASS);
+            }
         }
     }
 

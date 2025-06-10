@@ -33,8 +33,8 @@ class Inventory{
         int max_size = 64;
 
         void initialize(int size);
-        void add_inventory (std::shared_ptr<Item> item);
-        void erase_inventory (int ind);
+        bool add_inventory (std::shared_ptr<Item> item);
+        bool erase_inventory (int ind);
         void switch_inventory(int ind1, int ind2, SlotType from_type, SlotType to_type, Inventory& from_inv,bool split, bool one);
         void open_inventory();
         void close_inventory();

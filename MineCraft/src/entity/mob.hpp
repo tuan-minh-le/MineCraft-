@@ -6,6 +6,6 @@ class Mob : public Entity{
 
 
     public:
-        virtual void initialize() = 0;
+    virtual void initialize() = 0;
 
 };
