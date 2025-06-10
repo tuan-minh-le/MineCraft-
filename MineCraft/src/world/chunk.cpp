@@ -100,11 +100,10 @@ void Chunk::updateBlockObject(int x, int y, int z, BlockType newType) {
     int index = coordinateToIndex(x, y, z);
     cgp::vec3 worldPos = localToWorld({static_cast<float>(x), static_cast<float>(y), static_cast<float>(z)});
     
-    // Delete old block if it exists
-    delete blockObjects[index];
+    // delete blockObjects[index];
     
-    // Create new block object
     blockObjects[index] = createBlockObject(newType, worldPos);
+
 }
 
 Block* Chunk::getBlockObject(int x, int y, int z) const {
@@ -115,6 +114,8 @@ Block* Chunk::getBlockObject(int x, int y, int z) const {
     int index = coordinateToIndex(x, y, z);
     return blockObjects[index];
 }
+
+
 
 std::vector<std::tuple<int, int, int>> Chunk::findSurfaceBlocksBFS() const{
     std::vector<std::tuple<int, int, int>> ret;
