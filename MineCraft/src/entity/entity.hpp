@@ -18,6 +18,7 @@ class Entity{
     int getCooHeight(World* world);
     virtual void initialize(cgp::input_devices& inputs, cgp::window_structure& window,World* wrd) = 0;
 
+
     //Getter and Setter
 
     int getLife() const;

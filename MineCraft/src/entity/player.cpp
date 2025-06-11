@@ -21,7 +21,7 @@ void Player::initialize(cgp::input_devices& inputs, cgp::window_structure& windo
     item_in_hand = inventory.get_inventory()[ind_inventory][0];
     world = wrd;
     isGrounded = true;
-    isCreativeMode = false;
+    isCreativeMode = true;
     verticalVelocity = 0;
     gravity = 119.81f;
     dt = 0.05f;
@@ -251,7 +251,7 @@ void Player::handle_mouse_event(const cgp::inputs_mouse_parameters& mouse){
         if(check_cube(camera.camera_model.position(),camera.camera_model.front(),5.0f, hitblock,hitnormal) && std::dynamic_pointer_cast<Block>(item_in_hand)){
             BlockType type = std::dynamic_pointer_cast<Block>(item_in_hand)->get_type();
             if(inventory.erase_inventory(ind_inventory)){
-                std::cout<<"bloc posé de" <<item_in_hand->getItemName()<<type<<std::endl;
+                // std::cout<<"bloc posé de " <<item_in_hand->getItemName()<<type<<std::endl;
                 (*world).setBlock(hitblock+hitnormal,type);
             }
         }
@@ -334,6 +334,7 @@ bool Player::check_cube(const cgp::vec3& origin, const cgp::vec3& direction, flo
         sideDist[axis] += deltaDist[axis];
 
         if ((*world).getBlock(blockPos)) {
+            std::cout << (*world).getBlock(blockPos) << std::endl;
             hitBlock = blockPos;
             hitNormal = vec3({0,0,0});
             hitNormal[axis] = -step[axis];

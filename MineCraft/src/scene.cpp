@@ -11,7 +11,7 @@ void scene_structure::initialize()
 
 	lost = false;
 
-	world.initialize(10, 10, 20);
+	world.initialize(10, 10, 50);
 	player.initialize(inputs,window,&world);
 	chick.initialize(inputs,window,&world);
 	std::cout << "Player world: " << player.getWorld() << std::endl;
@@ -50,7 +50,7 @@ void scene_structure::display_frame()
 {
 	// Set the light to the current position of the camera
 	environment.light = player.get_camera().camera_model.position();
-	// glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	world.renderCached(player.getPosition(), environment);
 
 	

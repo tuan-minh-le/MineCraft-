@@ -1,12 +1,13 @@
 #pragma once
 
-#include "chunk.hpp"
+#include "../block/block.hpp"
 #include "worldgenerator.hpp"
 #include "frustum.hpp"
+#include "chunk.hpp"
+
 
 class World{
     private:
-        Chunk dummyChunk;
         std::vector<Chunk*> chunks;
         WorldGenerator worldGenerator;
 
