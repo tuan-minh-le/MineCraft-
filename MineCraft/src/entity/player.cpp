@@ -7,7 +7,7 @@ Player::Player()
 
 static bool lastE = false;
 
-void Player::initialize(cgp::input_devices& inputs, cgp::window_structure& window, World* wrd){
+void Player::initialize(const cgp::vec3& p_position, cgp::input_devices& inputs, cgp::window_structure& window, World* wrd){
     camera.initialize(inputs, window);
     camera.set_rotation_axis_y();
     set_hunger() = 20;
@@ -25,9 +25,7 @@ void Player::initialize(cgp::input_devices& inputs, cgp::window_structure& windo
     verticalVelocity = 0;
     gravity = 119.81f;
     dt = 0.05f;
-    position.x = 10.0f;
-    position.y = 10.0f;
-    position.z = 10.0f;
+    position = p_position;
     
 }
 
@@ -118,14 +116,14 @@ void Player::handle_keyboard_event(const cgp::inputs_keyboard_parameters& keyboa
         position.z = 10.0f;
     }
 
-    set_speed() = 0.01;
+    set_speed() = 0.1;
 
     if (keyboard.is_pressed(GLFW_KEY_Q)){
-        set_speed() = 0.05f;
+        set_speed() = 0.2f;
     }
 
     if (keyboard.is_pressed(GLFW_KEY_LEFT_SHIFT)){
-        set_speed() = 0.005f;
+        set_speed() = 0.05f;
         
     }
 
@@ -259,7 +257,7 @@ void Player::handle_mouse_event(const cgp::inputs_mouse_parameters& mouse){
         if(check_cube(camera.camera_model.position(),camera.camera_model.front(),5.0f, hitblock,hitnormal) && std::dynamic_pointer_cast<Block>(item_in_hand)){
             BlockType type = std::dynamic_pointer_cast<Block>(item_in_hand)->get_type();
             if(inventory.erase_inventory(ind_inventory)){
-                // std::cout<<"bloc posé de " <<item_in_hand->getItemName()<<type<<std::endl;
+                std::cout<<"bloc posé de " <<item_in_hand->getItemName() << " a la pos" << hitnormal+hitblock <<std::endl;
                 (*world).setBlock(hitblock+hitnormal,type);
             }
         }

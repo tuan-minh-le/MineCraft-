@@ -1,6 +1,9 @@
 #include "stone.hpp"
 
-Stone::Stone() : Block() {item_name = "Stone";}
+Stone::Stone() : Block() {
+    item_name = "Stone";
+    type = BlockType::STONE;
+}
 
 Stone::~Stone() {}
 

@@ -5,6 +5,7 @@
 #include "block/grass.hpp"
 #include "block/stone.hpp"
 #include "block/raw_chicken.hpp"
+#include "block/craft_table.hpp"
 #include <vector>
 #include <memory>
 #include <string>

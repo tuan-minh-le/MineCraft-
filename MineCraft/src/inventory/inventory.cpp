@@ -19,6 +19,7 @@ void Inventory::initialize(int size){
         inventory[0].push_back(std::shared_ptr<Item>(new Grass()));
         inventory[1].push_back(std::shared_ptr<Item>(new Stone()));
         inventory[2].push_back(std::shared_ptr<Item>(new Raw_chicken()));
+        inventory[3].push_back(std::shared_ptr<Item>(new Craft_table()));
     }
 }
 

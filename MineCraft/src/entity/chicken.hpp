@@ -8,7 +8,7 @@ class Chicken : public MobPassif{
 
     public:
         void move(Player& player, float speed);
-        void initialize(cgp::input_devices& inputs, cgp::window_structure& window, World* wrd);
+        void initialize(const cgp::vec3& p_position, cgp::input_devices& inputs, cgp::window_structure& window, World* wrd);
         World* getWorld() {return world;};
 
 };

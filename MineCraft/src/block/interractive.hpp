@@ -1,3 +1,5 @@
+#pragma once
+
 #include "block/tool.hpp"
 #include "block/block.hpp"
 

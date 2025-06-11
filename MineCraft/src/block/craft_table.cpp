@@ -12,23 +12,19 @@ Craft_table::Craft_table() : Block() {
 void Craft_table::initialize() {
     initialize_shared_mesh();
     
-    if (!drawable_initialized) {
-        craftingTableInstanced.initialize_data_on_gpu(shared_cube_mesh);
-        setup_texture();
-        drawable_initialized = true;    
-    }
 }
 
 void Craft_table::setup_texture(){
-    std::string texture_path = "assets/textures/crafting_table.png";
-    craftingTableInstanced.texture.load_and_initialize_texture_2d_on_gpu(texture_path);
+
 }
 
 void Craft_table::draw_block_at(const cgp::environment_generic_structure& environment) {
     initialize_shared_mesh();
     
     if (!drawable_initialized) {
-        initialize();
+        craftingTableInstanced.initialize_data_on_gpu(shared_cube_mesh);
+        craftingTableInstanced.material.color = cgp::vec3(0.5, 0.3, 0.1);
+        drawable_initialized = true;    
     }
     
     craftingTableInstanced.model.translation = position;

@@ -3,8 +3,8 @@
 void Zombie::move(Player& player, float speed){
     cgp::vec3 diff = player.getPosition() - position; 
     diff.y=0;
-    std::cout<<cgp::norm(diff)<<std::endl;
-    if (cgp::norm(diff) > 0.01f) diff = cgp::normalize(diff);
+    // std::cout<<cgp::norm(diff)<<std::endl;
+    if (cgp::norm(diff) > 0.05f) diff = cgp::normalize(diff);
     else
     {
         player.setLife()-=1;
@@ -17,16 +17,14 @@ void Zombie::move(Player& player, float speed){
     position.y = getCooHeight(world);
 }
 
-void Zombie::initialize(cgp::input_devices& inputs, cgp::window_structure& window, World* wrd){
+void Zombie::initialize(const cgp::vec3& p_position, cgp::input_devices& inputs, cgp::window_structure& window, World* wrd){
 
     life = 20;
 
     filename_mesh_obj = "assets/Zombie/Zombie.obj";
     filename_mesh_texture = "assets/Zombie/zombie.png";
     
-    position.x = 20.0f;
-    position.y = 15.0f;
-    position.z = 10.0f;
+    position = p_position;
 
     speed = 0.8f;
 

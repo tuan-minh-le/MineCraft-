@@ -37,7 +37,7 @@ public:
     Player();
     ~Player();
 
-    void initialize(cgp::input_devices& inputs, cgp::window_structure& window, World* wrd);
+    void initialize(const cgp::vec3& p_position, cgp::input_devices& inputs, cgp::window_structure& window, World* wrd);
     void move(float speed, const cgp::inputs_keyboard_parameters& keyboard,cgp::mat4& camera_view_matrix);
 
     float max_pitch_up = 85.0f;

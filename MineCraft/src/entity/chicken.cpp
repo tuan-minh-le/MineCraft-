@@ -20,16 +20,14 @@ void Chicken::move(Player& player, float speed){
     position.y = getCooHeight(world);
 }
 
-void Chicken::initialize(cgp::input_devices& inputs, cgp::window_structure& window, World* wrd){
+void Chicken::initialize(const cgp::vec3& p_position, cgp::input_devices& inputs, cgp::window_structure& window, World* wrd){
 
     life = 10;
 
     filename_mesh_obj = "assets/Chicken/Chicken.obj";
     filename_mesh_texture = "assets/Chicken/chicken.png";
 
-    position.x = 10.0f;
-    position.y = 15.0f;
-    position.z = 10.0f;
+    position = p_position;
     
     speed = 0.5f;
     world = wrd;
