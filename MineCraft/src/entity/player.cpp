@@ -249,7 +249,7 @@ void Player::handle_mouse_event(const cgp::inputs_mouse_parameters& mouse){
         if(check_cube(camera.camera_model.position(),camera.camera_model.front(),5.0f, hitblock,hitnormal) && std::dynamic_pointer_cast<Block>(item_in_hand)){
             BlockType type = std::dynamic_pointer_cast<Block>(item_in_hand)->get_type();
             if(inventory.erase_inventory(ind_inventory)){
-                std::cout<<"bloc posé de " <<item_in_hand->getItemName()<<type<<std::endl;
+                // std::cout<<"bloc posé de " <<item_in_hand->getItemName()<<type<<std::endl;
                 (*world).setBlock(hitblock+hitnormal,type);
             }
         }

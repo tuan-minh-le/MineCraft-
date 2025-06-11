@@ -113,18 +113,20 @@ BiomeType WorldGenerator::getBiomeTypeAt(float worldX, float worldZ){
     float humidity = generateHumidityAt(worldX, worldZ);
 
     // Debug: Print first 20 temperature values to see the range
-    static int debugCount = 0;
-    if(debugCount < 20) {
-        std::cout << "Debug " << debugCount << ": pos(" << worldX << "," << worldZ 
-                  << ") temp=" << temperature << " humidity=" << humidity;
-        debugCount++;
-    }
+    // static int debugCount = 0;
+    // if(debugCount % 10000 == 0) {
+    //     std::cout << "Debug " << debugCount << ": pos(" << worldX << "," << worldZ 
+    //               << ") temp=" << temperature << " humidity=" << humidity << std::endl;
+        
+    // }
+
+    // debugCount++;
 
     BiomeType result;
-    if(temperature < 0.3f){
+    if(temperature < 0.01f){
         result = SNOWBIOME;
     }
-    else if(temperature > 0.4f){
+    else if(temperature > 0.2f){
         result = DESERT;
     }
     else{
