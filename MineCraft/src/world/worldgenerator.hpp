@@ -1,6 +1,7 @@
 #pragma once
 #include "cgp/cgp.hpp"
 #include "chunk.hpp"
+#include "../extern/fastnoise/FastNoise.h"
 
 const int HEIGHTOFFSET = 5;
 const float HEIGHTINTENSITY = 5.f; 
@@ -9,6 +10,8 @@ class WorldGenerator {
 private:
     cgp::vec2 noiseScale = {0.01, 0.01};
     cgp::vec2 noiseOffset = {0, 0};
+
+    FastNoise noise;
     
 public:
     WorldGenerator();

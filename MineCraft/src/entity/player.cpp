@@ -26,7 +26,7 @@ void Player::initialize(cgp::input_devices& inputs, cgp::window_structure& windo
     gravity = 119.81f;
     dt = 0.05f;
     position.x = 10.0f;
-    position.y = 15.0f;
+    position.y = 10.0f;
     position.z = 10.0f;
     
 }
@@ -203,9 +203,9 @@ void Player::move(float speed,const cgp::inputs_keyboard_parameters& keyboard,cg
     if (keyboard.is_pressed(GLFW_KEY_W)){
         position += speed * forward;
 
-        if(colision()==true){
-            position -= speed * forward;
-        }
+        // if(colision()==true){
+        //     position -= speed * forward;
+        // }
     }
 
     if (keyboard.is_pressed(GLFW_KEY_A)){

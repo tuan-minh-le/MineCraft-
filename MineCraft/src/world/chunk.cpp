@@ -224,6 +224,8 @@ void Chunk::renderBasic(const cgp::environment_generic_structure& environment){
     }
 }
 
+// Replace the findSurfaceBlocksBFS(vector& surfaceBlocks) method in chunk.cpp with this:
+
 void Chunk::findSurfaceBlocksBFS(std::vector<std::tuple<int, int, int>>& surfaceBlocks) const {
     surfaceBlocks.clear();
     
@@ -231,7 +233,7 @@ void Chunk::findSurfaceBlocksBFS(std::vector<std::tuple<int, int, int>>& surface
     std::vector<bool> visited(totalBlocks, false);
     std::queue<std::tuple<int, int, int>> queue;
     
-   // 26-directional movement (6 faces + 12 edges + 8 corners)
+    // 26-directional movement for connectivity search
     static const int directions[26][3] = {
         // 6 face neighbors
         {-1, 0, 0}, {1, 0, 0},   // X axis (left, right)
@@ -248,33 +250,40 @@ void Chunk::findSurfaceBlocksBFS(std::vector<std::tuple<int, int, int>>& surface
         {1, -1, -1}, {1, -1, 1}, {1, 1, -1}, {1, 1, 1}
     };
     
-    // Fixed: Use only 6 face directions for exposure check (standard Minecraft rule)
-    auto isBlockExposed = [&](int x, int y, int z) -> bool {
-        if(getBlock(x, y, z) == AIR){
-            return false; 
+    auto isCrustBlock = [&](int x, int y, int z) -> bool {
+        BlockType currentBlock = getBlock(x, y, z);
+        
+        if(currentBlock == AIR) {
+            return false;
         }
-
-        for(int face = 0; face < 6; face++) {  // Only check 6 faces for exposure
-            int nx = x + directions[face][0];
-            int ny = y + directions[face][1];
-            int nz = z + directions[face][2];
-            
-            if(!isValidCoordinate(nx, ny, nz) || getBlock(nx, ny, nz) == AIR) {
-                return true;
+        
+        // Crust condition 1: Exposed to air from above
+        if(y == chunkSize.height - 1 || getBlock(x, y+1, z) == AIR) {
+            return true;
+        }
+        
+        // Crust condition 2: On chunk boundary AND near surface
+        if(x == 0 || x == chunkSize.width-1 || z == 0 || z == chunkSize.depth-1) {
+            // Check if there's air above this block somewhere
+            for(int checkY = y; checkY < chunkSize.height; checkY++) {
+                if(getBlock(x, checkY, z) == AIR) {
+                    return true; // Near surface
+                }
             }
         }
-        return false; 
+        
+        return false; // Interior block, not crust
     };
     
+    // Step 1: Find starting points (any crust block)
     bool foundStartBlock = false;
     for(int x = 0; x < chunkSize.width && !foundStartBlock; x++) {
         for(int y = 0; y < chunkSize.height && !foundStartBlock; y++) {
             for(int z = 0; z < chunkSize.depth && !foundStartBlock; z++) {
-                if(isBlockExposed(x, y, z)) {
+                if(isCrustBlock(x, y, z)) {
                     queue.push({x, y, z});
                     int index = coordinateToIndex(x, y, z);
                     visited[index] = true;
-                    surfaceBlocks.push_back({x, y, z});
                     foundStartBlock = true;
                 }
             }
@@ -282,27 +291,32 @@ void Chunk::findSurfaceBlocksBFS(std::vector<std::tuple<int, int, int>>& surface
     }
     
     if(!foundStartBlock) {
-        // std::cout << "No exposed blocks found - chunk is completely buried or empty" << std::endl;
-        return;
+        return; // No crust blocks found
     }
-
+    
+    // Step 2: BFS through all connected solid blocks
+    // But only add to surfaceBlocks if they're crust blocks
     while(!queue.empty()) {
         auto [x, y, z] = queue.front();
         queue.pop();
         
-        for(int dir = 0; dir < 26; dir++) {  
+        // Add current block to surface list ONLY if it's a crust block
+        if(isCrustBlock(x, y, z)) {
+            surfaceBlocks.push_back({x, y, z});
+        }
+        
+        // Check all 26 neighbors for connectivity
+        for(int dir = 0; dir < 26; dir++) {
             int nx = x + directions[dir][0];
             int ny = y + directions[dir][1];
             int nz = z + directions[dir][2];
             
             if(isValidCoordinate(nx, ny, nz)) {
                 int neighborIndex = coordinateToIndex(nx, ny, nz);
-                if(!visited[neighborIndex]) {
-                    if(isBlockExposed(nx, ny, nz)) {
-                        visited[neighborIndex] = true;
-                        queue.push({nx, ny, nz});
-                        surfaceBlocks.push_back({nx, ny, nz});
-                    }
+                if(!visited[neighborIndex] && getBlock(nx, ny, nz) != AIR) {
+                    visited[neighborIndex] = true;
+                    queue.push({nx, ny, nz}); // Add ALL solid neighbors to queue for connectivity
+                    // But they'll only be added to surfaceBlocks if they pass the crust test
                 }
             }
         }
