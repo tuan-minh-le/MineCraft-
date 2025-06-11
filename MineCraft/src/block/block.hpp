@@ -28,12 +28,14 @@ protected:
     static std::vector<cgp::vec3> stone_instances;
     static std::vector<cgp::vec3> sand_instances;
     static std::vector<cgp::vec3> snow_instances;
+    static std::vector<cgp::vec3> ct_instances;
     
     // Static mesh drawables for instanced rendering
     static cgp::mesh_drawable grass_instanced;
     static cgp::mesh_drawable stone_instanced;
     static cgp::mesh_drawable sand_instanced;
     static cgp::mesh_drawable snow_instanced;
+    static cgp::mesh_drawable ct_instanced;
     static bool instanced_drawables_initialized;
 
 public:
@@ -51,6 +53,7 @@ public:
     static void add_stone_instance(const cgp::vec3& position);
     static void add_sand_instance(const cgp::vec3& position);
     static void add_snow_instance(const cgp::vec3& position);
+    static void add_ct_instance(const cgp::vec3& position);
     static void render_all_instances(const cgp::environment_generic_structure& environment);
     
     // Keep original method for compatibility

@@ -1,11 +1,9 @@
+#pragma once
 #include "block/interractive.hpp"
 
-class Craft_table : public Block {
+class Craft_table : public Interractive {
 private:
     bool opened;
-    static cgp::mesh_drawable craftingTableInstanced;
-    static cgp::image_structure craftingTableTexture;
-    static bool drawable_initialized;
 
 public:
     Craft_table();

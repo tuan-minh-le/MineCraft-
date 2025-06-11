@@ -3,7 +3,7 @@
 #include "block/tool.hpp"
 #include "block/block.hpp"
 
-class Interractive : public Tool, public Block{
+class Interractive : public Block, public Tool{
     protected:
 
     public:
