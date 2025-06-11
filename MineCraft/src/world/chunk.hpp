@@ -7,6 +7,8 @@
 #include "block/snow.hpp"
 #include <queue>
 
+class World;
+
 struct ChunkSize {
     int width;
     int height; 
@@ -15,7 +17,7 @@ struct ChunkSize {
 
 class Chunk {
 private:
-    ChunkSize chunkSize = {16, 32, 16};
+    ChunkSize chunkSize = {16, 64, 16};
     cgp::vec3 chunkWorldPosition; 
     std::vector<BlockType> blockData;
     std::vector<Block*> blockObjects;
@@ -29,8 +31,7 @@ private:
 
     bool isDataGenerated = false;
 
-    
-    
+    World* world = nullptr;
 
     bool isValidCoordinate(int x, int y, int z) const;
     int coordinateToIndex(int x, int y, int z) const;
@@ -39,6 +40,7 @@ private:
     void updateBlockObject(int x, int y, int z, BlockType newType);
     void cleanupBlockObjects(); // For destructor
 
+    bool isBlockExposed(int x, int y, int z) const;
 
     
 public:
@@ -50,6 +52,7 @@ public:
     bool surfaceBlocksCached = false;
     
     void initialize();
+    void setWorld(World* worldptr);
     void setWorldPosition(const cgp::vec3& worldPos);
     
     BlockType getBlock(int x, int y, int z) const;

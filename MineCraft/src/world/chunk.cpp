@@ -1,4 +1,5 @@
 #include "chunk.hpp"
+#include "world.hpp"
 
 Chunk::Chunk():chunkWorldPosition({0, 0, 0}){}
 
@@ -25,6 +26,61 @@ void Chunk::initialize(){
     surfaceBlocksCached = false;
     
     // std::cout << "Chunk initialized with " << blockData.size() << " block data slots" << std::endl;
+}
+
+void Chunk::setWorld(World* worldptr){
+    world = worldptr;
+}
+
+bool Chunk::isBlockExposed(int x, int y, int z) const{
+    BlockType currentBlock = getBlock(x, y, z);
+
+    if(currentBlock == AIR){
+        return false;
+    }
+
+    static const int directions [6][3] = {
+        {1, 0, 0}, {-1, 0, 0}, {0, 1, 0}, 
+        {0, -1, 0}, {0, 0, 1}, {0, 0, -1}
+    };
+
+    for(int i = 0; i < 6; i++){
+        int nx = x + directions[i][0];
+        int ny = y + directions[i][1];
+        int nz = z + directions[i][2];
+
+        BlockType neighborBlock;
+
+        // If neighbor is within this chunk bounds
+        if(isValidCoordinate(nx, ny, nz)){
+            neighborBlock = getBlock(nx, ny, nz);
+        }
+        // If neighbor is outside chunk, check world (cross-chunk)
+        else{
+            if(world != nullptr){
+                cgp::vec3 currentWorldPos = localToWorld({
+                    static_cast<float>(x), static_cast<float>(y), static_cast<float>(z)
+                });
+
+                cgp::vec3 neighborWorldPos = currentWorldPos + cgp::vec3(
+                    static_cast<float>(directions[i][0]),
+                    static_cast<float>(directions[i][1]),
+                    static_cast<float>(directions[i][2])
+                );
+
+                neighborBlock = world->getBlock(neighborWorldPos);
+            }
+            else{
+                neighborBlock = AIR;
+            }
+        }
+        
+        // If any neighbor is air, this block is exposed
+        if(neighborBlock == AIR){
+            return true;
+        }
+    }
+    return false;
 }
 
 Block* Chunk::createBlockObject(BlockType type, const cgp::vec3& position) {
@@ -217,71 +273,88 @@ int& Chunk::setBlockObjectListsize(){
 //     return ret;
 // }
 
-
-// Replace the findSurfaceBlocksBFS(vector& surfaceBlocks) method in chunk.cpp with this:
-
 void Chunk::findSurfaceBlocksBFS(std::vector<std::tuple<int, int, int>>& surfaceBlocks) const {
     surfaceBlocks.clear();
     
+    // Check if this chunk is on the border of the world
+    bool isBorderChunk = false;
+    if(world != nullptr) {
+        cgp::vec3 chunkPos = getWorldPosition();
+        ChunkSize size = getSize();
+        
+        // Check if there are adjacent chunks in all 4 horizontal directions
+        cgp::vec3 neighbors[4] = {
+            {chunkPos.x + size.width, chunkPos.y, chunkPos.z},  // Right
+            {chunkPos.x - size.width, chunkPos.y, chunkPos.z},  // Left  
+            {chunkPos.x, chunkPos.y, chunkPos.z + size.depth},  // Forward
+            {chunkPos.x, chunkPos.y, chunkPos.z - size.depth}   // Backward
+        };
+        
+        for(int i = 0; i < 4; i++) {
+            if(world->getChunkAt(neighbors[i]) == nullptr) {
+                isBorderChunk = true;
+                break;
+            }
+        }
+    } else {
+        isBorderChunk = true;
+    }
+    
+    // Use BFS for both border and interior chunks, but with different starting strategies
     int totalBlocks = chunkSize.width * chunkSize.height * chunkSize.depth;
     std::vector<bool> visited(totalBlocks, false);
     std::queue<std::tuple<int, int, int>> queue;
     
-   // 26-directional movement (6 faces + 12 edges + 8 corners)
     static const int directions[26][3] = {
-        // 6 face neighbors
-        {-1, 0, 0}, {1, 0, 0},   // X axis (left, right)
-        {0, -1, 0}, {0, 1, 0},   // Y axis (down, up)
-        {0, 0, -1}, {0, 0, 1},   // Z axis (back, front)
-        
-        // 12 edge neighbors
-        {-1, -1, 0}, {-1, 1, 0}, {1, -1, 0}, {1, 1, 0},     // XY edges
-        {-1, 0, -1}, {-1, 0, 1}, {1, 0, -1}, {1, 0, 1},     // XZ edges  
-        {0, -1, -1}, {0, -1, 1}, {0, 1, -1}, {0, 1, 1},     // YZ edges
-        
-        // 8 corner neighbors
+        {-1, 0, 0}, {1, 0, 0}, {0, -1, 0}, {0, 1, 0}, {0, 0, -1}, {0, 0, 1},
+        {-1, -1, 0}, {-1, 1, 0}, {1, -1, 0}, {1, 1, 0},
+        {-1, 0, -1}, {-1, 0, 1}, {1, 0, -1}, {1, 0, 1},
+        {0, -1, -1}, {0, -1, 1}, {0, 1, -1}, {0, 1, 1},
         {-1, -1, -1}, {-1, -1, 1}, {-1, 1, -1}, {-1, 1, 1},
         {1, -1, -1}, {1, -1, 1}, {1, 1, -1}, {1, 1, 1}
     };
-    
-    
-    auto isBlockExposed = [&](int x, int y, int z) -> bool {
-        if(getBlock(x, y, z) == AIR){
-            return false; 
-        }
 
-        for(int face = 0; face < 26; face++) {
-            int nx = x + directions[face][0];
-            int ny = y + directions[face][1];
-            int nz = z + directions[face][2];
-            
-            if(!isValidCoordinate(nx, ny, nz) || getBlock(nx, ny, nz) == AIR) {
-                return true;
+    if(isBorderChunk) {
+        // For border chunks, find any exposed block as starting point
+        bool foundStartBlock = false;
+        for(int x = 0; x < chunkSize.width && !foundStartBlock; x++) {
+            for(int y = 0; y < chunkSize.height && !foundStartBlock; y++) {
+                for(int z = 0; z < chunkSize.depth && !foundStartBlock; z++) {
+                    if(isBlockExposed(x, y, z)) {
+                        queue.push({x, y, z});
+                        int index = coordinateToIndex(x, y, z);
+                        visited[index] = true;
+                        surfaceBlocks.push_back({x, y, z});
+                        foundStartBlock = true;
+                    }
+                }
             }
         }
-        return false; 
-    };
-    
-    bool foundStartBlock = false;
-    for(int x = 0; x < chunkSize.width && !foundStartBlock; x++) {
-        for(int y = 0; y < chunkSize.height && !foundStartBlock; y++) {
-            for(int z = 0; z < chunkSize.depth && !foundStartBlock; z++) {
-                if(isBlockExposed(x, y, z)) {
-                    queue.push({x, y, z});
-                    int index = coordinateToIndex(x, y, z);
-                    visited[index] = true;
-                    surfaceBlocks.push_back({x, y, z});
-                    foundStartBlock = true;
+    } else {
+        // For interior chunks, start BFS from the top surface only
+        // This finds the top surface and any connected internal surfaces (caves, holes)
+        for(int x = 0; x < chunkSize.width; x++) {
+            for(int z = 0; z < chunkSize.depth; z++) {
+                // Find topmost solid block in this column as starting point
+                for(int y = chunkSize.height - 1; y >= 0; y--) {
+                    if(getBlock(x, y, z) != AIR) {
+                        // Check if this block is exposed (top surface or has air above)
+                        if(y == chunkSize.height - 1 || getBlock(x, y + 1, z) == AIR) {
+                            int index = coordinateToIndex(x, y, z);
+                            if(!visited[index] && isBlockExposed(x, y, z)) {
+                                queue.push({x, y, z});
+                                visited[index] = true;
+                                surfaceBlocks.push_back({x, y, z});
+                            }
+                        }
+                        break; // Found the topmost block in this column
+                    }
                 }
             }
         }
     }
-    
-    if(!foundStartBlock) {
-        std::cout << "No exposed blocks found - chunk is completely buried or empty" << std::endl;
-        return;
-    }
 
+    // BFS to find all connected exposed blocks
     while(!queue.empty()) {
         auto [x, y, z] = queue.front();
         queue.pop();
@@ -293,8 +366,6 @@ void Chunk::findSurfaceBlocksBFS(std::vector<std::tuple<int, int, int>>& surface
             
             if(isValidCoordinate(nx, ny, nz)) {
                 int neighborIndex = coordinateToIndex(nx, ny, nz);
-                
-                // Only process if not visited yet
                 if(!visited[neighborIndex]) {
                     if(isBlockExposed(nx, ny, nz)) {
                         visited[neighborIndex] = true;

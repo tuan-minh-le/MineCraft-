@@ -38,6 +38,8 @@ struct scene_structure : cgp::scene_inputs_generic {
 	Player player;
 	Chicken chick;
 	Zombie zombie;
+	double startTime;
+	bool lost;
 
 
 	Chunk chunk;

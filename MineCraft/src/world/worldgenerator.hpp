@@ -6,6 +6,8 @@
 const int HEIGHTOFFSET = 5;
 const float HEIGHTINTENSITY = 2000.f; 
 
+class Chunk;
+
 enum BiomeType{
     DESERT = 0,
     PLAINS = 1, 

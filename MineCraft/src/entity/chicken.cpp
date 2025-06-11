@@ -1,7 +1,7 @@
 #include "chicken.hpp"
 #include <random>
 
-void Chicken::move(Player player, float speed){
+void Chicken::move(Player& player, float speed){
     int rand_int = rand()%2;
     cgp::vec3 diff ={0,0,0};
     if (rand_int)
@@ -17,7 +17,7 @@ void Chicken::move(Player player, float speed){
 
     position = position + diff;
     mesh_drawable.model.translation=position;
-    //position.y = //fronction romain;
+    position.y = getCooHeight(world);
 }
 
 void Chicken::initialize(cgp::input_devices& inputs, cgp::window_structure& window, World* wrd){

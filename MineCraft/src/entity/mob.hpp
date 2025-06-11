@@ -24,7 +24,7 @@ class Mob : public Entity{
     void initialize();
     void initialize_mesh();
     void initialize_drawable_mesh();
-    virtual void move(Player player, float speed) = 0;
+    virtual void move(Player& player, float speed) = 0;
 
     cgp::mesh get_mesh() const;
     cgp::mesh_drawable get_mesh_drawable() const;

@@ -1,14 +1,20 @@
 #include "zombie.hpp"
 
-void Zombie::move(Player player, float speed){
+void Zombie::move(Player& player, float speed){
     cgp::vec3 diff = player.getPosition() - position; 
     diff.y=0;
+    std::cout<<cgp::norm(diff)<<std::endl;
     if (cgp::norm(diff) > 0.01f) diff = cgp::normalize(diff);
-    diff *=speed;
+    else
+    {
+        player.setLife()-=1;
+    }
+    
+    diff *=speed/10;
 
     position = position + diff;
     mesh_drawable.model.translation=position;
-    //position.y = //fronction romain;
+    position.y = getCooHeight(world);
 }
 
 void Zombie::initialize(cgp::input_devices& inputs, cgp::window_structure& window, World* wrd){

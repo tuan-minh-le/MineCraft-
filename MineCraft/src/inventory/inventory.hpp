@@ -4,6 +4,7 @@
 #include "block/item.hpp" //Take care Forward declaration maybe
 #include "block/grass.hpp"
 #include "block/stone.hpp"
+#include "block/raw_chicken.hpp"
 #include <vector>
 #include <memory>
 #include <string>

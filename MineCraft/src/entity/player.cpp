@@ -12,7 +12,7 @@ void Player::initialize(cgp::input_devices& inputs, cgp::window_structure& windo
     camera.set_rotation_axis_y();
     set_hunger() = 20;
     setLife() = 20;
-    speed = 1.0f;
+    speed = 0.01f;
     ind_inventory = 0;
 
     inventory.initialize(inventory_size);
@@ -21,7 +21,7 @@ void Player::initialize(cgp::input_devices& inputs, cgp::window_structure& windo
     item_in_hand = inventory.get_inventory()[ind_inventory][0];
     world = wrd;
     isGrounded = true;
-    isCreativeMode = false;
+    isCreativeMode = true;
     verticalVelocity = 0;
     gravity = 119.81f;
     dt = 0.05f;
@@ -118,6 +118,8 @@ void Player::handle_keyboard_event(const cgp::inputs_keyboard_parameters& keyboa
         position.z = 10.0f;
     }
 
+    set_speed() = 0.01;
+
     if (keyboard.is_pressed(GLFW_KEY_Q)){
         set_speed() = 0.05f;
     }
@@ -136,6 +138,14 @@ void Player::handle_keyboard_event(const cgp::inputs_keyboard_parameters& keyboa
     if (keyboard.is_pressed(GLFW_KEY_7)) ind_inventory = 6;
     if (keyboard.is_pressed(GLFW_KEY_8)) ind_inventory = 7;
     if (keyboard.is_pressed(GLFW_KEY_9)) ind_inventory = 8;
+
+    if (inventory.get_inventory()[ind_inventory].empty())
+    {
+        item_in_hand = nullptr;
+    }
+    else{
+        item_in_hand = inventory.get_inventory()[ind_inventory][0];
+    }
 
     if (position.y <= 0) {
         position.y = 0;  
@@ -174,7 +184,7 @@ void Player::handle_keyboard_event(const cgp::inputs_keyboard_parameters& keyboa
         }
     }
     if(!isGrounded){
-        // std::cout<<"oui / "<<position.y<<std::endl;
+        //std::cout<<"oui / "<<position.y<<std::endl;
     }
     position.y += verticalVelocity * dt;
     
@@ -258,6 +268,7 @@ void Player::handle_mouse_event(const cgp::inputs_mouse_parameters& mouse){
         cgp::vec3 hitnormal;
         if(check_cube(camera.camera_model.position(),camera.camera_model.front(), 5.0f, hitblock, hitnormal)){
             if((*world).getBlock(hitblock) != BlockType::BEDROCK && inventory.add_inventory(std::shared_ptr<Item>(((*world).getBlockObject(hitblock))))){
+                std::cout<<"cassé"<<std::endl;
                 (*world).setBlock(hitblock,AIR);
             }
         }        
@@ -268,7 +279,7 @@ void Player::handle_mouse_event(const cgp::inputs_mouse_parameters& mouse){
         if(check_cube(camera.camera_model.position(),camera.camera_model.front(),5.0f, hitblock,hitnormal) && std::dynamic_pointer_cast<Block>(item_in_hand)){
             BlockType type = std::dynamic_pointer_cast<Block>(item_in_hand)->get_type();
             if(inventory.erase_inventory(ind_inventory)){
-                std::cout<<"bloc posé de"<<type<<std::endl;
+                // std::cout<<"bloc posé de " <<item_in_hand->getItemName()<<type<<std::endl;
                 (*world).setBlock(hitblock+hitnormal,type);
             }
         }
@@ -277,13 +288,18 @@ void Player::handle_mouse_event(const cgp::inputs_mouse_parameters& mouse){
     if (ImGui::IsMouseClicked(1)){
         cgp::vec3 hitblock;
         cgp::vec3 hitnormal;
+        int hunger = get_hunger();
         if(check_cube(camera.camera_model.position(),camera.camera_model.front(),5.0f, hitblock,hitnormal) && (*world).getBlock(hitblock) == BlockType::BEDROCK){
             Interractive* interractive_block = dynamic_cast<Interractive*>((*world).getBlockObject(hitblock));
-            interractive_block->action();
+            std::cout<<"table de craft"<<std::endl;
+            interractive_block->action(&hunger);
         }
         else if(std::dynamic_pointer_cast<Tool>(item_in_hand) && !std::dynamic_pointer_cast<Interractive>(item_in_hand)){
             std::shared_ptr<Tool> tool = std::dynamic_pointer_cast<Tool>(item_in_hand);
-            tool->action();
+            std::cout<<"manger"<<hunger<<std::endl;
+            tool->action(&hunger);
+            std::cout<<"mangera"<<hunger<<std::endl;
+            set_hunger()= hunger;
         }
         
     }
@@ -292,6 +308,13 @@ void Player::handle_mouse_event(const cgp::inputs_mouse_parameters& mouse){
         if (ind_inventory+1 < inventory_size/4)
         {
             ind_inventory++;
+            if (inventory.get_inventory()[ind_inventory].empty())
+            {
+                item_in_hand = nullptr;
+            }
+            else{
+                item_in_hand = inventory.get_inventory()[ind_inventory][0];
+            }
         }
     }
 
@@ -299,6 +322,13 @@ void Player::handle_mouse_event(const cgp::inputs_mouse_parameters& mouse){
         if (ind_inventory - 1 >= 0)
         {
             ind_inventory--;
+            if (inventory.get_inventory()[ind_inventory].empty())
+            {
+                item_in_hand = nullptr;
+            }
+            else{
+                item_in_hand = inventory.get_inventory()[ind_inventory][0];
+            }
         }
     }
 }
@@ -344,6 +374,7 @@ bool Player::check_cube(const cgp::vec3& origin, const cgp::vec3& direction, flo
         sideDist[axis] += deltaDist[axis];
 
         if ((*world).getBlock(blockPos)) {
+            std::cout << (*world).getBlock(blockPos) << std::endl;
             hitBlock = blockPos;
             hitNormal = vec3({0,0,0});
             hitNormal[axis] = -step[axis];
