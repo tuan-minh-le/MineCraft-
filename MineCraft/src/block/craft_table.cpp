@@ -2,9 +2,10 @@
 #include "block/craft_table.hpp"
 
 
-Craft_table::Craft_table() : Block() {
+Craft_table::Craft_table(){
     opened = false;
-    item_name = "Crafting Table";
+    Block::item_name = "Crafting Table";
+    Tool::item_name = "Crafting Table";
     type = BlockType::CRAFT_TABLE;
 }
 

@@ -1,7 +1,7 @@
 #pragma once
 #include "block/interractive.hpp"
 
-class Craft_table : public Block {
+class Craft_table : public Interractive {
 private:
     bool opened;
 
