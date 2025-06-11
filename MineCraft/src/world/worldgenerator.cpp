@@ -117,10 +117,12 @@ BiomeType WorldGenerator::getBiomeTypeAt(float worldX, float worldZ){
     }
 
     if(temperature > 0.4){
+        // std::cout << "Generated Desert at : " << cgp::vec2(worldX, worldZ) << std::endl;
         return DESERT;
     }
 
     else{
+        // std::cout << "Generated Plains at : " << cgp::vec2(worldX, worldZ) << std::endl;
         return PLAINS;
     }
 }

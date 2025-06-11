@@ -18,7 +18,7 @@ private:
     cgp::vec2 noiseOffset = {0, 0};
 
     cgp::vec2 temperatureScale = {0.004, 0.004};
-    cgp::vec2 temperatureOffset = {100, 100};
+    cgp::vec2 temperatureOffset = {600, 600};
 
     cgp::vec2 humidityScale = {0.006, 0.006};
     cgp::vec2 humidityOffset = {500, 500};
