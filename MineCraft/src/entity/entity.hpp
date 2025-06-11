@@ -9,10 +9,13 @@ class Entity{
     int life;
     cgp::mesh_drawable entity_mesh;
     cgp::vec3 position;
+    cgp::vec3 testPosition;
+    World* world;
 
     public:
-
-    virtual void initialize(cgp::input_devices& inputs, cgp::window_structure& window,World& wrd) = 0;
+    
+    int getCooHeight(World* world);
+    virtual void initialize(cgp::input_devices& inputs, cgp::window_structure& window,World* wrd) = 0;
     virtual void move(float speed, const cgp::inputs_keyboard_parameters& keyboard,cgp::mat4& camera_view_matrix) = 0;
 
     //Getter and Setter
@@ -21,6 +24,8 @@ class Entity{
     int& setLife();
     cgp::vec3 getPosition() const;
     cgp::vec3& setPosition();
+    cgp::vec3 getTestPosition() const;
+    cgp::vec3& setTestPosition();
     cgp::mesh_drawable getEntityMesh() const;
     cgp::mesh_drawable& setEntityMesh();
 

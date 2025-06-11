@@ -1,0 +1,518 @@
+#include "entity/player.hpp"
+
+Player::Player()
+{
+
+}
+
+static bool lastE = false;
+
+void Player::initialize(cgp::input_devices& inputs, cgp::window_structure& window, World* wrd){
+    camera.initialize(inputs, window);
+    camera.set_rotation_axis_y();
+    set_hunger() = 20;
+    setLife() = 20;
+    speed = 1.0f;
+    ind_inventory = 0;
+
+    inventory.initialize(inventory_size);
+    craft.initialize(craft_size);
+
+    item_in_hand = inventory.get_inventory()[ind_inventory][0];
+    primary_world.initialize();
+    world = wrd;
+    isGrounded = true;
+    isCreativeMode = false;
+    verticalVelocity = 0;
+    gravity = 9.81f;
+    dt = 0.05f;
+    groundHeight = 0.0f;
+    position.x = 10.0f;
+    position.y = 15.0f;
+    position.z = 10.0f;
+    
+}
+
+Player::~Player()
+{
+
+}
+
+int Player::get_hunger() const{
+    return hunger;
+}
+
+int& Player::set_hunger(){
+    return hunger;
+}
+
+float Player::get_speed() const{
+    return speed;
+}
+
+float& Player::set_speed(){
+    return speed;
+}
+
+float Player::get_ground_height() const{
+    return groundHeight;
+}
+
+float& Player::set_ground_height(){
+    return groundHeight;
+}
+
+Inventory& Player::get_inventory(){
+    return inventory;
+}
+
+Inventory& Player::set_inventory(){
+    return inventory;
+}
+
+Inventory& Player::get_craft(){
+    return craft;
+}
+Inventory& Player::set_craft(){
+    return craft;
+}
+
+cgp::camera_controller_first_person_euler Player::get_camera() const{
+    return camera;
+}
+
+cgp::camera_controller_first_person_euler& Player::set_camera(){
+    return camera;
+}
+
+std::shared_ptr<Item> Player::get_item_in_hand() const{
+    return item_in_hand;
+}
+
+std::shared_ptr<Item>& Player::set_item_in_hand(){
+    return item_in_hand;
+}
+
+int Player::get_item_ind() const{
+    return ind_inventory;
+}
+
+int& Player::set_item_ind(){
+    return ind_inventory;
+}
+
+void Player::handle_mouse_move(cgp::vec2 const& mouse_position_current, cgp::vec2 const& mouse_position_previous, cgp::mat4& camera_view_matrix) {
+    
+    if(cgp::norm(mouse_position_current - mouse_position_previous) < 0.01){
+        //std::cout << "Ignoring input" << std::endl;
+        return;
+    }
+
+    camera.action_mouse_move(camera_view_matrix);
+    
+    float& current_cam_pitch_rad = camera.camera_model.pitch;    
+    
+    float local_max_pitch_up_rad = max_pitch_up * cgp::Pi / 180.0f;
+    float local_max_pitch_down_rad = max_pitch_down * cgp::Pi / 180.0f; 
+
+    current_cam_pitch_rad = cgp::clamp(current_cam_pitch_rad, local_max_pitch_down_rad, local_max_pitch_up_rad);
+    
+    camera_view_matrix = camera.camera_model.matrix_view();
+}
+
+void Player::handle_keyboard_event(const cgp::inputs_keyboard_parameters& keyboard,cgp::mat4& camera_view_matrix){
+
+    if (keyboard.is_pressed(GLFW_KEY_E) && !lastE)
+    {
+        inventory.set_opened_inventory() = !inventory.get_opened_inventory();
+    }
+
+    lastE = keyboard.is_pressed(GLFW_KEY_E);
+
+    if (keyboard.is_pressed(GLFW_KEY_P) && !lastE)
+    {   
+        position.x = 10.0f;
+        position.y = 15.0f;
+        position.z = 10.0f;
+    }
+
+    if (keyboard.is_pressed(GLFW_KEY_Q)){
+        set_speed() = 0.05f;
+    }
+
+    if (keyboard.is_pressed(GLFW_KEY_LEFT_SHIFT)){
+        set_speed() = 0.005f;
+        
+    }
+
+    if (keyboard.is_pressed(GLFW_KEY_1)) ind_inventory = 0;
+    if (keyboard.is_pressed(GLFW_KEY_2)) ind_inventory = 1;
+    if (keyboard.is_pressed(GLFW_KEY_3)) ind_inventory = 2;
+    if (keyboard.is_pressed(GLFW_KEY_4)) ind_inventory = 3;
+    if (keyboard.is_pressed(GLFW_KEY_5)) ind_inventory = 4;
+    if (keyboard.is_pressed(GLFW_KEY_6)) ind_inventory = 5;
+    if (keyboard.is_pressed(GLFW_KEY_7)) ind_inventory = 6;
+    if (keyboard.is_pressed(GLFW_KEY_8)) ind_inventory = 7;
+    if (keyboard.is_pressed(GLFW_KEY_9)) ind_inventory = 8;
+
+
+    //----------------------OldCode----------------------------------//
+    int res = getCooHeight(world);
+    set_ground_height() = res;
+
+    if (position.y <= get_ground_height()) {
+        position.y = get_ground_height();  
+        isGrounded = true;    
+        verticalVelocity = 0.0f; 
+    }
+    // if(gravityAplication()==true){
+    //     isGrounded = false; 
+    //     std::cout<<isGrounded<<std::endl;
+
+    // }
+    // if (colision()==true) {
+    //     verticalVelocity += gravity * dt; 
+    //     position.y += verticalVelocity * dt;  
+    //     isGrounded = true; 
+        
+    // }
+    
+
+    if(!isCreativeMode){
+        if (isGrounded && keyboard.is_pressed(GLFW_KEY_SPACE)) {
+            verticalVelocity = 5.0f; 
+            isGrounded = false;          
+            }
+        }
+    else{
+        if(keyboard.is_pressed(GLFW_KEY_SPACE)){
+            verticalVelocity = 20.0;
+        }
+        if(keyboard.is_pressed(GLFW_KEY_LEFT_CONTROL)){
+            verticalVelocity = -20.0;
+        }
+    }
+    
+    verticalVelocity -= gravity * dt;
+    position.y += verticalVelocity * dt;
+    
+    // int res = gravityAplication();
+    // std::cout<<res<<" "<<position.y<<std::endl;
+    // if( res < position.y){
+    //     std::cout<<"Grospouet "<<res<<std::endl;
+    //     position.y = res + 0.5;
+    //     isGrounded = true; 
+    //     verticalVelocity = 0.0f;
+    // }
+    
+
+    //--------------------------------------NewCode------------------------------------//
+
+    // if(isGrounded && keyboard.is_pressed(GLFW_KEY_SPACE)) {
+    //         acceleration.y += 80.0f;
+    //         isGrounded = false;          
+    //     }
+    
+    // oldPosition = position;
+    // vitesse += acceleration * dt;
+    // position += vitesse * dt;
+    // if(colision2()){
+    //     position = oldPosition;
+    //     vitesse = vitesse - vitesseNorme;
+    // }     
+
+
+
+    //--------------------------------------------------------------------------------//
+
+    camera.camera_model.position_camera = position;
+    camera_view_matrix = camera.camera_model.matrix_view();
+}
+
+// void Player::move(float speed,const cgp::inputs_keyboard_parameters& keyboard,cgp::mat4& camera_view_matrix){
+    
+//     static cgp::vec3 forward;
+//     static cgp::vec3 right;
+//     testPosition = position;
+//     forward = camera.camera_model.front();
+//     right = camera.camera_model.right();
+    
+//     if (cgp::norm(forward) > 0.01f) forward = cgp::normalize(forward);
+//     if (cgp::norm(right) > 0.01f) right = cgp::normalize(right);
+
+//     forward.y = 0;
+//     right.y = 0;
+
+//     if (keyboard.is_pressed(GLFW_KEY_W)){
+//         testPosition += speed * forward;
+//         if(!colision()){
+//             position += speed * forward;
+//         }
+//     }
+
+//     if (keyboard.is_pressed(GLFW_KEY_A)){
+//         testPosition -= speed * right;
+//         if(!colision()){
+//             position -= speed * right;
+//         }
+//     }
+
+//     if (keyboard.is_pressed(GLFW_KEY_S)){
+//         testPosition -= speed * forward; 
+//         if(!colision()){
+//             position -= speed * forward;
+//         }
+//     }
+
+//     if (keyboard.is_pressed(GLFW_KEY_D)){
+//         testPosition += speed * right;
+//          if(!colision()){
+//             position += speed * right;
+//         }
+//     }
+
+//     //------------------NewCode------------------//
+
+//     // if (keyboard.is_pressed(GLFW_KEY_W)){
+//     //     vitesse.
+//     // }
+
+//     // if (keyboard.is_pressed(GLFW_KEY_A)){
+
+//     // }
+
+//     // if (keyboard.is_pressed(GLFW_KEY_S)){
+
+//     // }
+
+//     // if (keyboard.is_pressed(GLFW_KEY_D)){
+
+//     // }
+
+
+
+//     camera.camera_model.position_camera = position;
+//     camera_view_matrix = camera.camera_model.matrix_view();
+// }
+
+void Player::handle_mouse_event(const cgp::inputs_mouse_parameters& mouse){
+    if (mouse.click.left && !inventory.get_opened_inventory()){
+        cgp::vec3 hitblock;
+        cgp::vec3 hitnormal;
+        if(check_cube(camera.camera_model.position(),camera.camera_model.front(), 5.0f, hitblock, hitnormal)){
+            if(inventory.add_inventory(std::shared_ptr<Item>((world->getBlockObject(hitblock))))){
+                world->setBlock(hitblock,AIR);
+            }
+        }        
+    }
+    if (mouse.click.right && !inventory.get_opened_inventory()){
+        cgp::vec3 hitblock;
+        cgp::vec3 hitnormal;
+        if(check_cube(camera.camera_model.position(),camera.camera_model.front(),5.0f, hitblock,hitnormal) && std::dynamic_pointer_cast<Block>(item_in_hand)){
+            BlockType type = std::dynamic_pointer_cast<Block>(item_in_hand)->get_type();
+            if(inventory.erase_inventory(ind_inventory)){
+                std::cout<<"bloc posé de"<<type<<std::endl;
+                world->setBlock(hitblock+hitnormal,type);
+            }
+        }
+    }
+
+    if (ImGui::GetIO().MouseWheel<0){
+        if (ind_inventory+1 < inventory_size/4)
+        {
+            ind_inventory++;
+        }
+    }
+
+    if (ImGui::GetIO().MouseWheel>0){
+        if (ind_inventory - 1 >= 0)
+        {
+            ind_inventory--;
+        }
+    }
+}
+
+bool Player::check_cube(const cgp::vec3& origin, const cgp::vec3& direction, float maxDistance, cgp::vec3& hitBlock, cgp::vec3& hitNormal) {
+    using namespace cgp;
+
+    vec3 pos = origin;
+    vec3 blockPos = vec3(std::floor(pos.x), std::floor(pos.y), std::floor(pos.z));
+
+    vec3 deltaDist = vec3(
+        direction.x != 0.0f ? std::abs(1.0f / direction.x) : std::numeric_limits<float>::infinity(),
+        direction.y != 0.0f ? std::abs(1.0f / direction.y) : std::numeric_limits<float>::infinity(),
+        direction.z != 0.0f ? std::abs(1.0f / direction.z) : std::numeric_limits<float>::infinity()
+    );
+
+    vec3 step;
+    vec3 sideDist;
+
+    for (int i = 0; i < 3; ++i) {
+        if (direction[i] < 0) {
+            step[i] = -1;
+            sideDist[i] = (pos[i] - blockPos[i]) * deltaDist[i];
+        } else {
+            step[i] = 1;
+            sideDist[i] = (blockPos[i] + 1.0f - pos[i]) * deltaDist[i];
+        }
+    }
+
+    float distance = 0.0f;
+    hitNormal = vec3({0,0,0}); // important : reset
+
+    while (distance < maxDistance) {
+        int axis;
+        if (sideDist.x < sideDist.y) {
+            axis = (sideDist.x < sideDist.z) ? 0 : 2;
+        } else {
+            axis = (sideDist.y < sideDist.z) ? 1 : 2;
+        }
+
+        blockPos[axis] += step[axis];
+        distance += deltaDist[axis];
+        sideDist[axis] += deltaDist[axis];
+
+        if (world->getBlock(blockPos)) {
+            hitBlock = blockPos;
+            hitNormal = vec3({0,0,0});
+            hitNormal[axis] = -step[axis];
+            return true;
+        }
+    }
+
+    return false;
+}
+
+// bool Player::colision(){
+
+//     if(world.getChunkAt(testPosition) != nullptr){
+//     int cpt = 0;
+//     for(auto val: world.getChunkAt(testPosition)->getBlockObjectList()){
+//         cpt += 1;
+//         if(val!=nullptr){
+//         std::cout<<val->getPosition()[0]  - 0.5f <<" <= "<<testPosition.x <<"<="<< val->getPosition()[0]  + 0.5f <<" && "<< val->getPosition()[1]  + 0.5f <<" <= "<<  testPosition.y <<" <= "<< val->getPosition()[1]  + 1.5f <<" && " <<val->getPosition()[2]  - 0.5f <<" <= "<< testPosition.z <<" <= " << val->getPosition()[2]  + 0.5<<std::endl;
+//         if((val->getPosition()[0]  - 0.5f <= testPosition.x && testPosition.x <= val->getPosition()[0]  + 0.5f) && (val->getPosition()[1]  + 0.5f <= testPosition.y && testPosition.y <= val->getPosition()[1]  + 1.5f) && (val->getPosition()[2]  - 0.5f <= testPosition.z && testPosition.z <=  val->getPosition()[2]  + 0.5)){
+//             std::cout<<"Colision"<<std::endl;
+//             return true;
+//             }
+//         }  
+//     }
+//     }
+//     return false;
+// }
+//----------------------NewCode--------------------//
+bool Player::colision2(){
+
+    if(world->getChunkAt(position) != nullptr){
+    int cpt = 0;
+    for(auto val: world->getChunkAt(position)->getBlockObjectList()){
+        cpt += 1;
+        if(val!=nullptr){
+        if((val->getPosition()[0]  - 0.5f <= position.x && position.x <= val->getPosition()[0]  + 0.5f) && (val->getPosition()[1]  + 0.5f <= position.y && position.y <= val->getPosition()[1]  + 1.5f) && (val->getPosition()[2]  - 0.5f <= position.z && position.z <=  val->getPosition()[2]  + 0.5)){
+            return true;
+            }
+        }  
+    }
+    }
+    return false;
+}
+//--------------------ChatgptCode----------------//
+bool Player::colision() {
+    if(world->getChunkAt(testPosition) != nullptr){
+        for(auto& val: world->getChunkAt(testPosition)->getBlockObjectList()){
+            if(val != nullptr){
+                // Test si testPosition est dans le volume du bloc (±0.5 autour du centre)
+                if((val->getPosition().x - 0.5f <= testPosition.x && testPosition.x <= val->getPosition().x + 0.5f)
+                && (val->getPosition().y <= testPosition.y && testPosition.y <= val->getPosition().y + 1.0f) // hauteur du bloc
+                && (val->getPosition().z - 0.5f <= testPosition.z && testPosition.z <= val->getPosition().z + 0.5f)) {
+                    return true; // collision détectée
+                }
+            }
+        }
+    }
+    return false;
+}
+
+
+void Player::move(float speed, const cgp::inputs_keyboard_parameters& keyboard, cgp::mat4& camera_view_matrix) {
+    cgp::vec3 forward = camera.camera_model.front();
+    cgp::vec3 right = camera.camera_model.right();
+
+    forward.y = 0;
+    right.y = 0;
+    forward = cgp::normalize(forward);
+    right = cgp::normalize(right);
+
+    cgp::vec3 newPosition = position;
+
+    if (keyboard.is_pressed(GLFW_KEY_W)) newPosition += speed * forward;
+    if (keyboard.is_pressed(GLFW_KEY_S)) newPosition -= speed * forward;
+    if (keyboard.is_pressed(GLFW_KEY_D)) newPosition += speed * right;
+    if (keyboard.is_pressed(GLFW_KEY_A)) newPosition -= speed * right;
+
+    // Test collision à la nouvelle position
+    testPosition = newPosition;
+    if (!colision()) {  // si pas de collision
+        position = newPosition;
+    }
+
+    // Mise à jour caméra
+    camera.camera_model.position_camera = position;
+    camera_view_matrix = camera.camera_model.matrix_view();
+}
+
+//-------------------------------------------------------------
+
+
+
+
+
+
+
+// bool Player::colision(){
+
+//     if(world.getChunkAt(position) != nullptr){
+//     int cpt = 0;
+//     for(auto val: world.getChunkAt(position)->getBlockObjectList()){
+//         cpt += 1;
+//         if(val!=nullptr){
+//         if((val->getPosition()[0]  - 0.5f <= position.x && position.x <= val->getPosition()[0]  + 0.5f) && (val->getPosition()[2]  - 0.5f <= position.z && position.z <=  val->getPosition()[2]  + 0.5)){
+//             return true;
+//             }
+//         }  
+//     }
+//     }
+//     return false;
+// }
+
+
+int Player::gravityAplication(){
+    if(world->getChunkAt(position) != nullptr){
+        std::cout<<"pouet"<<std::endl;
+    for(int i = 0; world->getChunkAt(position)->getSize().height; i++){
+        std::cout<<"pouetpouetpouet "<<i<<std::endl;
+        if(world->getChunkAt(position)->getBlock(position.x, i, position.z) == 0) {
+            std::cout<<"pouetpouet"<<std::endl;
+            return i;
+        }
+    }
+    return 0;
+}
+}
+
+float Player::normeCarre(){
+    return getPosition()[0]*getPosition()[0]+getPosition()[1]*getPosition()[1]+getPosition()[2]*getPosition()[2];
+}
+
+// std::string Player::getNameObj()const{
+//     return nameObj;
+// }
+// std::string& Player::setNameObj(){
+//     return nameObj;
+// }
+// std::string Player::getNameTexture()const{
+//     return nameTexture;
+// }
+// std::string& Player::setNameTexture(){
+//     return nameTexture;
+// }
