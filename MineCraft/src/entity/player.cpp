@@ -172,6 +172,7 @@ void Player::handle_keyboard_event(const cgp::inputs_keyboard_parameters& keyboa
         else {
             verticalVelocity -= gravity * dt; 
         }
+        gravityAplication();
     }
     else{
         if(keyboard.is_pressed(GLFW_KEY_SPACE)){
@@ -189,7 +190,7 @@ void Player::handle_keyboard_event(const cgp::inputs_keyboard_parameters& keyboa
 
      
 
-    gravityAplication();
+    
 
     camera.camera_model.position_camera = position;
     camera_view_matrix = camera.camera_model.matrix_view();

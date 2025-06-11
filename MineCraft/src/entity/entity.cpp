@@ -6,19 +6,16 @@ using namespace cgp;
 //Methodes
 
 int Entity::getCooHeight(World* entity_world){
-    // std::cout<<"lol3"<<std::endl;
     cgp::vec3 testposition = {position.x,1.0f,position.z};
     if(entity_world->getChunkAt(testposition) != nullptr){
-        // std::cout<<"lol4  "<<entity_world.getChunkAt(testposition)<<std::endl;
-        // std::cout<<"lol5  "<<entity_world.getChunkAt(testposition)->getSize().height<<std::endl;
-    for(int i = 0; entity_world->getChunkAt(testposition)->getSize().height; i++){
-        // std::cout<<"lol6  "<<i<<std::endl;
-        if(entity_world->getChunkAt(testposition)->getBlock(testposition.x, i, testposition.z) == 0) {
-            return i;
+        for(int i = 0; entity_world->getChunkAt(testposition)->getSize().height; i++){
+            testPosition = {position.x,i,position.z};
+            if(entity_world->getBlock(testPosition) == 0) {
+                return i;
+            }
         }
-    }
-    return 0;
-}
+    }   
+    return -1;
 }
 
 // //----------Chatgpt Version-----------------
