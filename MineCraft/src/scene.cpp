@@ -14,9 +14,10 @@ void scene_structure::initialize()
 	world.initialize(10, 10, 50);
 	player.initialize({10, 10, 10}, inputs,window,&world);
 	chick.initialize({10, 10, 10}, inputs,window,&world);
+	zombie.initialize({30, 10, 30}, inputs,window,&world);
 	std::cout << "Player world: " << player.getWorld() << std::endl;
 	std::cout << "Chicken world: " << chick.getWorld() << std::endl;
-	zombie.initialize({30, 10, 30}, inputs,window,&world);
+
     
     std::vector<cgp::vec3> testPositions = {
         {0, 0, 0},      // Should be in first chunk
@@ -455,7 +456,7 @@ void scene_structure::idle_frame()
 		player.handle_mouse_event(inputs.mouse);
 	
 
-		zombie.move(player,zombie.get_speed());
+		// zombie.move(player,zombie.get_speed());
 		chick.move(player,chick.get_speed());
 
 		double currentTime = glfwGetTime();

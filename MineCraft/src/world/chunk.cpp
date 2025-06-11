@@ -105,6 +105,9 @@ Block* Chunk::createBlockObject(BlockType type, const cgp::vec3& position) {
         case BEDROCK:
             block = new Stone(); 
             break;
+        case CRAFT_TABLE:
+            block = new Craft_table();
+            break;
         case AIR:
         default:
             return nullptr; 

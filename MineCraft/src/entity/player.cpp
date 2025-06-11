@@ -21,9 +21,9 @@ void Player::initialize(const cgp::vec3& p_position, cgp::input_devices& inputs,
     item_in_hand = inventory.get_inventory()[ind_inventory][0];
     world = wrd;
     isGrounded = true;
-    isCreativeMode = true;
+    isCreativeMode = false;
     verticalVelocity = 0;
-    gravity = 119.81f;
+    gravity = 50.f;
     dt = 0.05f;
     position = p_position;
     
@@ -165,7 +165,7 @@ void Player::handle_keyboard_event(const cgp::inputs_keyboard_parameters& keyboa
         if (isGrounded) {
         verticalVelocity = 0.0f; 
         if (keyboard.is_pressed(GLFW_KEY_SPACE)) {
-            verticalVelocity = 80.0f; 
+            verticalVelocity = 50.0f; 
             isGrounded = false;          
         }
         }
@@ -175,7 +175,7 @@ void Player::handle_keyboard_event(const cgp::inputs_keyboard_parameters& keyboa
     }
     else{
         if(keyboard.is_pressed(GLFW_KEY_SPACE)){
-            verticalVelocity = 20.0;
+            verticalVelocity = 15.0;
         }
         if(keyboard.is_pressed(GLFW_KEY_LEFT_CONTROL)){
             verticalVelocity = -20.0;
@@ -425,7 +425,7 @@ bool Player::colision(){
 // }
 
 void Player::gravityAplication(){
-    cgp::vec3 Test_under = {position.x,position.y - 0.1f,position.z};
+    cgp::vec3 Test_under = {position.x, position.y - 0.1f, position.z};
     setTestPosition() = Test_under;
     if(!colision()){
         setPosition() = Test_under;

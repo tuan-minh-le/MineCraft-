@@ -5,6 +5,7 @@
 #include "block/stone.hpp"
 #include "block/block.hpp"
 #include "block/snow.hpp"
+#include "block/craft_table.hpp"
 #include <queue>
 
 class World;
@@ -28,6 +29,7 @@ private:
     Stone stone;
     Sand sand;
     Snow snow;
+    Craft_table craftingTable;
 
     bool isDataGenerated = false;
 
