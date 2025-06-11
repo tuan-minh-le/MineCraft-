@@ -42,7 +42,6 @@ struct scene_structure : cgp::scene_inputs_generic {
 
 	Chunk chunk;
 	World world;
-	Primary_World primary_world;
 
 	//Grass* grass;
 	Grass grass;
