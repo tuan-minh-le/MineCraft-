@@ -112,21 +112,27 @@ BiomeType WorldGenerator::getBiomeTypeAt(float worldX, float worldZ){
     float temperature = generateTemperatureAt(worldX, worldZ);
     float humidity = generateHumidityAt(worldX, worldZ);
 
+    // Debug: Print first 20 temperature values to see the range
+    static int debugCount = 0;
+    if(debugCount < 20) {
+        std::cout << "Debug " << debugCount << ": pos(" << worldX << "," << worldZ 
+                  << ") temp=" << temperature << " humidity=" << humidity;
+        debugCount++;
+    }
+
+    BiomeType result;
     if(temperature < 0.3f){
-        return SNOWBIOME;
+        result = SNOWBIOME;
     }
-
-    if(temperature > 0.4){
-        // std::cout << "Generated Desert at : " << cgp::vec2(worldX, worldZ) << std::endl;
-        return DESERT;
+    else if(temperature > 0.4f){
+        result = DESERT;
     }
-
     else{
-        // std::cout << "Generated Plains at : " << cgp::vec2(worldX, worldZ) << std::endl;
-        return PLAINS;
+        result = PLAINS;
     }
-}
 
+    return result;
+}
 
 
 BlockType WorldGenerator::getBlockTypeAt(float worldX, float worldY, float worldZ, int surfaceHeight) {
@@ -166,7 +172,7 @@ BlockType WorldGenerator::getBlockTypeAt(float worldX, float worldY, float world
     else if (depth <= 7) {
         return (biome == DESERT) ? SAND : STONE;
     }
-    else if (blockY > 0) {
+    else if (blockY > 3) {
         return STONE;
     }
     else {
