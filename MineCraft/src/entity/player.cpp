@@ -22,10 +22,10 @@ void Player::initialize(cgp::input_devices& inputs, cgp::window_structure& windo
     primary_world.initialize();
     world = wrd;
     isGrounded = true;
-    isCreativeMode = true;
+    isCreativeMode = false;
     verticalVelocity = 0;
     gravity = 119.81f;
-    dt = 0.01f;
+    dt = 0.05f;
     position.x = 10.0f;
     position.y = 10.0f;
     position.z = 10.0f;
@@ -151,11 +151,18 @@ void Player::handle_keyboard_event(const cgp::inputs_keyboard_parameters& keyboa
         isGrounded = true;    
         verticalVelocity = 0.0f; 
     }
+    if(gravityAplication()==true){
+        isGrounded = false; 
+        std::cout<<isGrounded<<std::endl;
+        std::cout<<"FUCKMINH"<<std::endl;
+    }
     if (colision()==true) {
         verticalVelocity += gravity * dt; 
         position.y += verticalVelocity * dt;  
-        isGrounded = false; 
+        isGrounded = true; 
+        
     }
+    
 
     verticalVelocity = 0.0f;
 
@@ -163,7 +170,7 @@ void Player::handle_keyboard_event(const cgp::inputs_keyboard_parameters& keyboa
         if (isGrounded) {
         verticalVelocity = 0.0f; 
         if (keyboard.is_pressed(GLFW_KEY_SPACE)) {
-            verticalVelocity = 350.0f; 
+            verticalVelocity = 80.0f; 
             isGrounded = false;          
         }
         }
@@ -179,7 +186,9 @@ void Player::handle_keyboard_event(const cgp::inputs_keyboard_parameters& keyboa
             verticalVelocity = -20.0;
         }
     }
-
+    if(!isGrounded){
+        std::cout<<"oui / "<<position.y<<std::endl;
+    }
     position.y += verticalVelocity * dt;
 
     camera.camera_model.position_camera = position;
@@ -328,10 +337,29 @@ bool Player::colision(){
         cpt += 1;
         if(val!=nullptr){
 
-        if((val->getPosition()[0]  - 0.5f <= position.x && position.x <= val->getPosition()[0]  + 0.5f) && (val->getPosition()[1]  - 0.5f <= position.y && position.y <= val->getPosition()[1]  + 0.5f) && (val->getPosition()[2]  - 0.5f <= position.z && position.z <=  val->getPosition()[2]  + 0.5)){
+        if((val->getPosition()[0]  - 0.5f <= position.x && position.x <= val->getPosition()[0]  + 0.5f) && (val->getPosition()[1]  + 0.5f <= position.y && position.y <= val->getPosition()[1]  + 1.5f) && (val->getPosition()[2]  - 0.5f <= position.z && position.z <=  val->getPosition()[2]  + 0.5)){
             return true;
             }
         }  
+    }
+    }
+    return false;
+}
+
+
+bool Player::gravityAplication(){
+    if(colision()){
+    if(world.getChunkAt(position) != nullptr){
+    int cpt = 0;
+    for(auto val: world.getChunkAt(position)->getBlockObjectList()){
+        cpt += 1;
+        if(val!=nullptr){
+            //std::cout<<position.y-1.0f<<" / "<<val->getPosition()[1]  - 0.5f<<std::endl;
+        if((val->getPosition()[0]  - 0.5f <= position.x && position.x <= val->getPosition()[0]  + 0.5f) && (val->getPosition()[1]  - 0.5f <= position.y-1.0f && position.y-1 <= val->getPosition()[1]  + 0.5f) && (val->getPosition()[2]  - 0.5f <= position.z && position.z <=  val->getPosition()[2]  + 0.5)){
+            return true;
+            }
+        }  
+    }
     }
     }
     return false;

@@ -1,9 +1,4 @@
 #include "scene.hpp"
-#include "entity/player.hpp"
-#include "world/primary_world.hpp"
-#include <map> 
-#include <memory>
-#include "stb_image.h"
 
 
 using namespace cgp;
@@ -17,6 +12,8 @@ void scene_structure::initialize()
 
 	world.initialize(10, 10, 30);
 	player.initialize(inputs,window,world);
+	chick.initialize(inputs,window,world);
+	zombie.initialize(inputs,window,world);
     
     std::vector<cgp::vec3> testPositions = {
         {0, 0, 0},      // Should be in first chunk
@@ -54,6 +51,9 @@ void scene_structure::display_frame()
 	world.renderCached(player.getPosition(), environment);
 
 	
+
+	cgp::draw(chick.get_mesh_drawable(),environment);
+	cgp::draw(zombie.get_mesh_drawable(),environment);
 
 	if (gui.display_frame)
 		draw(global_frame, environment);

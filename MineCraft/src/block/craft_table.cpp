@@ -1,0 +1,1 @@
+#include "block/craft_table.hpp"

@@ -6,7 +6,5 @@ class MobPassif : public Mob{
 
 
     public:
-    
-    virtual void initialize() = 0;
 
 };
