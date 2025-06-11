@@ -7,7 +7,6 @@ private:
 
 public:
     Craft_table();
-    ~Craft_table() = default;
     
     void initialize() override;
     void setup_texture() override;

@@ -4,8 +4,7 @@
 
 Craft_table::Craft_table(){
     opened = false;
-    Block::item_name = "Crafting Table";
-    Tool::item_name = "Crafting Table";
+    item_name = "Crafting Table";
     type = BlockType::CRAFT_TABLE;
 }
 
