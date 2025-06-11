@@ -4,6 +4,7 @@
 #include "block/sand.hpp" 
 #include "block/stone.hpp"
 #include "block/block.hpp"
+#include "block/snow.hpp"
 #include <queue>
 
 struct ChunkSize {
@@ -24,6 +25,7 @@ private:
     Grass grass;
     Stone stone;
     Sand sand;
+    Snow snow;
     
     bool isDataGenerated = false;
 
@@ -77,7 +79,6 @@ public:
 
     void renderInstanced(const cgp::environment_generic_structure& environment);
 
-    std::vector<std::tuple<int, int, int>> findSurfaceBlocksBFS() const;
     
     void findSurfaceBlocksBFS(std::vector<std::tuple<int, int, int>>& surfaceBlocks) const;
 

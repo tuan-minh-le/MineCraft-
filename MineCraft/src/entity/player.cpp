@@ -153,8 +153,8 @@ void Player::handle_keyboard_event(const cgp::inputs_keyboard_parameters& keyboa
     }
     if(gravityAplication()==true){
         isGrounded = false; 
-        std::cout<<isGrounded<<std::endl;
-        std::cout<<"FUCKMINH"<<std::endl;
+        // std::cout<<isGrounded<<std::endl;
+        // std::cout<<"FUCKMINH"<<std::endl;
     }
     if (colision()==true) {
         verticalVelocity += gravity * dt; 
@@ -187,7 +187,7 @@ void Player::handle_keyboard_event(const cgp::inputs_keyboard_parameters& keyboa
         }
     }
     if(!isGrounded){
-        std::cout<<"oui / "<<position.y<<std::endl;
+        // std::cout<<"oui / "<<position.y<<std::endl;
     }
     position.y += verticalVelocity * dt;
 

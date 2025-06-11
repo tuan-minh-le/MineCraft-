@@ -8,8 +8,9 @@ enum BlockType {
     GRASS = 1,
     DIRT = 2,
     SAND = 3,
-    STONE = 4,
-    BEDROCK = 5
+    SNOW = 4,
+    STONE = 5,
+    BEDROCK = 6
 };
 
 class Block : public Item {
@@ -25,11 +26,13 @@ protected:
     static std::vector<cgp::vec3> grass_instances;
     static std::vector<cgp::vec3> stone_instances;
     static std::vector<cgp::vec3> sand_instances;
+    static std::vector<cgp::vec3> snow_instances;
     
     // Static mesh drawables for instanced rendering
     static cgp::mesh_drawable grass_instanced;
     static cgp::mesh_drawable stone_instanced;
     static cgp::mesh_drawable sand_instanced;
+    static cgp::mesh_drawable snow_instanced;
     static bool instanced_drawables_initialized;
 
 public:
@@ -46,6 +49,7 @@ public:
     static void add_grass_instance(const cgp::vec3& position);
     static void add_stone_instance(const cgp::vec3& position);
     static void add_sand_instance(const cgp::vec3& position);
+    static void add_snow_instance(const cgp::vec3& position);
     static void render_all_instances(const cgp::environment_generic_structure& environment);
     
     // Keep original method for compatibility
