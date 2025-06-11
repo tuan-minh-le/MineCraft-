@@ -17,7 +17,7 @@ using cgp::mesh_drawable;
 
 struct gui_parameters {
 	bool display_frame = true;
-	bool display_wireframe = false;
+	bool display_wireframe = true;
 };
 
 // The structure of the custom scene

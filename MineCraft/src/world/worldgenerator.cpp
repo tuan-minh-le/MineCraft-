@@ -1,6 +1,10 @@
 #include "worldgenerator.hpp"
 
-WorldGenerator::WorldGenerator() {}
+
+WorldGenerator::WorldGenerator() {
+    noise.SetSeed(1337);
+    noise.SetFrequency(1.f);
+}
 
 WorldGenerator::~WorldGenerator() {}
 
@@ -9,7 +13,6 @@ void WorldGenerator::initialize() {}
 void WorldGenerator::generateChunk(Chunk& chunk) {
     ChunkSize size = chunk.getSize();
     cgp::vec3 chunkWorldPos = chunk.getWorldPosition();
-    
     for(int x = 0; x < size.width; x++) {
         for(int z = 0; z < size.depth; z++) {
             // Convert local chunk coordinates to world coordinates
@@ -69,10 +72,15 @@ void WorldGenerator::generateChunk(Chunk& chunk, const cgp::vec3& position) {
 }
 
 int WorldGenerator::generateHeightAt(float worldX, float worldZ) {
+    noise.SetNoiseType(FastNoise::Perlin);
+    noise.SetFractalOctaves(4.f);
+    noise.SetFractalLacunarity(2.1f);
+    noise.SetFractalGain(0.8f);
+
     float perlinCoord_x = noiseOffset.x + worldX * noiseScale.x;
-    float perlinCoord_y = noiseOffset.y + worldZ * noiseScale.y;
+    float perlinCoord_z = noiseOffset.y + worldZ * noiseScale.y;
     
-    float noiseValue = cgp::noise_perlin({perlinCoord_x, perlinCoord_y});
+    float noiseValue = noise.GetPerlinFractal(perlinCoord_x, perlinCoord_z);
     int height = static_cast<int>(HEIGHTOFFSET + HEIGHTINTENSITY * noiseValue);
     
     return std::max(0, height); 

@@ -24,8 +24,8 @@ if(NOT EXISTS ${ABS_PATH_TO_CGP})
 endif()
 
 # Compile for Release with Debug Info
-set(CMAKE_BUILD_TYPE RelWithDebInfo) 
-set(CMAKE_CONFIGURATION_TYPES RelWithDebInfo) 
+set(CMAKE_BUILD_TYPE Release) 
+set(CMAKE_CONFIGURATION_TYPES Release) 
 # uncomment the following to activate the other possibilities (Debug, Release)
 #set(CMAKE_CONFIGURATION_TYPES RelWithDebInfo; Release; Debug )
 
@@ -34,6 +34,17 @@ set(CMAKE_CONFIGURATION_TYPES RelWithDebInfo)
 #    You may want to change this definition in case of specific file structure
 file(GLOB_RECURSE src_files ${CMAKE_CURRENT_LIST_DIR}/src/*.[ch]pp ${CMAKE_CURRENT_LIST_DIR}/shaders/*.glsl)
 
+# Add FastNoise source files
+set(FASTNOISE_SOURCES
+    ${CMAKE_CURRENT_LIST_DIR}/extern/fastnoise/FastNoise.cpp
+)
+
+# Check if FastNoise files exist
+if(EXISTS ${CMAKE_CURRENT_LIST_DIR}/extern/fastnoise/FastNoise.h)
+    message(STATUS "Found FastNoise library")
+else()
+    message(WARNING "FastNoise not found at extern/fastnoise/")
+endif()
 
 # Generate the executable_name from the current directory name
 get_filename_component(executable_name ${CMAKE_CURRENT_LIST_DIR} NAME)
@@ -43,6 +54,9 @@ project(${executable_name})
 
 # Add current src/ directory
 include_directories("src")
+
+# Add extern directory for FastNoise
+include_directories("extern")
 
 # Add the lib directory
 include_directories(${ABS_PATH_TO_CGP})
@@ -67,13 +81,14 @@ add_definitions(-DCGP_OPENGL_3_3)   # for OpenGL 3.3
 #  @src_files: the local file for this project
 #  @src_files_cgp: all files of the cgp library
 #  @src_files_third_party: all third party libraries compiled with the project
-add_executable(${executable_name} ${src_files_cgp} ${src_files_third_party} ${src_files})
+#  @FASTNOISE_SOURCES: FastNoise library files
+add_executable(${executable_name} ${src_files_cgp} ${src_files_third_party} ${src_files} ${FASTNOISE_SOURCES})
 
 
 # Set Compiler for Unix system
 if(UNIX)
    set(CMAKE_CXX_COMPILER g++)                      # Can switch to clang++ if prefered
-   add_definitions(-g -O2 -std=c++17 -Wall -Wextra -Wfatal-errors -Wno-pragmas -Wno-unknown-warning-option) # Can adapt compiler flags if needed
+   add_definitions(-O3 -std=c++17 -Wall -Wextra -Wfatal-errors -Wno-pragmas -Wno-unknown-warning-option) # Can adapt compiler flags if needed (-g for callgrind)
    add_definitions(-Wno-sign-compare -Wno-type-limits) # Remove some warnings
 endif()
 
@@ -102,4 +117,3 @@ target_link_libraries(${executable_name} ${GLFW_LIBRARIES})
 if(UNIX)
    target_link_libraries(${executable_name} dl) #dlopen is required by Glad on Unix
 endif()
-
