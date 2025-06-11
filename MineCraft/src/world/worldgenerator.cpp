@@ -1,4 +1,5 @@
 #include "worldgenerator.hpp"
+#include "chunk.hpp"
 
 
 WorldGenerator::WorldGenerator() {

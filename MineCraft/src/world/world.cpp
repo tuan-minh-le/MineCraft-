@@ -15,7 +15,7 @@ void World::initialize(int pWorldSizeX, int pWorldSizeZ, int pRenderDistance){
     worldSizeX = pWorldSizeX;
     worldSizeZ = pWorldSizeZ;
     renderDistance = pRenderDistance;
-    
+
     worldGenerator.initialize();
     generateWorld();
     // std::cout << "Initialized world with - Size: " << worldSizeX << 
@@ -24,6 +24,7 @@ void World::initialize(int pWorldSizeX, int pWorldSizeZ, int pRenderDistance){
 
 void World::generateWorld(){
     chunks.clear();
+    Chunk dummyChunk;
 
     // std::cout << "\n=== GENERATING WORLD ===" << std::endl;
     // std::cout << "World size: " << worldSizeX << " x " << worldSizeZ << std::endl;
@@ -40,6 +41,8 @@ void World::generateWorld(){
             
             chunk->initialize();
 
+            chunk->setWorld(this);
+
             worldGenerator.generateChunk(*chunk, chunkWorldPos);
 
 
@@ -48,6 +51,12 @@ void World::generateWorld(){
 
             chunks.push_back(chunk);
         }
+
+        for(auto& chunk : chunks) {
+        if(chunk) {
+            chunk->surfaceBlocksCached = false;
+        }
+    }
     }
     
     // std::cout << "Generated " << chunks.size() << " chunks total" << std::endl;
@@ -77,7 +86,6 @@ void World::renderCached(const cgp::vec3& position, const cgp::environment_gener
     for(const auto& chunk : chunks){
         if(chunk && chunk->isGenerated()){
             cgp::vec3 chunkCenter = chunk->getChunkCenter();
-
             float distance = cgp::norm(position - chunkCenter);
 
             if(distance < renderDistance){
