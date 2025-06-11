@@ -17,7 +17,7 @@ void Chicken::move(Player& player, float speed){
 
     position = position + diff;
     mesh_drawable.model.translation=position;
-    //position.y = //fronction romain;
+    position.y = getCooHeight(world);
 }
 
 void Chicken::initialize(cgp::input_devices& inputs, cgp::window_structure& window, World* wrd){
