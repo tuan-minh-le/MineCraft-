@@ -1,6 +1,6 @@
 #include "zombie.hpp"
 
-void Zombie::move(Player player, float speed){
+void Zombie::move(Player& player, float speed){
     cgp::vec3 diff = player.getPosition() - position; 
     diff.y=0;
     std::cout<<cgp::norm(diff)<<std::endl;

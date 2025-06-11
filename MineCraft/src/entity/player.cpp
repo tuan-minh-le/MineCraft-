@@ -139,6 +139,14 @@ void Player::handle_keyboard_event(const cgp::inputs_keyboard_parameters& keyboa
     if (keyboard.is_pressed(GLFW_KEY_8)) ind_inventory = 7;
     if (keyboard.is_pressed(GLFW_KEY_9)) ind_inventory = 8;
 
+    if (inventory.get_inventory()[ind_inventory].empty())
+    {
+        item_in_hand = nullptr;
+    }
+    else{
+        item_in_hand = inventory.get_inventory()[ind_inventory][0];
+    }
+
     if (position.y <= 0) {
         position.y = 0;  
         isGrounded = true;    
@@ -280,7 +288,13 @@ void Player::handle_mouse_event(const cgp::inputs_mouse_parameters& mouse){
         if (ind_inventory+1 < inventory_size/4)
         {
             ind_inventory++;
-            item_in_hand = inventory.get_inventory()[ind_inventory][0];
+            if (inventory.get_inventory()[ind_inventory].empty())
+            {
+                item_in_hand = nullptr;
+            }
+            else{
+                item_in_hand = inventory.get_inventory()[ind_inventory][0];
+            }
         }
     }
 
@@ -288,7 +302,13 @@ void Player::handle_mouse_event(const cgp::inputs_mouse_parameters& mouse){
         if (ind_inventory - 1 >= 0)
         {
             ind_inventory--;
-            item_in_hand = inventory.get_inventory()[ind_inventory][0];
+            if (inventory.get_inventory()[ind_inventory].empty())
+            {
+                item_in_hand = nullptr;
+            }
+            else{
+                item_in_hand = inventory.get_inventory()[ind_inventory][0];
+            }
         }
     }
 }

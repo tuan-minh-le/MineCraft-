@@ -1,7 +1,7 @@
 #include "chicken.hpp"
 #include <random>
 
-void Chicken::move(Player player, float speed){
+void Chicken::move(Player& player, float speed){
     int rand_int = rand()%2;
     cgp::vec3 diff ={0,0,0};
     if (rand_int)
