@@ -1,5 +1,4 @@
 #include "block/tool.hpp"
-#include "entity/player.hpp"
 
 class Rotten_flesh : public Tool{
     protected:
@@ -7,8 +6,10 @@ class Rotten_flesh : public Tool{
 
     public:
 
-    void action (Player& player);
-    void action ();
-    void initialize();
+    void action (int* entier);
+    Rotten_flesh();
+
+    int get_hunger() const;
+    int& set_hunger();
         
 };

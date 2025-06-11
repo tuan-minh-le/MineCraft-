@@ -3,7 +3,13 @@
 void Zombie::move(Player player, float speed){
     cgp::vec3 diff = player.getPosition() - position; 
     diff.y=0;
+    std::cout<<cgp::norm(diff)<<std::endl;
     if (cgp::norm(diff) > 0.01f) diff = cgp::normalize(diff);
+    else
+    {
+        player.setLife()-=1;
+    }
+    
     diff *=speed/10;
 
     position = position + diff;

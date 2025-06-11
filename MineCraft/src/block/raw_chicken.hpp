@@ -1,5 +1,4 @@
 #include "block/tool.hpp"
-#include "entity/player.hpp"
 
 class Raw_chicken : public Tool{
     protected:
@@ -7,8 +6,10 @@ class Raw_chicken : public Tool{
 
     public:
 
-    void action (Player& player);
-    void action ();
-    void initialize();
+    Raw_chicken();
+    void action (int* entier);
+
+    int get_hunger() const;
+    int& set_hunger();
     
 };

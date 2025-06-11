@@ -12,7 +12,7 @@ void Player::initialize(cgp::input_devices& inputs, cgp::window_structure& windo
     camera.set_rotation_axis_y();
     set_hunger() = 20;
     setLife() = 20;
-    speed = 1.0f;
+    speed = 0.01f;
     ind_inventory = 0;
 
     inventory.initialize(inventory_size);
@@ -117,6 +117,8 @@ void Player::handle_keyboard_event(const cgp::inputs_keyboard_parameters& keyboa
         position.y = 15.0f;
         position.z = 10.0f;
     }
+
+    set_speed() = 0.01;
 
     if (keyboard.is_pressed(GLFW_KEY_Q)){
         set_speed() = 0.05f;
@@ -258,15 +260,18 @@ void Player::handle_mouse_event(const cgp::inputs_mouse_parameters& mouse){
     if (ImGui::IsMouseClicked(1)){
         cgp::vec3 hitblock;
         cgp::vec3 hitnormal;
+        int hunger = get_hunger();
         if(check_cube(camera.camera_model.position(),camera.camera_model.front(),5.0f, hitblock,hitnormal) && (*world).getBlock(hitblock) == BlockType::BEDROCK){
             Interractive* interractive_block = dynamic_cast<Interractive*>((*world).getBlockObject(hitblock));
             std::cout<<"table de craft"<<std::endl;
-            interractive_block->action();
+            interractive_block->action(&hunger);
         }
         else if(std::dynamic_pointer_cast<Tool>(item_in_hand) && !std::dynamic_pointer_cast<Interractive>(item_in_hand)){
             std::shared_ptr<Tool> tool = std::dynamic_pointer_cast<Tool>(item_in_hand);
-            std::cout<<"manger"<<std::endl;
-            tool->action();
+            std::cout<<"manger"<<hunger<<std::endl;
+            tool->action(&hunger);
+            std::cout<<"mangera"<<hunger<<std::endl;
+            set_hunger()= hunger;
         }
         
     }
@@ -275,6 +280,7 @@ void Player::handle_mouse_event(const cgp::inputs_mouse_parameters& mouse){
         if (ind_inventory+1 < inventory_size/4)
         {
             ind_inventory++;
+            item_in_hand = inventory.get_inventory()[ind_inventory][0];
         }
     }
 
@@ -282,6 +288,7 @@ void Player::handle_mouse_event(const cgp::inputs_mouse_parameters& mouse){
         if (ind_inventory - 1 >= 0)
         {
             ind_inventory--;
+            item_in_hand = inventory.get_inventory()[ind_inventory][0];
         }
     }
 }

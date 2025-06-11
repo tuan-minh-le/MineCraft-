@@ -17,7 +17,6 @@ class Entity{
     
     int getCooHeight(World* world);
     virtual void initialize(cgp::input_devices& inputs, cgp::window_structure& window,World* wrd) = 0;
-    virtual void move(float speed, const cgp::inputs_keyboard_parameters& keyboard,cgp::mat4& camera_view_matrix) = 0;
 
     //Getter and Setter
 

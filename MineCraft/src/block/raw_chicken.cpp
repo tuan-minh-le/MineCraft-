@@ -1,21 +1,26 @@
 #include "block/raw_chicken.hpp"
 
-void Raw_chicken::action (Player& player){
-    if (player.get_hunger() < 20)
+Raw_chicken::Raw_chicken(){
+    give_hunger = 4;
+    item_name = "Chicken";
+}
+
+void Raw_chicken::action (int* entier){
+    if (*entier<20)
     {
-        player.set_hunger() += give_hunger;
-        if (player.get_hunger()>20)
+        *entier += give_hunger;
+        if (*entier>20)
         {
-            player.set_hunger() = 20;
+            *entier=20;
         }
     }
-    
+    std::cout << *entier << std::endl; 
 }
 
-void Raw_chicken::action (){
-
+int Raw_chicken::get_hunger() const{
+    return give_hunger;
 }
 
-void Raw_chicken::initialize(){
-    give_hunger = 4;
+int& Raw_chicken::set_hunger(){
+    return give_hunger;
 }

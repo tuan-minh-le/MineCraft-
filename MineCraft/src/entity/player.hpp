@@ -55,6 +55,8 @@ public:
     Inventory& get_craft();
     Inventory& set_craft();
 
+    void manger();
+
     World* getWorld() {return world;};
 
     std::shared_ptr<Item> get_item_in_hand() const;

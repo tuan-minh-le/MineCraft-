@@ -6,7 +6,7 @@ class Interractive : public Tool, public Block{
 
     public:
 
-    virtual void action () = 0;
+    virtual void action (int* entier) = 0;
     virtual ~Interractive() = default;
     
 };

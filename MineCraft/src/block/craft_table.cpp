@@ -1,10 +1,10 @@
 #include "block/craft_table.hpp"
 
-void Craft_table::action (){
+void Craft_table::action (int* entier){
     opened = true;
 }
 
-void Craft_table::initialize(){
+Craft_table::Craft_table(){
     opened = false;
 }
 
