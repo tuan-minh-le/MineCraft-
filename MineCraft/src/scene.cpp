@@ -8,12 +8,12 @@ void scene_structure::initialize()
 	player.get_camera().look_at({ 3.0f, 2.0f, 2.0f }, {0,0,0}, {0,0,1});
 	global_frame.initialize_data_on_gpu(mesh_primitive_frame());
 
-
-
-	world.initialize(10, 10, 30);
-	player.initialize(inputs,window,world);
-	chick.initialize(inputs,window,world);
-	zombie.initialize(inputs,window,world);
+	world.initialize(10, 10, 20);
+	player.initialize(inputs,window,&world);
+	chick.initialize(inputs,window,&world);
+	std::cout << "Player world: " << player.getWorld() << std::endl;
+	std::cout << "Chicken world: " << chick.getWorld() << std::endl;
+	zombie.initialize(inputs,window,&world);
     
     std::vector<cgp::vec3> testPositions = {
         {0, 0, 0},      // Should be in first chunk
@@ -420,5 +420,7 @@ void scene_structure::idle_frame()
 	player.handle_keyboard_event(inputs.keyboard,environment.camera_view);
 	player.move(player.get_speed(),inputs.keyboard, environment.camera_view);
 	player.handle_mouse_event(inputs.mouse);
+	zombie.move(player,zombie.get_speed());
+	chick.move(player,chick.get_speed());
 }
 

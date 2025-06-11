@@ -10,6 +10,14 @@ using namespace cgp;
 
 //Setters getters
 
+float Entity::get_speed() const{
+    return speed;
+}
+
+float& Entity::set_speed(){
+    return speed;
+}
+
 int Entity::getLife() const{
     return life;
 };

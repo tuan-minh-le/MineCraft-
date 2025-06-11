@@ -7,7 +7,7 @@ Player::Player()
 
 static bool lastE = false;
 
-void Player::initialize(cgp::input_devices& inputs, cgp::window_structure& window, World& wrd){
+void Player::initialize(cgp::input_devices& inputs, cgp::window_structure& window, World* wrd){
     camera.initialize(inputs, window);
     camera.set_rotation_axis_y();
     set_hunger() = 20;
@@ -19,7 +19,6 @@ void Player::initialize(cgp::input_devices& inputs, cgp::window_structure& windo
     craft.initialize(craft_size);
 
     item_in_hand = inventory.get_inventory()[ind_inventory][0];
-    primary_world.initialize();
     world = wrd;
     isGrounded = true;
     isCreativeMode = false;
@@ -43,14 +42,6 @@ int Player::get_hunger() const{
 
 int& Player::set_hunger(){
     return hunger;
-}
-
-float Player::get_speed() const{
-    return speed;
-}
-
-float& Player::set_speed(){
-    return speed;
 }
 
 Inventory& Player::get_inventory(){
@@ -246,21 +237,35 @@ void Player::handle_mouse_event(const cgp::inputs_mouse_parameters& mouse){
         cgp::vec3 hitblock;
         cgp::vec3 hitnormal;
         if(check_cube(camera.camera_model.position(),camera.camera_model.front(), 5.0f, hitblock, hitnormal)){
-            if(inventory.add_inventory(std::shared_ptr<Item>((world.getBlockObject(hitblock))))){
-                world.setBlock(hitblock,AIR);
+            if((*world).getBlock(hitblock) != BlockType::BEDROCK && inventory.add_inventory(std::shared_ptr<Item>(((*world).getBlockObject(hitblock))))){
+                (*world).setBlock(hitblock,AIR);
             }
         }        
     }
-    if (mouse.click.right && !inventory.get_opened_inventory()){
+    if (ImGui::IsMouseDown(1) && !inventory.get_opened_inventory()) {
         cgp::vec3 hitblock;
         cgp::vec3 hitnormal;
         if(check_cube(camera.camera_model.position(),camera.camera_model.front(),5.0f, hitblock,hitnormal) && std::dynamic_pointer_cast<Block>(item_in_hand)){
             BlockType type = std::dynamic_pointer_cast<Block>(item_in_hand)->get_type();
             if(inventory.erase_inventory(ind_inventory)){
                 std::cout<<"bloc posé de"<<type<<std::endl;
-                world.setBlock(hitblock+hitnormal,type);
+                (*world).setBlock(hitblock+hitnormal,type);
             }
         }
+    }
+
+    if (ImGui::IsMouseClicked(1)){
+        cgp::vec3 hitblock;
+        cgp::vec3 hitnormal;
+        if(check_cube(camera.camera_model.position(),camera.camera_model.front(),5.0f, hitblock,hitnormal) && (*world).getBlock(hitblock) == BlockType::BEDROCK){
+            Interractive* interractive_block = dynamic_cast<Interractive*>((*world).getBlockObject(hitblock));
+            interractive_block->action();
+        }
+        else if(std::dynamic_pointer_cast<Tool>(item_in_hand) && !std::dynamic_pointer_cast<Interractive>(item_in_hand)){
+            std::shared_ptr<Tool> tool = std::dynamic_pointer_cast<Tool>(item_in_hand);
+            tool->action();
+        }
+        
     }
 
     if (ImGui::GetIO().MouseWheel<0){
@@ -318,7 +323,7 @@ bool Player::check_cube(const cgp::vec3& origin, const cgp::vec3& direction, flo
         distance += deltaDist[axis];
         sideDist[axis] += deltaDist[axis];
 
-        if (world.getBlock(blockPos)) {
+        if ((*world).getBlock(blockPos)) {
             hitBlock = blockPos;
             hitNormal = vec3({0,0,0});
             hitNormal[axis] = -step[axis];
@@ -331,9 +336,9 @@ bool Player::check_cube(const cgp::vec3& origin, const cgp::vec3& direction, flo
 
 bool Player::colision(){
 
-    if(world.getChunkAt(position) != nullptr){
+    if((*world).getChunkAt(position) != nullptr){
     int cpt = 0;
-    for(auto val: world.getChunkAt(position)->getBlockObjectList()){
+    for(auto val: (*world).getChunkAt(position)->getBlockObjectList()){
         cpt += 1;
         if(val!=nullptr){
 
@@ -349,9 +354,9 @@ bool Player::colision(){
 
 bool Player::gravityAplication(){
     if(colision()){
-    if(world.getChunkAt(position) != nullptr){
+    if((*world).getChunkAt(position) != nullptr){
     int cpt = 0;
-    for(auto val: world.getChunkAt(position)->getBlockObjectList()){
+    for(auto val: (*world).getChunkAt(position)->getBlockObjectList()){
         cpt += 1;
         if(val!=nullptr){
             //std::cout<<position.y-1.0f<<" / "<<val->getPosition()[1]  - 0.5f<<std::endl;
