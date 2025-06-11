@@ -142,11 +142,7 @@ void Player::handle_keyboard_event(const cgp::inputs_keyboard_parameters& keyboa
         isGrounded = true;    
         verticalVelocity = 0.0f; 
     }
-    if(gravityAplication()==true){
-        isGrounded = false; 
-        // std::cout<<isGrounded<<std::endl;
-        // std::cout<<"FUCKMINH"<<std::endl;
-    }
+
     if (colision()==true) {
         verticalVelocity += gravity * dt; 
         position.y += verticalVelocity * dt;  
@@ -181,6 +177,11 @@ void Player::handle_keyboard_event(const cgp::inputs_keyboard_parameters& keyboa
         // std::cout<<"oui / "<<position.y<<std::endl;
     }
     position.y += verticalVelocity * dt;
+    
+
+     
+
+    gravityAplication();
 
     camera.camera_model.position_camera = position;
     camera_view_matrix = camera.camera_model.matrix_view();
@@ -199,38 +200,57 @@ void Player::move(float speed,const cgp::inputs_keyboard_parameters& keyboard,cg
 
     forward.y = 0;
     right.y = 0;
+    setTestPosition() = position;
 
     if (keyboard.is_pressed(GLFW_KEY_W)){
-        position += speed * forward;
-
-        // if(colision()==true){
-        //     position -= speed * forward;
-        // }
+        testPosition += speed * forward;
+        if(!colision()){
+            position += speed * forward;
+        }
     }
-
     if (keyboard.is_pressed(GLFW_KEY_A)){
-        position -= speed * right;
-        if(colision()==true){
+        testPosition -= speed * right;
+        if(!colision()){
+            position -= speed * right;
+        }
+    }
+    if (keyboard.is_pressed(GLFW_KEY_S)){
+        testPosition -= speed * forward; 
+        if(!colision()){
+            position -= speed * forward;
+        }
+    }
+    if (keyboard.is_pressed(GLFW_KEY_D)){
+        testPosition += speed * right;
+         if(!colision()){
             position += speed * right;
         }
     }
 
-    if (keyboard.is_pressed(GLFW_KEY_S)){
-        position -= speed * forward; 
-        if(colision()==true){
-            position += speed * forward;
-        }
-    }
-
-    if (keyboard.is_pressed(GLFW_KEY_D)){
-        position += speed * right;
-         if(colision()==true){
-            position -= speed * right;
-        }
-    }
+    // if(!isCreativeMode){
+    //     if (keyboard.is_pressed(GLFW_KEY_SPACE) && isGrounded) {
+    //         testPosition += {0.0f,1.5f,0.0f};
+    //         if(!colision()){
+    //         isGrounded = false;
+    //         position += {0.0f,2.5f,0.0f};        
+    //     }
+    //     else {
+    //         verticalVelocity -= gravity * dt; 
+    //     }}
+    //     else{
+    //     if(keyboard.is_pressed(GLFW_KEY_SPACE)){
+    //         verticalVelocity = 20.0;
+    //     }
+    //     if(keyboard.is_pressed(GLFW_KEY_LEFT_CONTROL)){
+    //         verticalVelocity = -20.0;
+    //     }
+    // }
+   
+    // }
     camera.camera_model.position_camera = position;
     camera_view_matrix = camera.camera_model.matrix_view();
 }
+
 
 void Player::handle_mouse_event(const cgp::inputs_mouse_parameters& mouse){
     if (mouse.click.left && !inventory.get_opened_inventory()){
@@ -334,41 +354,75 @@ bool Player::check_cube(const cgp::vec3& origin, const cgp::vec3& direction, flo
     return false;
 }
 
+//Test collision sur next coordonnées donc : Tester si y nouvelle coordonnées okay ou pas avant avec 
+// bool Player::colision(){
+
+//     if((*world).getChunkAt(position) != nullptr){
+//     //
+//     for(auto val: (*world).getChunkAt(position)->getBlockObjectList()){
+//         if(val!=nullptr){
+//         if((val->getPosition()[0]  - 0.5f <= position.x && position.x <= val->getPosition()[0]  + 0.5f) && (val->getPosition()[1]  + 0.5f <= position.y && position.y <= val->getPosition()[1]  + 1.5f) && (val->getPosition()[2]  - 0.5f <= position.z && position.z <=  val->getPosition()[2]  + 0.5)){
+//             return true;
+//             }
+//         }  
+//     }
+//     }
+//     return false;
+// }
+
 bool Player::colision(){
-
-    if((*world).getChunkAt(position) != nullptr){
-    int cpt = 0;
-    for(auto val: (*world).getChunkAt(position)->getBlockObjectList()){
-        cpt += 1;
-        if(val!=nullptr){
-
-        if((val->getPosition()[0]  - 0.5f <= position.x && position.x <= val->getPosition()[0]  + 0.5f) && (val->getPosition()[1]  + 0.5f <= position.y && position.y <= val->getPosition()[1]  + 1.5f) && (val->getPosition()[2]  - 0.5f <= position.z && position.z <=  val->getPosition()[2]  + 0.5)){
+    if(world->getChunkAt(testPosition) != nullptr){
+        //std::cout<<"Pas Colision : "<<world->getBlock(testPosition)<<" "<<std::floor(testPosition.x)<<" "<<std::floor(testPosition.y)<<" "<<std::floor(testPosition.z)<<std::endl;
+        if(world->getBlock(testPosition) != AIR) {
+            //std::cout<<"Colision : "<<world->getBlock(testPosition)<<std::endl;
             return true;
-            }
-        }  
-    }
+        }
     }
     return false;
 }
 
+// bool Player::colision(){
+//     BlockType block = world->getBlock(testPosition); // Utilise la fonction World::getBlock
 
-bool Player::gravityAplication(){
-    if(colision()){
-    if((*world).getChunkAt(position) != nullptr){
-    int cpt = 0;
-    for(auto val: (*world).getChunkAt(position)->getBlockObjectList()){
-        cpt += 1;
-        if(val!=nullptr){
-            //std::cout<<position.y-1.0f<<" / "<<val->getPosition()[1]  - 0.5f<<std::endl;
-        if((val->getPosition()[0]  - 0.5f <= position.x && position.x <= val->getPosition()[0]  + 0.5f) && (val->getPosition()[1]  - 0.5f <= position.y-1.0f && position.y-1 <= val->getPosition()[1]  + 0.5f) && (val->getPosition()[2]  - 0.5f <= position.z && position.z <=  val->getPosition()[2]  + 0.5)){
-            return true;
-            }
-        }  
+//     std::cout << "Collision test at: " << testPosition
+//               << " -> Block = " << static_cast<int>(block) << std::endl;
+
+//     if (block != AIR) {
+//         std::cout << "Collision détectée." << std::endl;
+//         return true;
+//     }
+
+//     return false;
+// }
+
+void Player::gravityAplication(){
+    cgp::vec3 Test_under = {position.x,position.y - 0.1f,position.z};
+    setTestPosition() = Test_under;
+    if(!colision()){
+        setPosition() = Test_under;
     }
+    else{
+        isGrounded = true;
     }
-    }
-    return false;
 }
+
+// bool Player::gravityAplication(){
+//     if(colision()){
+//     if((*world).getChunkAt(position) != nullptr){
+//     int cpt = 0;
+//     for(auto val: (*world).getChunkAt(position)->getBlockObjectList()){
+//         cpt += 1;
+//         if(val!=nullptr){
+//             //std::cout<<position.y-1.0f<<" / "<<val->getPosition()[1]  - 0.5f<<std::endl;
+//         if((val->getPosition()[0]  - 0.5f <= position.x && position.x <= val->getPosition()[0]  + 0.5f) && (val->getPosition()[1]  - 0.5f <= position.y-1.0f && position.y-1 <= val->getPosition()[1]  + 0.5f) && (val->getPosition()[2]  - 0.5f <= position.z && position.z <=  val->getPosition()[2]  + 0.5)){
+//             return true;
+//             }
+//         }  
+//     }
+//     }
+//     }
+//     return false;
+// }
 
 float Player::normeCarre(){
     return getPosition()[0]*getPosition()[0]+getPosition()[1]*getPosition()[1]+getPosition()[2]*getPosition()[2];
