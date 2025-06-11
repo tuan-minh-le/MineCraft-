@@ -178,7 +178,7 @@ void Player::handle_keyboard_event(const cgp::inputs_keyboard_parameters& keyboa
         }
     }
     if(!isGrounded){
-        // std::cout<<"oui / "<<position.y<<std::endl;
+        //std::cout<<"oui / "<<position.y<<std::endl;
     }
     position.y += verticalVelocity * dt;
 
@@ -238,6 +238,7 @@ void Player::handle_mouse_event(const cgp::inputs_mouse_parameters& mouse){
         cgp::vec3 hitnormal;
         if(check_cube(camera.camera_model.position(),camera.camera_model.front(), 5.0f, hitblock, hitnormal)){
             if((*world).getBlock(hitblock) != BlockType::BEDROCK && inventory.add_inventory(std::shared_ptr<Item>(((*world).getBlockObject(hitblock))))){
+                std::cout<<"cassé"<<std::endl;
                 (*world).setBlock(hitblock,AIR);
             }
         }        
@@ -248,7 +249,7 @@ void Player::handle_mouse_event(const cgp::inputs_mouse_parameters& mouse){
         if(check_cube(camera.camera_model.position(),camera.camera_model.front(),5.0f, hitblock,hitnormal) && std::dynamic_pointer_cast<Block>(item_in_hand)){
             BlockType type = std::dynamic_pointer_cast<Block>(item_in_hand)->get_type();
             if(inventory.erase_inventory(ind_inventory)){
-                std::cout<<"bloc posé de "<<type<<std::endl;
+                std::cout<<"bloc posé de " <<item_in_hand->getItemName()<<type<<std::endl;
                 (*world).setBlock(hitblock+hitnormal,type);
             }
         }
@@ -259,10 +260,12 @@ void Player::handle_mouse_event(const cgp::inputs_mouse_parameters& mouse){
         cgp::vec3 hitnormal;
         if(check_cube(camera.camera_model.position(),camera.camera_model.front(),5.0f, hitblock,hitnormal) && (*world).getBlock(hitblock) == BlockType::BEDROCK){
             Interractive* interractive_block = dynamic_cast<Interractive*>((*world).getBlockObject(hitblock));
+            std::cout<<"table de craft"<<std::endl;
             interractive_block->action();
         }
         else if(std::dynamic_pointer_cast<Tool>(item_in_hand) && !std::dynamic_pointer_cast<Interractive>(item_in_hand)){
             std::shared_ptr<Tool> tool = std::dynamic_pointer_cast<Tool>(item_in_hand);
+            std::cout<<"manger"<<std::endl;
             tool->action();
         }
         

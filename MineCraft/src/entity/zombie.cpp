@@ -4,7 +4,7 @@ void Zombie::move(Player player, float speed){
     cgp::vec3 diff = player.getPosition() - position; 
     diff.y=0;
     if (cgp::norm(diff) > 0.01f) diff = cgp::normalize(diff);
-    diff *=speed;
+    diff *=speed/10;
 
     position = position + diff;
     mesh_drawable.model.translation=position;
