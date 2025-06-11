@@ -10,7 +10,8 @@ enum BlockType {
     SAND = 3,
     SNOW = 4,
     STONE = 5,
-    BEDROCK = 6
+    BEDROCK = 6,
+    CRAFT_TABLE = 7
 };
 
 class Block : public Item {
