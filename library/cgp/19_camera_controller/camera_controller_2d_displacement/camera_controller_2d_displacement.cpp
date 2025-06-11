@@ -26,9 +26,9 @@ namespace cgp
 		if (event_valid) {
 			if (click_left || (is_cursor_trapped && !click_right)) {
 				if (!ctrl)
-					camera_model.manipulator_rotate_roll_pitch_yaw(0, dp.y, -dp.x); // left drag => rotates
+					 camera_model.manipulator_rotate_roll_pitch_yaw(0, dp.y, -dp.x); // left drag => rotates
 				else
-					camera_model.manipulator_twist_rotation_axis(dp.x); // left drag + Ctrl => twist
+					 camera_model.manipulator_twist_rotation_axis(dp.x); // left drag + Ctrl => twist
 
 			}
 			else if (click_right)

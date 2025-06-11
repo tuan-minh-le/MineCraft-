@@ -23,7 +23,7 @@ using cgp::mesh_drawable;
 
 struct gui_parameters {
 	bool display_frame = true;
-	bool display_wireframe = false;
+	bool display_wireframe = true;
 };
 
 // The structure of the custom scene
@@ -42,7 +42,6 @@ struct scene_structure : cgp::scene_inputs_generic {
 
 	Chunk chunk;
 	World world;
-	Primary_World primary_world;
 
 	//Grass* grass;
 	Grass grass;

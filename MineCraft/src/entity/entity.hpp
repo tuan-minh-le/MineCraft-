@@ -9,6 +9,7 @@ class Entity{
     int life;
     cgp::mesh_drawable entity_mesh;
     cgp::vec3 position;
+    float speed;
     cgp::vec3 testPosition;
     World* world;
 
@@ -28,6 +29,9 @@ class Entity{
     cgp::vec3& setTestPosition();
     cgp::mesh_drawable getEntityMesh() const;
     cgp::mesh_drawable& setEntityMesh();
+
+    float get_speed() const;
+    float& set_speed();
 
 
 };

@@ -4,11 +4,11 @@ World::World():worldSizeX(0), worldSizeZ(0), renderDistance(0){}
 
 
 World::~World(){
-    std::cout << "World destructor called - deleting " << chunks.size() << " chunks" << std::endl;
-    for(Chunk* chunk : chunks){
-        delete chunk;
-    }
-    std::cout << "World destructor completed" << std::endl;
+    // std::cout << "World destructor called - deleting " << chunks.size() << " chunks" << std::endl;
+    // for(Chunk* chunk : chunks){
+    //     delete chunk;
+    // }
+    // std::cout << "World destructor completed" << std::endl;
 }
 
 void World::initialize(int pWorldSizeX, int pWorldSizeZ, int pRenderDistance){

@@ -1,5 +1,6 @@
 #include "scene.hpp"
 
+
 using namespace cgp;
 
 void scene_structure::initialize()
@@ -8,22 +9,12 @@ void scene_structure::initialize()
 	global_frame.initialize_data_on_gpu(mesh_primitive_frame());
 
 	world.initialize(10, 10, 20);
-	player.initialize(inputs,window,world);
-	chick.initialize(inputs,window,world);
-	zombie.initialize(inputs,window,world);
+	player.initialize(inputs,window,&world);
+	chick.initialize(inputs,window,&world);
+	std::cout << "Player world: " << player.getWorld() << std::endl;
+	std::cout << "Chicken world: " << chick.getWorld() << std::endl;
+	zombie.initialize(inputs,window,&world);
     
-    // === DEBUG TESTING ===
-    //std::cout << "\n=== SCENE DEBUG TESTING ===" << std::endl;
-    
-    // Test 1: Check chunk dimensions
-    Chunk dummyChunk;
-    ChunkSize size = dummyChunk.getSize();
-    //std::cout << "Default chunk size: " << size.width << "x" << size.height << "x" << size.depth << std::endl;
-    
-    // Test 2: Check player starting position
-    //std::cout << "Player starting position: (" << player.getPosition().x << ", " << player.getPosition().y << ", " << player.getPosition().z << ")" << std::endl;
-    
-    // Test 3: Test known world positions
     std::vector<cgp::vec3> testPositions = {
         {0, 0, 0},      // Should be in first chunk
         {5, 5, 5},      // Should be in first chunk
@@ -56,8 +47,10 @@ void scene_structure::display_frame()
 {
 	// Set the light to the current position of the camera
 	environment.light = player.get_camera().camera_model.position();
-
+	// glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	world.renderCached(player.getPosition(), environment);
+
+	
 
 	cgp::draw(chick.get_mesh_drawable(),environment);
 	cgp::draw(zombie.get_mesh_drawable(),environment);
@@ -427,5 +420,7 @@ void scene_structure::idle_frame()
 	player.handle_keyboard_event(inputs.keyboard,environment.camera_view);
 	player.move(player.get_speed(),inputs.keyboard, environment.camera_view);
 	player.handle_mouse_event(inputs.mouse);
+	zombie.move(player,zombie.get_speed());
+	chick.move(player,chick.get_speed());
 }
 

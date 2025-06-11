@@ -68,10 +68,8 @@ void Inventory::fast_switch_inventory(int ind,SlotType from_type, Inventory& inv
     {
         if (ind==2)
         {
-            int cpt = 0;
             bool test_bool = true;
             while(test_bool){
-                cpt++;
                 finish_craft(false);
                 test_bool = check_craft();
             }
@@ -269,8 +267,7 @@ bool Inventory::check_craft(){
 }
 
 void Inventory::finish_craft(bool erase){
-    int i;
-    for (int i; i < get_inventory_size(); i++)
+    for (int i = 0; i < get_inventory_size(); i++)
     {
         if (!(inventory[i].empty()))
         {
