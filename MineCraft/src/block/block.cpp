@@ -8,10 +8,13 @@ bool Block::instanced_drawables_initialized = false;
 std::vector<cgp::vec3> Block::grass_instances;
 std::vector<cgp::vec3> Block::stone_instances;
 std::vector<cgp::vec3> Block::sand_instances;
+std::vector<cgp::vec3> Block::snow_instances;
 
 cgp::mesh_drawable Block::grass_instanced;
 cgp::mesh_drawable Block::stone_instanced;
 cgp::mesh_drawable Block::sand_instanced;
+cgp::mesh_drawable Block::snow_instanced;
+
 
 Block::Block() {}
 
@@ -37,6 +40,9 @@ void Block::initialize_instanced_drawables() {
         // Initialize sand drawable
         sand_instanced.initialize_data_on_gpu(shared_cube_mesh);
         sand_instanced.material.color = cgp::vec3{0.9f, 0.9f, 0.1f}; // Yellow
+
+        snow_instanced.initialize_data_on_gpu(shared_cube_mesh);
+        snow_instanced.material.color = cgp::vec3(1.f, 1.f, 1.f);
         
         instanced_drawables_initialized = true;
     }
@@ -46,6 +52,7 @@ void Block::clear_all_instances() {
     grass_instances.clear();
     stone_instances.clear();
     sand_instances.clear();
+    snow_instances.clear();
 }
 
 BlockType Block::get_type() const{
@@ -102,6 +109,8 @@ void Block::render_all_instances(const cgp::environment_generic_structure& envir
     
     // Render all sand blocks
     render_instanced_blocks(sand_instanced, sand_instances, environment);
+
+    render_instanced_blocks(snow_instanced, snow_instances, environment);
 }
 
 void Block::draw_block_at(const cgp::environment_generic_structure& environment) {

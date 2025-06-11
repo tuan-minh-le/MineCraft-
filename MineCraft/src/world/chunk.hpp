@@ -4,6 +4,7 @@
 #include "block/sand.hpp" 
 #include "block/stone.hpp"
 #include "block/block.hpp"
+#include "block/snow.hpp"
 #include <queue>
 
 struct ChunkSize {
@@ -14,7 +15,7 @@ struct ChunkSize {
 
 class Chunk {
 private:
-    ChunkSize chunkSize = {16, 16, 16};
+    ChunkSize chunkSize = {16, 32, 16};
     cgp::vec3 chunkWorldPosition; 
     std::vector<BlockType> blockData;
     std::vector<Block*> blockObjects;
@@ -24,7 +25,8 @@ private:
     Grass grass;
     Stone stone;
     Sand sand;
-    
+    Snow snow;
+
     bool isDataGenerated = false;
 
     
@@ -77,7 +79,6 @@ public:
 
     void renderInstanced(const cgp::environment_generic_structure& environment);
 
-    std::vector<std::tuple<int, int, int>> findSurfaceBlocksBFS() const;
     
     void findSurfaceBlocksBFS(std::vector<std::tuple<int, int, int>>& surfaceBlocks) const;
 
