@@ -80,7 +80,9 @@ public:
     
     bool colision();
 
-    bool gravityAplication();
+    // bool gravityAplication();
+    void gravityAplication();
+
     // std::string getNameObj()const;
     // std::string& setNameObj();
     // std::string getNameTexture()const;
