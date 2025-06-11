@@ -422,7 +422,7 @@ void scene_structure::display_inventory_ui()
 		auto* drawList = ImGui::GetWindowDrawList();
 		ImColor color = IM_COL32(0, 0, 0, 255);
 
-		const char* text = "test";
+		const char* text = "You are dead, Press Enter to respawn";
 
 		ImVec2 textSize = ImGui::CalcTextSize(text);
 		ImVec2 textPos = ImVec2(center.x - textSize.x / 2.0f, center.y - textSize.y / 2.0f);
@@ -478,5 +478,16 @@ void scene_structure::idle_frame()
 			player.setLife()+=1;
 		}
 	}
+	else
+	{
+		if (inputs.keyboard.is_pressed(GLFW_KEY_ENTER))
+		{
+			lost = false;
+			player.~Player();
+			player.initialize(inputs,window,&world);
+		}
+		
+	}
+	
 }
 
