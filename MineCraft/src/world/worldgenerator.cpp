@@ -129,7 +129,7 @@ BiomeType WorldGenerator::getBiomeTypeAt(float worldX, float worldZ){
         result = DESERT;
     }
     else{
-        result = DESERT;
+        result = PLAINS;
     }
 
     return result;
