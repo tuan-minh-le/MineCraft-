@@ -4,7 +4,7 @@
 #include "../extern/fastnoise/FastNoise.h"
 
 const int HEIGHTOFFSET = 5;
-const float HEIGHTINTENSITY = 2000.f; 
+const float HEIGHTINTENSITY = 4000.f; 
 
 class Chunk;
 
