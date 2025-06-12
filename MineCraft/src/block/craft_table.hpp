@@ -17,4 +17,7 @@ public:
     void action();
     bool get_opened() const;
     bool& set_opened();
+
+    Inventory& get_inventory();
+    Inventory& set_inventory();
 };
