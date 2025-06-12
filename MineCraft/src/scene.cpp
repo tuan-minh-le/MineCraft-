@@ -51,7 +51,7 @@ void scene_structure::display_frame()
 {
 	// Set the light to the current position of the camera
 	environment.light = player.get_camera().camera_model.position();
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	// glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);// Arret if uncomment
 	world.renderCached(player.getPosition(), environment);
 
 	
