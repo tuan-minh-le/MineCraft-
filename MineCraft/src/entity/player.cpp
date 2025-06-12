@@ -26,7 +26,7 @@ void Player::initialize(const cgp::vec3& p_position, cgp::input_devices& inputs,
     craft_opened = false;
 
     isGrounded = true;
-    isCreativeMode = true;
+    isCreativeMode = false;
     verticalVelocity = 0;
     gravity = 50.f;
     dt = 0.05f;
@@ -284,6 +284,7 @@ void Player::move(float speed,const cgp::inputs_keyboard_parameters& keyboard,cg
     }
    
     }
+    gravityAplication();
     camera.camera_model.position_camera = position;
     camera_view_matrix = camera.camera_model.matrix_view();
 }
@@ -456,7 +457,7 @@ bool Player::colision(){
 // }
 
 void Player::gravityAplication(){
-    cgp::vec3 Test_under = {position.x, position.y - 0.1f, position.z};
+    cgp::vec3 Test_under = {position.x, position.y - 0.2f, position.z};
     setTestPosition() = Test_under;
     if(!colision()){
         setPosition() = Test_under;
