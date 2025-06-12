@@ -45,3 +45,10 @@ bool Craft_table::get_opened() const{
 bool& Craft_table::set_opened(){
     return opened;
 }
+
+Inventory& Craft_table::get_inventory(){
+    return craft_inventory;
+}
+Inventory& Craft_table::set_inventory(){
+    return craft_inventory;
+}

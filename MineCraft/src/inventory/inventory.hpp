@@ -13,7 +13,8 @@ class Craft_table;
 
 enum class SlotType {
     INVENTORY,
-    CRAFT
+    CRAFT,
+    TABLE_CRAFT
 };
 
 struct DragPayload {

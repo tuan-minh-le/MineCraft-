@@ -22,7 +22,9 @@ void Player::initialize(const cgp::vec3& p_position, cgp::input_devices& inputs,
 
     item_in_hand = inventory.get_inventory()[ind_inventory][0];
     world = wrd;
+
     craft_opened = false;
+
     isGrounded = true;
     isCreativeMode = false;
     verticalVelocity = 0;
@@ -120,7 +122,7 @@ void Player::handle_mouse_move(cgp::vec2 const& mouse_position_current, cgp::vec
 
 void Player::handle_keyboard_event(const cgp::inputs_keyboard_parameters& keyboard,cgp::mat4& camera_view_matrix){
 
-    if (keyboard.is_pressed(GLFW_KEY_E) && !lastE)
+    if (keyboard.is_pressed(GLFW_KEY_E) && !lastE && !craft_opened)
     {
         inventory.set_opened_inventory() = !inventory.get_opened_inventory();
     }
@@ -172,46 +174,46 @@ void Player::handle_keyboard_event(const cgp::inputs_keyboard_parameters& keyboa
         item_in_hand = inventory.get_inventory()[ind_inventory][0];
     }
 
-    // if (position.y <= 0) {
-    //     position.y = 0;  
-    //     isGrounded = true;    
-    //     verticalVelocity = 0.0f; 
-    // }
+    if (position.y <= 0) {
+        position.y = 0;  
+        isGrounded = true;    
+        verticalVelocity = 0.0f; 
+    }
 
-    // if (colision()==true) {
-    //     verticalVelocity += gravity * dt; 
-    //     position.y += verticalVelocity * dt;  
-    //     isGrounded = true; 
+    if (colision()==true) {
+        verticalVelocity += gravity * dt; 
+        position.y += verticalVelocity * dt;  
+        isGrounded = true; 
         
-    // }
+    }
     
 
-    // verticalVelocity = 0.0f;
+    verticalVelocity = 0.0f;
 
-    // if(!isCreativeMode){
-    //     if (isGrounded) {
-    //     verticalVelocity = 0.0f; 
-    //     if (keyboard.is_pressed(GLFW_KEY_SPACE)) {
-    //         verticalVelocity = 50.0f; 
-    //         isGrounded = false;          
-    //     }
-    //     }
-    //     else {
-    //         verticalVelocity -= gravity * dt; 
-    //     }
-    // }
-    // else{
-    //     if(keyboard.is_pressed(GLFW_KEY_SPACE)){
-    //         verticalVelocity = 15.0;
-    //     }
-    //     if(keyboard.is_pressed(GLFW_KEY_LEFT_CONTROL)){
-    //         verticalVelocity = -20.0;
-    //     }
-    // }
-    // if(!isGrounded){
-    //     //std::cout<<"oui / "<<position.y<<std::endl;
-    // }
-    // position.y += verticalVelocity * dt;
+    if(!isCreativeMode){
+        if (isGrounded) {
+        verticalVelocity = 0.0f; 
+        if (keyboard.is_pressed(GLFW_KEY_SPACE)) {
+            verticalVelocity = 50.0f; 
+            isGrounded = false;          
+        }
+        }
+        else {
+            verticalVelocity -= gravity * dt; 
+        }
+    }
+    else{
+        if(keyboard.is_pressed(GLFW_KEY_SPACE)){
+            verticalVelocity = 15.0;
+        }
+        if(keyboard.is_pressed(GLFW_KEY_LEFT_CONTROL)){
+            verticalVelocity = -20.0;
+        }
+    }
+    if(!isGrounded){
+        //std::cout<<"oui / "<<position.y<<std::endl;
+    }
+    position.y += verticalVelocity * dt;
     
 
      
@@ -271,12 +273,12 @@ void Player::move(float speed,const cgp::inputs_keyboard_parameters& keyboard,cg
             }
             else{
             verticalVelocity -= gravity * dt; 
-            }
         }
-        gravityAplication();
-    }else{
-        if(keyboard.is_pressed(GLFW_KEY_SPACE))
-        {
+        }
+        gravityAplication(); 
+    }
+        else{
+        if(keyboard.is_pressed(GLFW_KEY_SPACE)){
             verticalVelocity = 20.0;
         }
         if(keyboard.is_pressed(GLFW_KEY_LEFT_CONTROL))
@@ -286,7 +288,6 @@ void Player::move(float speed,const cgp::inputs_keyboard_parameters& keyboard,cg
     }
    
 
-    
     camera.camera_model.position_camera = position;
     camera_view_matrix = camera.camera_model.matrix_view();
 }
