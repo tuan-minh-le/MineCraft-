@@ -32,7 +32,7 @@ void VegetationGenerator::initializeBiomeConfigs() {
         .minDistance = 15.0f,
         .maxAttempts = 20,
         .density = 0.08f,
-        .vegetationTypes = {CACTUS, DEAD_BUSH},
+        .vegetationTypes = {CACTUS_T, DEAD_BUSH},
         .typeWeights = {0.3f, 0.7f}
     };
 }
