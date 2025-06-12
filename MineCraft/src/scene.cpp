@@ -11,7 +11,7 @@ void scene_structure::initialize()
 
 	lost = false;
 
-	world.initialize(1, 1, 50);
+	world.initialize(10, 10, 50);
 	player.initialize({10, 10, 10}, inputs,window,&world);
 	chick.initialize({10, 10, 10}, inputs,window,&world);
 	zombie.initialize({30, 10, 30}, inputs,window,&world);
@@ -51,7 +51,7 @@ void scene_structure::display_frame()
 {
 	// Set the light to the current position of the camera
 	environment.light = player.get_camera().camera_model.position();
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	// glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	world.renderCached(player.getPosition(), environment);
 
 	
@@ -277,7 +277,7 @@ void scene_structure::display_inventory_ui()
 		{
 		glfwSetInputMode(window.glfw_window,GLFW_CURSOR,GLFW_CURSOR_NORMAL);
 		ImGui::SetNextWindowPos(ImVec2(500,200));
-		ImGui::SetNextWindowSize(ImVec2(800, 600));
+		ImGui::SetNextWindowSize(ImVec2(800, 700));
 		ImGui::Begin("Craft_table", nullptr,
 				ImGuiWindowFlags_NoTitleBar |
 				ImGuiWindowFlags_NoResize |
@@ -305,7 +305,7 @@ void scene_structure::display_inventory_ui()
 
 			for (int i = 0; i < rows * columns-2; ++i) {
 				int j;
-				if (i == 7) {j = 9;} else {i = j;}
+				if (i == 7) {j = 10;} else {j = i;}
 
 				int row = j / columns;
 				int col = j % columns;
@@ -397,7 +397,7 @@ void scene_structure::display_inventory_ui()
 				
 				ImVec2 pos = ImVec2(
 					basePos.x + col * (slotSize + slotSpacingx),
-					basePos.y + 250 + row * (slotSize + slotSpacingy)
+					basePos.y + 300 + row * (slotSize + slotSpacingy)
 				);
 
 				std::string label = "inv " + std::to_string(i);
