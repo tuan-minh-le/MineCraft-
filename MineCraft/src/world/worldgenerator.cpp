@@ -42,11 +42,9 @@ void WorldGenerator::generateChunk(Chunk& chunk, const cgp::vec3& position) {
     
     for(int x = 0; x < size.width; x++) {
         for(int z = 0; z < size.depth; z++) {
-            // Convert local chunk coordinates to world coordinates
             float worldX = chunkWorldPos.x + x;
             float worldZ = chunkWorldPos.z + z;
             
-            // Generate height using Perlin noise
             int surfaceHeight = generateHeightAt(worldX, worldZ);
             
             // Fill the column from bottom to surface height
@@ -86,7 +84,7 @@ int WorldGenerator::generateHeightAt(float worldX, float worldZ) {
 }
 
 float WorldGenerator::generateTemperatureAt(float worldX, float worldZ){
-    noise.SetSeed(1338);
+    noise.SetSeed(1403);
     noise.SetNoiseType(FastNoise::Perlin);
 
     noise.SetFrequency(1.f);
@@ -124,10 +122,10 @@ BiomeType WorldGenerator::getBiomeTypeAt(float worldX, float worldZ){
     // debugCount++;
 
     BiomeType result;
-    if(temperature < 0.01f){
+    if(temperature < 0.004f){
         result = SNOWBIOME;
     }
-    else if(temperature > 0.2f){
+    else if(temperature > 0.1f){
         result = DESERT;
     }
     else{

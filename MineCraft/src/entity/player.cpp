@@ -24,7 +24,7 @@ void Player::initialize(const cgp::vec3& p_position, cgp::input_devices& inputs,
     world = wrd;
     craft_opened = false;
     isGrounded = true;
-    isCreativeMode = false;
+    isCreativeMode = true;
     verticalVelocity = 0;
     gravity = 50.f;
     dt = 0.05f;

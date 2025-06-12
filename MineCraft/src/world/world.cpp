@@ -1,6 +1,6 @@
 #include "world.hpp"
 
-World::World():worldSizeX(0), worldSizeZ(0), renderDistance(0){}
+World::World():worldSizeX(0), worldSizeZ(0), renderDistance(0), vegetationGenerator(&worldGenerator){}
 
 
 World::~World(){
@@ -45,6 +45,7 @@ void World::generateWorld(){
 
             worldGenerator.generateChunk(*chunk, chunkWorldPos);
 
+            vegetationGenerator.generateVegetationForChunk(*chunk, chunkWorldPos);
 
             chunk->populateBlockObjects();
             chunk->markAsGenerated();

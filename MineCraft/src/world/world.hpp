@@ -2,6 +2,7 @@
 
 #include "../block/block.hpp"
 #include "worldgenerator.hpp"
+#include "vegetation_generator.hpp" 
 #include "frustum.hpp"
 #include "chunk.hpp"
 
@@ -10,6 +11,8 @@ class World{
     private:
         std::vector<Chunk*> chunks;
         WorldGenerator worldGenerator;
+
+        VegetationGenerator vegetationGenerator;
 
         int worldSizeX;
         int worldSizeZ;
