@@ -6,6 +6,7 @@ Craft_table::Craft_table(){
     opened = false;
     item_name = "Crafting Table";
     type = BlockType::CRAFT_TABLE;
+    craft_inventory.initialize(10,false);
 }
 
 void Craft_table::initialize() {
@@ -34,7 +35,7 @@ void Craft_table::draw_block_at(const cgp::environment_generic_structure& enviro
     cgp::draw(ct_drawable, environment);
 }
 
-void Craft_table::action (int* entier){
+void Craft_table::action (){
     opened = true;
 }
 

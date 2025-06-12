@@ -15,8 +15,10 @@ void Player::initialize(const cgp::vec3& p_position, cgp::input_devices& inputs,
     speed = 0.01f;
     ind_inventory = 0;
 
-    inventory.initialize(inventory_size);
-    craft.initialize(craft_size);
+    inventory.initialize(inventory_size,true);
+    craft.initialize(craft_size,false);
+
+    craft_table_opened = nullptr;
 
     item_in_hand = inventory.get_inventory()[ind_inventory][0];
     world = wrd;
@@ -81,6 +83,13 @@ int& Player::set_item_ind(){
     return ind_inventory;
 }
 
+std::shared_ptr<Craft_table> Player::get_craft_table_opened() const{
+    return craft_table_opened;
+}
+std::shared_ptr<Craft_table>& Player::set_craft_table_opened(){
+    return craft_table_opened;
+}
+
 void Player::handle_mouse_move(cgp::vec2 const& mouse_position_current, cgp::vec2 const& mouse_position_previous, cgp::mat4& camera_view_matrix) {
     
     if(cgp::norm(mouse_position_current - mouse_position_previous) < 0.01){
@@ -124,6 +133,14 @@ void Player::handle_keyboard_event(const cgp::inputs_keyboard_parameters& keyboa
 
     if (keyboard.is_pressed(GLFW_KEY_LEFT_SHIFT)){
         set_speed() = 0.05f;
+        
+    }
+
+    if(keyboard.is_pressed(GLFW_KEY_ESCAPE) && craft_table_opened != nullptr)
+    {
+        
+        craft_table_opened->set_opened() = !craft_table_opened->get_opened();
+        craft_table_opened = nullptr;
         
     }
 
@@ -283,21 +300,22 @@ void Player::handle_mouse_event(const cgp::inputs_mouse_parameters& mouse){
         }
     }
 
-    if (ImGui::IsMouseClicked(1)){
+    if (ImGui::IsMouseClicked(1) && !inventory.get_opened_inventory()){
         cgp::vec3 hitblock;
         cgp::vec3 hitnormal;
         int hunger = get_hunger();
-        if(check_cube(camera.camera_model.position(),camera.camera_model.front(),5.0f, hitblock,hitnormal) && (*world).getBlock(hitblock) == BlockType::BEDROCK){
-            Interractive* interractive_block = dynamic_cast<Interractive*>((*world).getBlockObject(hitblock));
+        if(check_cube(camera.camera_model.position(),camera.camera_model.front(),5.0f, hitblock,hitnormal) && (*world).getBlock(hitblock) == BlockType::CRAFT_TABLE){
+            std::shared_ptr<Block> craft_table_block = std::shared_ptr<Block>((*world).getBlockObject(hitblock));
+            std::shared_ptr<Craft_table> craft_table = std::dynamic_pointer_cast<Craft_table>(craft_table_block);
             std::cout<<"table de craft"<<std::endl;
-            interractive_block->action(&hunger);
+            craft_table_opened = craft_table;
+            craft_table_opened->action();
+            std::cout<<"booléen changé"<<std::endl;
         }
         else if(std::dynamic_pointer_cast<Tool>(item_in_hand) && !std::dynamic_pointer_cast<Interractive>(item_in_hand)){
             std::shared_ptr<Tool> tool = std::dynamic_pointer_cast<Tool>(item_in_hand);
-            std::cout<<"manger"<<hunger<<std::endl;
-            tool->action(&hunger);
-            std::cout<<"mangera"<<hunger<<std::endl;
             set_hunger()= hunger;
+            inventory.erase_inventory(ind_inventory);
         }
         
     }

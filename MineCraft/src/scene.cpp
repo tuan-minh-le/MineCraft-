@@ -273,6 +273,33 @@ void scene_structure::display_inventory_ui()
 
 			ImGui::End();
 		}
+		else if (player.get_craft_table_opened()!= nullptr && player.get_craft_table_opened()->get_opened())
+		{
+			ImVec2 center = ImVec2(window.width * 0.5f, window.height * 0.5f);
+		float size = 25.0f;
+
+		ImGui::SetNextWindowPos(ImVec2(center.x-2*size,center.y-2*size));
+		ImGui::SetNextWindowSize(ImVec2(5*size, 5*size));
+		ImGui::Begin("Craft_table", nullptr,
+				ImGuiWindowFlags_NoTitleBar |
+				ImGuiWindowFlags_NoResize |
+				ImGuiWindowFlags_NoMove |
+				ImGuiWindowFlags_NoCollapse |
+				ImGuiWindowFlags_NoBackground);
+
+		ImVec2 basePos = ImGui::GetCursorScreenPos();
+		auto* drawList = ImGui::GetWindowDrawList();
+		ImColor color = IM_COL32(0, 0, 0, 255);
+
+		const char* text = "Craft table opened";
+
+		ImVec2 textSize = ImGui::CalcTextSize(text);
+		ImVec2 textPos = ImVec2(center.x - textSize.x / 2.0f, center.y - textSize.y / 2.0f);
+		drawList->AddText(textPos, color, text);
+		
+		ImGui::End();
+		}
+		
 		else{
 			glfwSetInputMode(window.glfw_window,GLFW_CURSOR,GLFW_CURSOR_DISABLED);
 

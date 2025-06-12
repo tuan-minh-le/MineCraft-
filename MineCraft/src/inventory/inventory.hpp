@@ -5,10 +5,11 @@
 #include "block/grass.hpp"
 #include "block/stone.hpp"
 #include "block/raw_chicken.hpp"
-#include "block/craft_table.hpp"
 #include <vector>
 #include <memory>
 #include <string>
+
+class Craft_table;
 
 enum class SlotType {
     INVENTORY,
@@ -34,7 +35,7 @@ class Inventory{
 
         int max_size = 64;
 
-        void initialize(int size);
+        void initialize(int size,bool add_craft);
         bool add_inventory (std::shared_ptr<Item> item);
         bool erase_inventory (int ind);
         void switch_inventory(int ind1, int ind2, SlotType from_type, SlotType to_type, Inventory& from_inv,bool split, bool one);

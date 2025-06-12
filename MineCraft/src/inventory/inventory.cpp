@@ -1,4 +1,5 @@
 #include "inventory.hpp"
+#include "block/craft_table.hpp"
 
 Inventory::Inventory(){
 
@@ -8,7 +9,7 @@ Inventory::~Inventory(){
 }
 
 
-void Inventory::initialize(int size){
+void Inventory::initialize(int size,bool add_craft){
     set_inventory_size() = size;
     for (int i = 0; i < get_inventory_size();i++)
     {
@@ -19,7 +20,10 @@ void Inventory::initialize(int size){
         inventory[0].push_back(std::shared_ptr<Item>(new Grass()));
         inventory[1].push_back(std::shared_ptr<Item>(new Stone()));
         inventory[2].push_back(std::shared_ptr<Item>(new Raw_chicken()));
-        inventory[3].push_back(std::shared_ptr<Item>(new Craft_table()));
+        if (add_craft)
+        {
+            inventory[3].push_back(std::shared_ptr<Item>(new Craft_table()));
+        }
     }
 }
 
