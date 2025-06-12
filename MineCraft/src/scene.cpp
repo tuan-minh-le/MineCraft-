@@ -305,13 +305,13 @@ void scene_structure::display_inventory_ui()
 
 			for (int i = 0; i < rows * columns-2; ++i) {
 				int j;
-				if (i == 7) {j = 10;} else {j = i;}
+				if (i == 7) {j = 9;} else {i = j;}
 
 				int row = j / columns;
 				int col = j % columns;
 
 				ImVec2 pos = ImVec2(
-					basePos.x + 50 + col * (slotSize + slotSpacingx),
+					basePos.x + 200 + col * (slotSize + slotSpacingx),
 					basePos.y + 50 + row * (slotSize + slotSpacingy));
 
 				if (i == 3) {pos.y += slotSize/2; pos.x += 40;}
@@ -356,7 +356,7 @@ void scene_structure::display_inventory_ui()
 							player.get_craft_table_opened()->get_inventory().switch_inventory(from_index, i,from_type,SlotType::TABLE_CRAFT,inventory,inputs.keyboard.is_pressed(GLFW_KEY_R),inputs.keyboard.is_pressed(GLFW_KEY_T));
 							player.get_craft_table_opened()->get_inventory().check_craft();
 
-							if (from_type== SlotType::TABLE_CRAFT and from_index == 2)
+							if (from_type== SlotType::TABLE_CRAFT and from_index == 3)
 							{
 								player.get_craft_table_opened()->get_inventory().finish_craft(true);
 								player.get_craft_table_opened()->get_inventory().check_craft();
@@ -431,7 +431,7 @@ void scene_structure::display_inventory_ui()
 						{
 							player.set_inventory().switch_inventory(from_index, i,from_type,SlotType::INVENTORY,table_craft,inputs.keyboard.is_pressed(GLFW_KEY_R),inputs.keyboard.is_pressed(GLFW_KEY_T));
 							player.get_craft_table_opened()->get_inventory().check_craft();
-							if (from_type== SlotType::TABLE_CRAFT and from_index == 2)
+							if (from_type== SlotType::TABLE_CRAFT and from_index == 3)
 							{
 								player.get_craft_table_opened()->get_inventory().finish_craft(true);
 								player.get_craft_table_opened()->get_inventory().check_craft();

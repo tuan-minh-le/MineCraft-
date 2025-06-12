@@ -9,8 +9,10 @@ Inventory::~Inventory(){
 }
 
 
-void Inventory::initialize(int size,bool add_craft){
+void Inventory::initialize(int size,bool add_craft,bool liitle){
     set_inventory_size() = size;
+    little=liitle;
+    
     for (int i = 0; i < get_inventory_size();i++)
     {
         inventory.push_back(std::vector<std::shared_ptr<Item>>());
@@ -69,10 +71,12 @@ bool Inventory::erase_inventory (int ind){
 }
 
 void Inventory::fast_switch_inventory(int ind,SlotType from_type, Inventory& inv){
+    int tail;
+    if (little) {tail = 2;} else{tail = 3;}
 
     if (from_type == SlotType::CRAFT)
     {
-        if (ind==2)
+        if (ind==tail)
         {
             bool test_bool = true;
             while(test_bool){
@@ -167,8 +171,9 @@ int& Inventory::set_inventory_size(){
 }
 
 void Inventory::switch_inventory(int ind1, int ind2, SlotType from_type, SlotType to_type, Inventory& from_inv,bool split, bool one) {
-    
-    if (ind2 == 2 && to_type == SlotType::CRAFT)
+    int tail;
+    if (little) {tail = 2;} else{tail = 3;}
+    if (ind2 == tail && to_type == SlotType::CRAFT)
     {
         return;
     }
@@ -258,26 +263,50 @@ std::vector<std::vector<std::shared_ptr<Item>>>& Inventory::set_inventory(){
 }
 
 bool Inventory::check_craft(){
-    if (inventory[3].empty() || inventory[0].empty())
+    int tail;
+    if (little) {tail = 2;} else{tail = 3;}
+
+    if (little)
     {
-        return false;
+        if (inventory[3].empty() || inventory[0].empty())
+        {
+            return false;
+        }
+        
+        if (inventory[3][0]->getItemName() == "Grass" && inventory[0][0]->getItemName() == "Grass" && inventory[1].empty() && inventory[4].empty())
+        {
+            inventory[2].push_back(std::make_shared<Stone>());
+
+            return true;
+        }
+    }
+    else
+    {
+        if (inventory[4].empty() || inventory[0].empty() || inventory[7].empty())
+        {
+            return false;
+        }
+        
+        if (inventory[4][0]->getItemName() == "Grass" && inventory[0][0]->getItemName() == "Grass" && inventory[7][0]->getItemName() == "Grass" 
+        && inventory[1].empty() && inventory[2].empty() && inventory[5].empty() && inventory[6].empty() && inventory[8].empty() && inventory[9].empty())
+        {
+            inventory[3].push_back(std::make_shared<Stone>());
+
+            return true;
+        }
     }
     
-    if (inventory[3][0]->getItemName() == "Grass" && inventory[0][0]->getItemName() == "Grass" && inventory[1].empty() && inventory[4].empty())
-    {
-        inventory[2].push_back(std::make_shared<Stone>());
-
-        return true;
-    }
     return false;
 }
 
 void Inventory::finish_craft(bool erase){
+    int tail;
+    if (little) {tail = 2;} else{tail = 3;}
     for (int i = 0; i < get_inventory_size(); i++)
     {
         if (!(inventory[i].empty()))
         {
-            if (erase || i!=2)
+            if (erase || i!=tail)
             {
                 inventory[i].erase(inventory[i].begin());
             }

@@ -28,6 +28,7 @@ class Inventory{
         bool opened_inventory = false;
         std::vector<std::vector<std::shared_ptr<Item>>> inventory;
         int inventory_size;
+        bool little;
 
     public:
 
@@ -36,7 +37,7 @@ class Inventory{
 
         int max_size = 64;
 
-        void initialize(int size,bool add_craft);
+        void initialize(int size,bool add_craft,bool liitle);
         bool add_inventory (std::shared_ptr<Item> item);
         bool erase_inventory (int ind);
         void switch_inventory(int ind1, int ind2, SlotType from_type, SlotType to_type, Inventory& from_inv,bool split, bool one);
