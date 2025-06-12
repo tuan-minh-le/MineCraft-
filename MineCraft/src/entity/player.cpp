@@ -15,8 +15,8 @@ void Player::initialize(const cgp::vec3& p_position, cgp::input_devices& inputs,
     speed = 0.01f;
     ind_inventory = 0;
 
-    inventory.initialize(inventory_size,true);
-    craft.initialize(craft_size,false);
+    inventory.initialize(inventory_size,true,false);
+    craft.initialize(craft_size,false,true);
 
     craft_table_opened = nullptr;
 

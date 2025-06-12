@@ -6,7 +6,7 @@ Craft_table::Craft_table(){
     opened = false;
     item_name = "Crafting Table";
     type = BlockType::CRAFT_TABLE;
-    craft_inventory.initialize(10,false);
+    craft_inventory.initialize(10,false,false);
 }
 
 void Craft_table::initialize() {
