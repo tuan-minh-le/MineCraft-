@@ -1,11 +1,12 @@
 #include "zombie.hpp"
 
 void Zombie::move(Player& player, float speed){
-    cgp::vec3 diff = player.getPosition() - position; 
+    cgp::vec3 diff = player.getPosition() - position;
+    cgp::vec3 diff_touch = diff; 
     diff.y=0;
     // std::cout<<cgp::norm(diff)<<std::endl;
     if (cgp::norm(diff) > 0.05f) diff = cgp::normalize(diff);
-    else
+    if (cgp::norm(diff_touch) <= 0.05f)
     {
         player.setLife()-=1;
     }
