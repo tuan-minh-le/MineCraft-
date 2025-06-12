@@ -6,6 +6,9 @@
 #include "block/block.hpp"
 #include "block/snow.hpp"
 #include "block/craft_table.hpp"
+#include "block/cactus.hpp"
+#include "block/leaf.hpp"
+#include "block/wood.hpp"
 #include <queue>
 
 class World;
@@ -29,6 +32,9 @@ private:
     Stone stone;
     Sand sand;
     Snow snow;
+    Cactus cactus;
+    Leaf leaf;
+    Wood wood;
     Craft_table craftingTable;
 
     bool isDataGenerated = false;

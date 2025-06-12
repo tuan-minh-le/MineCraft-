@@ -10,12 +10,18 @@ std::vector<cgp::vec3> Block::stone_instances;
 std::vector<cgp::vec3> Block::sand_instances;
 std::vector<cgp::vec3> Block::snow_instances;
 std::vector<cgp::vec3> Block::ct_instances;
+std::vector<cgp::vec3> Block::cactus_instances;
+std::vector<cgp::vec3> Block::leaf_instances;
+std::vector<cgp::vec3> Block::wood_instances;
 
 cgp::mesh_drawable Block::grass_instanced;
 cgp::mesh_drawable Block::stone_instanced;
 cgp::mesh_drawable Block::sand_instanced;
 cgp::mesh_drawable Block::snow_instanced;
 cgp::mesh_drawable Block::ct_instanced;
+cgp::mesh_drawable Block::cactus_instanced;
+cgp::mesh_drawable Block::leaf_instanced;
+cgp::mesh_drawable Block::wood_instanced;
 
 
 Block::Block() {}
@@ -48,6 +54,17 @@ void Block::initialize_instanced_drawables() {
 
         ct_instanced.initialize_data_on_gpu(shared_cube_mesh);
         ct_instanced.material.color = cgp::vec3(0.5f, 0.3f, 0.1f);
+
+        cactus_instanced.initialize_data_on_gpu(shared_cube_mesh);
+        cactus_instanced.material.color = cgp::vec3{0.2f, 0.6f, 0.2f}; 
+        
+        // Initialize leaf drawable
+        leaf_instanced.initialize_data_on_gpu(shared_cube_mesh);
+        leaf_instanced.material.color = cgp::vec3{0.1f, 0.7f, 0.1f}; 
+        
+        // Initialize wood drawable
+        wood_instanced.initialize_data_on_gpu(shared_cube_mesh);
+        wood_instanced.material.color = cgp::vec3{0.5f, 0.3f, 0.1f};
         
         instanced_drawables_initialized = true;
     }
@@ -59,6 +76,10 @@ void Block::clear_all_instances() {
     sand_instances.clear();
     snow_instances.clear();
     ct_instances.clear();
+    cactus_instances.clear();
+    leaf_instances.clear();
+    wood_instances.clear();
+
 }
 
 BlockType Block::get_type() const{
@@ -87,6 +108,18 @@ void Block::add_snow_instance(const cgp::vec3& position) {
 
 void Block::add_ct_instance(const cgp::vec3& position){
     ct_instances.push_back(position);
+}
+
+void Block::add_cactus_instance(const cgp::vec3& position) {
+    cactus_instances.push_back(position);
+}
+
+void Block::add_leaf_instance(const cgp::vec3& position) {
+    leaf_instances.push_back(position);
+}
+
+void Block::add_wood_instance(const cgp::vec3& position) {
+    wood_instances.push_back(position);
 }
 
 void Block::render_instanced_blocks(cgp::mesh_drawable& drawable, 
@@ -127,6 +160,12 @@ void Block::render_all_instances(const cgp::environment_generic_structure& envir
     render_instanced_blocks(snow_instanced, snow_instances, environment);
 
     render_instanced_blocks(ct_instanced, ct_instances, environment);
+
+    render_instanced_blocks(cactus_instanced, cactus_instances, environment);
+
+    render_instanced_blocks(leaf_instanced, leaf_instances, environment);
+    
+    render_instanced_blocks(wood_instanced, wood_instances, environment);
 }
 
 void Block::draw_block_at(const cgp::environment_generic_structure& environment) {

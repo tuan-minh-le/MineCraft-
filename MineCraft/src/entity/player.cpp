@@ -21,7 +21,7 @@ void Player::initialize(const cgp::vec3& p_position, cgp::input_devices& inputs,
     item_in_hand = inventory.get_inventory()[ind_inventory][0];
     world = wrd;
     isGrounded = true;
-    isCreativeMode = false;
+    isCreativeMode = true;
     verticalVelocity = 0;
     gravity = 50.f;
     dt = 0.05f;

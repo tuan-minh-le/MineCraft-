@@ -11,7 +11,10 @@ enum BlockType {
     SNOW = 4,
     STONE = 5,
     BEDROCK = 6,
-    CRAFT_TABLE = 7
+    CRAFT_TABLE = 7,
+    CACTUS = 8,        
+    LEAF = 9,
+    WOOD = 10 
 };
 
 class Block : public Item {
@@ -29,6 +32,9 @@ protected:
     static std::vector<cgp::vec3> sand_instances;
     static std::vector<cgp::vec3> snow_instances;
     static std::vector<cgp::vec3> ct_instances;
+    static std::vector<cgp::vec3> cactus_instances;
+    static std::vector<cgp::vec3> leaf_instances;
+    static std::vector<cgp::vec3> wood_instances;
     
     // Static mesh drawables for instanced rendering
     static cgp::mesh_drawable grass_instanced;
@@ -36,6 +42,10 @@ protected:
     static cgp::mesh_drawable sand_instanced;
     static cgp::mesh_drawable snow_instanced;
     static cgp::mesh_drawable ct_instanced;
+    static cgp::mesh_drawable cactus_instanced;
+    static cgp::mesh_drawable leaf_instanced;
+    static cgp::mesh_drawable wood_instanced;
+
     static bool instanced_drawables_initialized;
 
 public:
@@ -54,6 +64,10 @@ public:
     static void add_sand_instance(const cgp::vec3& position);
     static void add_snow_instance(const cgp::vec3& position);
     static void add_ct_instance(const cgp::vec3& position);
+    static void add_cactus_instance(const cgp::vec3& position);
+    static void add_leaf_instance(const cgp::vec3& position);
+    static void add_wood_instance(const cgp::vec3& position);
+
     static void render_all_instances(const cgp::environment_generic_structure& environment);
     
     // Keep original method for compatibility
