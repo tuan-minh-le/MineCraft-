@@ -304,8 +304,11 @@ void scene_structure::display_inventory_ui()
 			Inventory& inventory = player.get_inventory();
 
 			for (int i = 0; i < rows * columns-2; ++i) {
-				int row = i / columns;
-				int col = i % columns;
+				int j;
+				if (i == 7) {j = 9;} else {i = j;}
+
+				int row = j / columns;
+				int col = j % columns;
 
 				ImVec2 pos = ImVec2(
 					basePos.x + 50 + col * (slotSize + slotSpacingx),
