@@ -201,6 +201,7 @@ void Player::handle_keyboard_event(const cgp::inputs_keyboard_parameters& keyboa
         else {
             verticalVelocity -= gravity * dt; 
         }
+        gravityAplication();
     }
     else{
         if(keyboard.is_pressed(GLFW_KEY_SPACE)){
@@ -264,28 +265,28 @@ void Player::move(float speed,const cgp::inputs_keyboard_parameters& keyboard,cg
         }
     }
 
-    if(!isCreativeMode){
-        if (keyboard.is_pressed(GLFW_KEY_SPACE) && isGrounded) {
-            testPosition += {0.0f,1.5f,0.0f};
-            if(!colision()){
-                isGrounded = false;
-                position += {0.0f,2.5f,0.0f};        
-            }
-            else{
-            verticalVelocity -= gravity * dt; 
-        }
-        }
-        gravityAplication(); 
-    }
-        else{
-        if(keyboard.is_pressed(GLFW_KEY_SPACE)){
-            verticalVelocity = 20.0;
-        }
-        if(keyboard.is_pressed(GLFW_KEY_LEFT_CONTROL))
-        {
-            verticalVelocity = -20.0;
-        }
-    }
+    // if(!isCreativeMode){
+    //     if (keyboard.is_pressed(GLFW_KEY_SPACE) && isGrounded) {
+    //         testPosition += {0.0f,1.5f,0.0f};
+    //         if(!colision()){
+    //             isGrounded = false;
+    //             position += {0.0f,2.5f,0.0f};        
+    //         }
+    //         else{
+    //         verticalVelocity -= gravity * dt; 
+    //     }
+    // }
+    //     gravityAplication(); 
+    // }
+    //     else{
+    //     if(keyboard.is_pressed(GLFW_KEY_SPACE)){
+    //         verticalVelocity = 20.0;
+    //     }
+    //     if(keyboard.is_pressed(GLFW_KEY_LEFT_CONTROL))
+    //     {
+    //         verticalVelocity = -20.0;
+    //     }
+    // }
    
 
     camera.camera_model.position_camera = position;

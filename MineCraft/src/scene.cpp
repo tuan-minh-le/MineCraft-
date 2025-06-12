@@ -305,7 +305,7 @@ void scene_structure::display_inventory_ui()
 
 			for (int i = 0; i < rows * columns-2; ++i) {
 				int j;
-				if (i == 7) {j = 9;} else {i = j;}
+				if (i == 7) {j = 10;} else {j = i;}
 
 				int row = j / columns;
 				int col = j % columns;
