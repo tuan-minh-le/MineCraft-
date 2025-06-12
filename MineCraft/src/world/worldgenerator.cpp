@@ -122,14 +122,14 @@ BiomeType WorldGenerator::getBiomeTypeAt(float worldX, float worldZ){
     // debugCount++;
 
     BiomeType result;
-    if(temperature < 0.004f){
+    if(temperature < 0.0001f){
         result = SNOWBIOME;
     }
     else if(temperature > 0.1f){
         result = DESERT;
     }
     else{
-        result = PLAINS;
+        result = DESERT;
     }
 
     return result;

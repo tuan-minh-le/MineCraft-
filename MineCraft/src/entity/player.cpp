@@ -24,7 +24,7 @@ void Player::initialize(const cgp::vec3& p_position, cgp::input_devices& inputs,
     world = wrd;
     craft_opened = false;
     isGrounded = true;
-    isCreativeMode = false;
+    isCreativeMode = true;
     verticalVelocity = 0;
     gravity = 50.f;
     dt = 0.05f;
@@ -172,46 +172,46 @@ void Player::handle_keyboard_event(const cgp::inputs_keyboard_parameters& keyboa
         item_in_hand = inventory.get_inventory()[ind_inventory][0];
     }
 
-    // if (position.y <= 0) {
-    //     position.y = 0;  
-    //     isGrounded = true;    
-    //     verticalVelocity = 0.0f; 
-    // }
+    if (position.y <= 0) {
+        position.y = 0;  
+        isGrounded = true;    
+        verticalVelocity = 0.0f; 
+    }
 
-    // if (colision()==true) {
-    //     verticalVelocity += gravity * dt; 
-    //     position.y += verticalVelocity * dt;  
-    //     isGrounded = true; 
+    if (colision()==true) {
+        verticalVelocity += gravity * dt; 
+        position.y += verticalVelocity * dt;  
+        isGrounded = true; 
         
-    // }
+    }
     
 
-    // verticalVelocity = 0.0f;
+    verticalVelocity = 0.0f;
 
-    // if(!isCreativeMode){
-    //     if (isGrounded) {
-    //     verticalVelocity = 0.0f; 
-    //     if (keyboard.is_pressed(GLFW_KEY_SPACE)) {
-    //         verticalVelocity = 50.0f; 
-    //         isGrounded = false;          
-    //     }
-    //     }
-    //     else {
-    //         verticalVelocity -= gravity * dt; 
-    //     }
-    // }
-    // else{
-    //     if(keyboard.is_pressed(GLFW_KEY_SPACE)){
-    //         verticalVelocity = 15.0;
-    //     }
-    //     if(keyboard.is_pressed(GLFW_KEY_LEFT_CONTROL)){
-    //         verticalVelocity = -20.0;
-    //     }
-    // }
-    // if(!isGrounded){
-    //     //std::cout<<"oui / "<<position.y<<std::endl;
-    // }
-    // position.y += verticalVelocity * dt;
+    if(!isCreativeMode){
+        if (isGrounded) {
+        verticalVelocity = 0.0f; 
+        if (keyboard.is_pressed(GLFW_KEY_SPACE)) {
+            verticalVelocity = 50.0f; 
+            isGrounded = false;          
+        }
+        }
+        else {
+            verticalVelocity -= gravity * dt; 
+        }
+    }
+    else{
+        if(keyboard.is_pressed(GLFW_KEY_SPACE)){
+            verticalVelocity = 15.0;
+        }
+        if(keyboard.is_pressed(GLFW_KEY_LEFT_CONTROL)){
+            verticalVelocity = -20.0;
+        }
+    }
+    if(!isGrounded){
+        //std::cout<<"oui / "<<position.y<<std::endl;
+    }
+    position.y += verticalVelocity * dt;
     
 
      
@@ -267,11 +267,14 @@ void Player::move(float speed,const cgp::inputs_keyboard_parameters& keyboard,cg
             testPosition += {0.0f,1.5f,0.0f};
             if(!colision()){
             isGrounded = false;
-            position += {0.0f,2.5f,0.0f};        
+            position += {0.0f,2.5f,0.0f};       
         }
         else {
             verticalVelocity -= gravity * dt; 
-        }}
+        }
+        }
+        gravityAplication(); 
+    }
         else{
         if(keyboard.is_pressed(GLFW_KEY_SPACE)){
             verticalVelocity = 20.0;
@@ -281,8 +284,7 @@ void Player::move(float speed,const cgp::inputs_keyboard_parameters& keyboard,cg
         }
     }
    
-    }
-    gravityAplication();
+
     camera.camera_model.position_camera = position;
     camera_view_matrix = camera.camera_model.matrix_view();
 }

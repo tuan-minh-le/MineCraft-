@@ -11,7 +11,7 @@ void scene_structure::initialize()
 
 	lost = false;
 
-	world.initialize(10, 10, 50);
+	world.initialize(30, 30, 50);
 	player.initialize({10, 10, 10}, inputs,window,&world);
 	chick.initialize({10, 10, 10}, inputs,window,&world);
 	zombie.initialize({30, 10, 30}, inputs,window,&world);
