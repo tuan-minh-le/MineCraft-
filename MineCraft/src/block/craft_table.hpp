@@ -1,13 +1,12 @@
 #pragma once
 #include "block/interractive.hpp"
 
-class Craft_table : public Block {
+class Craft_table : public Interractive {
 private:
     bool opened;
 
 public:
     Craft_table();
-    ~Craft_table() = default;
     
     void initialize() override;
     void setup_texture() override;
