@@ -24,7 +24,7 @@ void Player::initialize(const cgp::vec3& p_position, cgp::input_devices& inputs,
     world = wrd;
     craft_opened = false;
     isGrounded = true;
-    isCreativeMode = true;
+    isCreativeMode = false;
     verticalVelocity = 0;
     gravity = 50.f;
     dt = 0.05f;
@@ -215,7 +215,7 @@ void Player::handle_keyboard_event(const cgp::inputs_keyboard_parameters& keyboa
     
 
      
-
+    
     
 
     camera.camera_model.position_camera = position;
@@ -235,28 +235,28 @@ void Player::move(float speed,const cgp::inputs_keyboard_parameters& keyboard,cg
 
     forward.y = 0;
     right.y = 0;
-    setTestPosition() = position;
+    setTestPosition() = {position.x,position.y,position.z};
 
     if (keyboard.is_pressed(GLFW_KEY_W)){
-        testPosition += speed * forward;
+        testPosition += (speed + 0.5f) * forward ;
         if(!colision()){
             position += speed * forward;
         }
     }
     if (keyboard.is_pressed(GLFW_KEY_A)){
-        testPosition -= speed * right;
+        testPosition -= (speed + 0.5f) * forward ;
         if(!colision()){
             position -= speed * right;
         }
     }
     if (keyboard.is_pressed(GLFW_KEY_S)){
-        testPosition -= speed * forward; 
+        testPosition -= (speed + 0.5f) * forward ;
         if(!colision()){
             position -= speed * forward;
         }
     }
     if (keyboard.is_pressed(GLFW_KEY_D)){
-        testPosition += speed * right;
+        testPosition += (speed + 0.5f) * forward ;
          if(!colision()){
             position += speed * right;
         }
@@ -266,22 +266,27 @@ void Player::move(float speed,const cgp::inputs_keyboard_parameters& keyboard,cg
         if (keyboard.is_pressed(GLFW_KEY_SPACE) && isGrounded) {
             testPosition += {0.0f,1.5f,0.0f};
             if(!colision()){
-            isGrounded = false;
-            position += {0.0f,2.5f,0.0f};        
-        }
-        else {
+                isGrounded = false;
+                position += {0.0f,2.5f,0.0f};        
+            }
+            else{
             verticalVelocity -= gravity * dt; 
-        }}
-        else{
-        if(keyboard.is_pressed(GLFW_KEY_SPACE)){
+            }
+        }
+        gravityAplication();
+    }else{
+        if(keyboard.is_pressed(GLFW_KEY_SPACE))
+        {
             verticalVelocity = 20.0;
         }
-        if(keyboard.is_pressed(GLFW_KEY_LEFT_CONTROL)){
+        if(keyboard.is_pressed(GLFW_KEY_LEFT_CONTROL))
+        {
             verticalVelocity = -20.0;
         }
     }
    
-    }
+
+    
     camera.camera_model.position_camera = position;
     camera_view_matrix = camera.camera_model.matrix_view();
 }
@@ -408,7 +413,7 @@ bool Player::check_cube(const cgp::vec3& origin, const cgp::vec3& direction, flo
             return true;
         }
     }
-
+    
     return false;
 }
 
@@ -454,7 +459,7 @@ bool Player::colision(){
 // }
 
 void Player::gravityAplication(){
-    cgp::vec3 Test_under = {position.x, position.y - 0.1f, position.z};
+    cgp::vec3 Test_under = {position.x, position.y - 1.1f, position.z};
     setTestPosition() = Test_under;
     if(!colision()){
         setPosition() = Test_under;
