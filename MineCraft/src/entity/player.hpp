@@ -21,7 +21,7 @@ private:
     Inventory inventory;
     Inventory craft;
     std::shared_ptr<Item> item_in_hand;
-    std::shared_ptr<Craft_table> craft_table_opened;
+    Craft_table* craft_table_opened;
     int ind_inventory;
 
     bool craft_opened;
@@ -68,8 +68,8 @@ public:
     std::shared_ptr<Item> get_item_in_hand() const;
     std::shared_ptr<Item>& set_item_in_hand();
 
-    std::shared_ptr<Craft_table> get_craft_table_opened() const;
-    std::shared_ptr<Craft_table>& set_craft_table_opened();
+    Craft_table* get_craft_table_opened() const;
+    Craft_table*& set_craft_table_opened();
 
     int get_item_ind() const;
     int& set_item_ind();
