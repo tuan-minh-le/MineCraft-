@@ -145,7 +145,7 @@ void Player::handle_keyboard_event(const cgp::inputs_keyboard_parameters& keyboa
         
     }
 
-    if(keyboard.is_pressed(GLFW_KEY_ESCAPE) && craft_table_opened != nullptr)
+    if(keyboard.is_pressed(GLFW_KEY_ESCAPE) && craft_opened)
     {
         
         craft_table_opened->set_opened() = !craft_table_opened->get_opened();
