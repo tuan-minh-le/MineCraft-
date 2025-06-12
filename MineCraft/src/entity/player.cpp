@@ -22,6 +22,7 @@ void Player::initialize(const cgp::vec3& p_position, cgp::input_devices& inputs,
 
     item_in_hand = inventory.get_inventory()[ind_inventory][0];
     world = wrd;
+    craft_opened = false;
     isGrounded = true;
     isCreativeMode = false;
     verticalVelocity = 0;
@@ -77,6 +78,14 @@ std::shared_ptr<Item>& Player::set_item_in_hand(){
 
 int Player::get_item_ind() const{
     return ind_inventory;
+}
+
+bool Player::get_craft_opened() const{
+    return craft_opened;
+}
+
+bool& Player::set_craft_opened(){
+    return craft_opened;
 }
 
 int& Player::set_item_ind(){
@@ -141,6 +150,7 @@ void Player::handle_keyboard_event(const cgp::inputs_keyboard_parameters& keyboa
         
         craft_table_opened->set_opened() = !craft_table_opened->get_opened();
         craft_table_opened = nullptr;
+        craft_opened = false;
         
     }
 
@@ -310,6 +320,7 @@ void Player::handle_mouse_event(const cgp::inputs_mouse_parameters& mouse){
             std::cout<<"table de craft"<<std::endl;
             craft_table_opened = craft_table;
             craft_table_opened->action();
+            craft_opened = true;
             std::cout<<"booléen changé"<<std::endl;
         }
         else if(std::dynamic_pointer_cast<Tool>(item_in_hand) && !std::dynamic_pointer_cast<Interractive>(item_in_hand)){

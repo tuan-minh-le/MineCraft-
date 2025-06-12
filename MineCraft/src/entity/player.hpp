@@ -24,6 +24,8 @@ private:
     std::shared_ptr<Craft_table> craft_table_opened;
     int ind_inventory;
 
+    bool craft_opened;
+
     bool isGrounded;
     bool isCreativeMode;
     float verticalVelocity;
@@ -49,6 +51,9 @@ public:
 
     int get_hunger() const;
     int& set_hunger();
+
+    bool get_craft_opened() const;
+    bool& set_craft_opened();
 
     Inventory& get_inventory();
     Inventory& set_inventory();

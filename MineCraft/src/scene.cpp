@@ -273,7 +273,7 @@ void scene_structure::display_inventory_ui()
 
 			ImGui::End();
 		}
-		else if (player.get_craft_table_opened()!= nullptr && player.get_craft_table_opened()->get_opened())
+		else if (player.get_craft_opened())
 		{
 			ImVec2 center = ImVec2(window.width * 0.5f, window.height * 0.5f);
 		float size = 25.0f;
