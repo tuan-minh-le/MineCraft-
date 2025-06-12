@@ -282,13 +282,13 @@ bool Inventory::check_craft(){
     }
     else
     {
-        if (inventory[4].empty() || inventory[0].empty() || inventory[7].empty())
+        if (inventory[4].empty() || inventory[0].empty() || inventory[8].empty())
         {
             return false;
         }
         
-        if (inventory[4][0]->getItemName() == "Grass" && inventory[0][0]->getItemName() == "Grass" && inventory[7][0]->getItemName() == "Grass" 
-        && inventory[1].empty() && inventory[2].empty() && inventory[5].empty() && inventory[6].empty() && inventory[8].empty() && inventory[9].empty())
+        if (inventory[4][0]->getItemName() == "Grass" && inventory[0][0]->getItemName() == "Grass" && inventory[8][0]->getItemName() == "Grass" 
+        && inventory[1].empty() && inventory[2].empty() && inventory[5].empty() && inventory[6].empty() && inventory[7].empty() && inventory[9].empty())
         {
             inventory[3].push_back(std::make_shared<Stone>());
 
