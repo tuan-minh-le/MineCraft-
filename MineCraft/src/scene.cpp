@@ -275,9 +275,9 @@ void scene_structure::display_inventory_ui()
 		}
 		else if (player.get_craft_opened())
 		{
-
+		glfwSetInputMode(window.glfw_window,GLFW_CURSOR,GLFW_CURSOR_NORMAL);
 		ImGui::SetNextWindowPos(ImVec2(500,200));
-		ImGui::SetNextWindowSize(ImVec2(500, 800));
+		ImGui::SetNextWindowSize(ImVec2(800, 600));
 		ImGui::Begin("Craft_table", nullptr,
 				ImGuiWindowFlags_NoTitleBar |
 				ImGuiWindowFlags_NoResize |
@@ -303,15 +303,15 @@ void scene_structure::display_inventory_ui()
 			Inventory& table_craft = player.get_craft_table_opened()->get_inventory();
 			Inventory& inventory = player.get_inventory();
 
-			for (int i = 0; i < rows * columns-3; ++i) {
+			for (int i = 0; i < rows * columns-2; ++i) {
 				int row = i / columns;
 				int col = i % columns;
 
 				ImVec2 pos = ImVec2(
-					basePos.x + 250 + col * (slotSize + slotSpacingx),
-					basePos.y + 60 + row * (slotSize + slotSpacingy));
+					basePos.x + 50 + col * (slotSize + slotSpacingx),
+					basePos.y + 50 + row * (slotSize + slotSpacingy));
 
-				if (i == 2) {pos.y += slotSize/2; pos.x += 40;}
+				if (i == 3) {pos.y += slotSize/2; pos.x += 40;}
 
 				std::vector<std::shared_ptr<Item>> vec_item = table_craft.get_inventory()[i];
 
