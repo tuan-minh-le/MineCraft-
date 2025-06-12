@@ -22,7 +22,9 @@ void Player::initialize(const cgp::vec3& p_position, cgp::input_devices& inputs,
 
     item_in_hand = inventory.get_inventory()[ind_inventory][0];
     world = wrd;
+
     craft_opened = false;
+
     isGrounded = true;
     isCreativeMode = true;
     verticalVelocity = 0;
@@ -120,7 +122,7 @@ void Player::handle_mouse_move(cgp::vec2 const& mouse_position_current, cgp::vec
 
 void Player::handle_keyboard_event(const cgp::inputs_keyboard_parameters& keyboard,cgp::mat4& camera_view_matrix){
 
-    if (keyboard.is_pressed(GLFW_KEY_E) && !lastE)
+    if (keyboard.is_pressed(GLFW_KEY_E) && !lastE && !craft_opened)
     {
         inventory.set_opened_inventory() = !inventory.get_opened_inventory();
     }

@@ -11,7 +11,7 @@ void scene_structure::initialize()
 
 	lost = false;
 
-	world.initialize(30, 30, 50);
+	world.initialize(1, 1, 50);
 	player.initialize({10, 10, 10}, inputs,window,&world);
 	chick.initialize({10, 10, 10}, inputs,window,&world);
 	zombie.initialize({30, 10, 30}, inputs,window,&world);
@@ -51,7 +51,7 @@ void scene_structure::display_frame()
 {
 	// Set the light to the current position of the camera
 	environment.light = player.get_camera().camera_model.position();
-	// glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	world.renderCached(player.getPosition(), environment);
 
 	
@@ -275,11 +275,9 @@ void scene_structure::display_inventory_ui()
 		}
 		else if (player.get_craft_opened())
 		{
-			ImVec2 center = ImVec2(window.width * 0.5f, window.height * 0.5f);
-		float size = 25.0f;
 
-		ImGui::SetNextWindowPos(ImVec2(center.x-2*size,center.y-2*size));
-		ImGui::SetNextWindowSize(ImVec2(5*size, 5*size));
+		ImGui::SetNextWindowPos(ImVec2(500,200));
+		ImGui::SetNextWindowSize(ImVec2(500, 800));
 		ImGui::Begin("Craft_table", nullptr,
 				ImGuiWindowFlags_NoTitleBar |
 				ImGuiWindowFlags_NoResize |
@@ -287,15 +285,160 @@ void scene_structure::display_inventory_ui()
 				ImGuiWindowFlags_NoCollapse |
 				ImGuiWindowFlags_NoBackground);
 
-		ImVec2 basePos = ImGui::GetCursorScreenPos();
-		auto* drawList = ImGui::GetWindowDrawList();
-		ImColor color = IM_COL32(0, 0, 0, 255);
+		ImVec2 winPos = ImGui::GetWindowPos();
+			ImVec2 winSize = ImGui::GetWindowSize();
+			auto* drawList = ImGui::GetWindowDrawList();
 
-		const char* text = "Craft table opened";
+			drawList->AddRectFilled(winPos, ImVec2(winPos.x + winSize.x, winPos.y + winSize.y),
+									IM_COL32(255, 255, 255, 255));
 
-		ImVec2 textSize = ImGui::CalcTextSize(text);
-		ImVec2 textPos = ImVec2(center.x - textSize.x / 2.0f, center.y - textSize.y / 2.0f);
-		drawList->AddText(textPos, color, text);
+			ImVec2 basePos = ImGui::GetCursorScreenPos();
+
+			int slotSize = 70;
+			int slotSpacingx = 5;
+			int slotSpacingy = 5;
+			int columns = 4;
+			int rows = 3;
+
+			Inventory& table_craft = player.get_craft_table_opened()->get_inventory();
+			Inventory& inventory = player.get_inventory();
+
+			for (int i = 0; i < rows * columns-3; ++i) {
+				int row = i / columns;
+				int col = i % columns;
+
+				ImVec2 pos = ImVec2(
+					basePos.x + 250 + col * (slotSize + slotSpacingx),
+					basePos.y + 60 + row * (slotSize + slotSpacingy));
+
+				if (i == 2) {pos.y += slotSize/2; pos.x += 40;}
+
+				std::vector<std::shared_ptr<Item>> vec_item = table_craft.get_inventory()[i];
+
+				std::string text;
+				if (!vec_item.empty()) {text = vec_item[0]->getItemName() + std::to_string(vec_item.size()) + " t_craft " + std::to_string(i);}
+				else
+				{
+					text = std::to_string(i);
+				}
+
+				std::string label = "table_craft " + std::to_string(i);
+				ImGui::SetCursorScreenPos(pos);
+
+				if (ImGui::Button(text.c_str(), ImVec2(slotSize, slotSize))) {
+					
+					if (inputs.keyboard.is_pressed(GLFW_KEY_LEFT_SHIFT))
+					{
+						player.get_craft_table_opened()->get_inventory().fast_switch_inventory(i,SlotType::TABLE_CRAFT,inventory);
+						player.get_craft_table_opened()->get_inventory().check_craft();
+					}				
+				}
+
+				if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID)) {
+					DragPayload payload_data = { i, SlotType::TABLE_CRAFT };
+					ImGui::SetDragDropPayload("ITEM_SLOT", &payload_data, sizeof(DragPayload));
+					ImGui::Text("Déplacer %s"); // Apparence de l'objet en drag
+					ImGui::EndDragDropSource();
+				}
+
+				if (ImGui::BeginDragDropTarget()) {
+					if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("ITEM_SLOT")) {
+						const DragPayload* payload_data = static_cast<const DragPayload*>(payload->Data);
+						int from_index = payload_data->index;
+						SlotType from_type = payload_data->source;
+						std::string bjr;
+						if (from_type == SlotType::TABLE_CRAFT) {bjr = "t_craft";}else{bjr = "inventory";}
+						if (i!=from_index || from_type != SlotType::TABLE_CRAFT)
+						{
+							player.get_craft_table_opened()->get_inventory().switch_inventory(from_index, i,from_type,SlotType::TABLE_CRAFT,inventory,inputs.keyboard.is_pressed(GLFW_KEY_R),inputs.keyboard.is_pressed(GLFW_KEY_T));
+							player.get_craft_table_opened()->get_inventory().check_craft();
+
+							if (from_type== SlotType::TABLE_CRAFT and from_index == 2)
+							{
+								player.get_craft_table_opened()->get_inventory().finish_craft(true);
+								player.get_craft_table_opened()->get_inventory().check_craft();
+							}
+							
+						}
+					}
+					ImGui::EndDragDropTarget();
+				}
+			}
+
+			std::cout<<"table chargé"<<std::endl;
+
+			columns = 9;
+			rows = 4;
+
+			for (int i = 0; i < rows * columns; ++i) {
+				int row = rows - 1 - (i / columns);
+				int col = i % columns;
+
+				if (row == rows-1) {
+					slotSpacingy = 15;
+				}
+				else
+				{
+					slotSpacingy = 5;
+				}
+				
+
+				std::vector<std::shared_ptr<Item>> vec_item = inventory.get_inventory()[i];
+
+				std::string text;
+				if (!vec_item.empty()) {text = vec_item[0]->getItemName() + std::to_string(vec_item.size()) + " inv " + std::to_string(i);}
+				else
+				{
+					text = std::to_string(i);
+				}
+				
+				ImVec2 pos = ImVec2(
+					basePos.x + col * (slotSize + slotSpacingx),
+					basePos.y + 250 + row * (slotSize + slotSpacingy)
+				);
+
+				std::string label = "inv " + std::to_string(i);
+				ImGui::SetCursorScreenPos(pos);
+
+				if (ImGui::Button(text.c_str(), ImVec2(slotSize, slotSize))) {
+					
+					if (inputs.keyboard.is_pressed(GLFW_KEY_LEFT_SHIFT))
+					{
+						player.set_inventory().fast_switch_inventory(i,SlotType::INVENTORY,inventory);
+					}
+				}
+
+				// Si l'utilisateur commence à "tirer" le bouton
+				if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID)) {
+					DragPayload payload_data = { i, SlotType::INVENTORY };
+					ImGui::SetDragDropPayload("ITEM_SLOT", &payload_data, sizeof(DragPayload));
+					ImGui::Text("Déplacer %s"); // Apparence de l'objet en drag
+					ImGui::EndDragDropSource();
+				}
+
+				// Si c’est une cible de drop
+				if (ImGui::BeginDragDropTarget()) {
+					if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("ITEM_SLOT")) {
+						const DragPayload* payload_data = static_cast<const DragPayload*>(payload->Data);
+						int from_index = payload_data->index;
+						SlotType from_type = payload_data->source;
+						std::string bjr;
+						if (from_type == SlotType::TABLE_CRAFT) {bjr = "craft";}else{bjr = "inventory";}
+						if (i!=from_index || from_type != SlotType::INVENTORY)
+						{
+							player.set_inventory().switch_inventory(from_index, i,from_type,SlotType::INVENTORY,table_craft,inputs.keyboard.is_pressed(GLFW_KEY_R),inputs.keyboard.is_pressed(GLFW_KEY_T));
+							player.get_craft_table_opened()->get_inventory().check_craft();
+							if (from_type== SlotType::TABLE_CRAFT and from_index == 2)
+							{
+								player.get_craft_table_opened()->get_inventory().finish_craft(true);
+								player.get_craft_table_opened()->get_inventory().check_craft();
+							}
+						}
+					}
+					ImGui::EndDragDropTarget();
+				}
+			}
+			std::cout<<"inventaire chargé"<<std::endl;
 		
 		ImGui::End();
 		}
