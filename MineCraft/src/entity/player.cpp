@@ -92,10 +92,10 @@ int& Player::set_item_ind(){
     return ind_inventory;
 }
 
-std::shared_ptr<Craft_table> Player::get_craft_table_opened() const{
+Craft_table* Player::get_craft_table_opened() const{
     return craft_table_opened;
 }
-std::shared_ptr<Craft_table>& Player::set_craft_table_opened(){
+Craft_table*& Player::set_craft_table_opened(){
     return craft_table_opened;
 }
 
@@ -315,11 +315,11 @@ void Player::handle_mouse_event(const cgp::inputs_mouse_parameters& mouse){
         cgp::vec3 hitnormal;
         int hunger = get_hunger();
         if(check_cube(camera.camera_model.position(),camera.camera_model.front(),5.0f, hitblock,hitnormal) && (*world).getBlock(hitblock) == BlockType::CRAFT_TABLE){
-            std::shared_ptr<Block> craft_table_block = std::shared_ptr<Block>((*world).getBlockObject(hitblock));
-            std::shared_ptr<Craft_table> craft_table = std::dynamic_pointer_cast<Craft_table>(craft_table_block);
+            auto craft_table_block = world->getBlockObject(hitblock);
+            auto craft_table = dynamic_cast<Craft_table*>(craft_table_block);
             std::cout<<"table de craft"<<std::endl;
+            craft_table->action();
             craft_table_opened = craft_table;
-            craft_table_opened->action();
             craft_opened = true;
             std::cout<<"booléen changé"<<std::endl;
         }
